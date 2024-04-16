@@ -12,7 +12,7 @@ const AuthSlice = createSlice({
     reducers : {
         login : (state,action)=>{
             state.islogin = true;
-             console.log(action.payload)
+            //  console.log(action.payload)
              const {User_id,Role} = action.payload;
             state.Role = Role;
             state.User_id = User_id;  

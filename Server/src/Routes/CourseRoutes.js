@@ -6,9 +6,9 @@ import {
   GetCourses,
   CoursesByLevel,
   UploadFiles,
-  CourseByID,
+  CourseByID, 
   updatedCourse,
-  stripePayment
+  // stripePayment
 } from "../Controller/CourseController.js";
 
 const router = Router();
@@ -47,7 +47,7 @@ router.route("/AllCourses").get(GetCourses);
 
 router.route("/:level").get(CoursesByLevel);
 
-router.route("/checkout-session").post(stripePayment);
+// router.route("/checkout-session").post(stripePayment);
 
 
 

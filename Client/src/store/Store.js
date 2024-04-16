@@ -6,13 +6,13 @@ const persistedState = persistedStateJSON
   ? JSON.parse(persistedStateJSON)
   : { Auth : { islogin: false, Role: "", User_id: "" } };
 
-console.log(persistedStateJSON);
-console.log(persistedState);
+// console.log(persistedStateJSON);
+// console.log(persistedState);
 
 const preloadedState = {
   Auth: persistedState,
 };
-console.log(preloadedState);
+// console.log(preloadedState);
 export const store = configureStore({
   reducer: {
     Auth: AuthReducer,

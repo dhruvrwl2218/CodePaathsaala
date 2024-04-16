@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
-const EnrolledUserList = () => {
+import Pagination from "./Pagination";
+const EnrolledUserList =  () => {
   const [enrolledUser, setEnrolledUser] = useState();
   const [filteredEnrolledUser, setFilteredEnrolledUser] = useState();
-  // const [coursedetails, setCorseDetails] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const { register,  handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
+  const [page, setPage] = useState(1);
+  const [itemsPerPage,setItemsPerPage] = useState(8)
+  const [totalPages , setTotalPages] = useState(0)
 
   useEffect(() => {
     const FetchEnrolledUser = async () => {
@@ -31,7 +34,10 @@ const EnrolledUserList = () => {
     FetchEnrolledUser();
   }, []);
 
-  
+  useEffect(()=>{
+    const NoofPages = Math.ceil(filteredEnrolledUser?.length/itemsPerPage)||1;
+    setTotalPages(NoofPages);
+  },[filteredEnrolledUser])
 
   const CourseSearchOptions = enrolledUser
     ?.map((Course) => Course.Course.Name)
@@ -42,24 +48,37 @@ const EnrolledUserList = () => {
       return acc;
     }, []);
 
-  const SearchUsers = (data) => {
-    console.log(data);
-    console.log(data.User);
-    console.log(data.selectCourses);
+  const SearchUsers = async (data) => {
+    // console.log(data);
+    // console.log(data.User);
+    // console.log(data.selectCourses);
     if (!data.User || data.User === "") {
-      const filteredData = enrolledUser.filter(
+      const filteredData = await enrolledUser.filter(
         (enrolled) => enrolled.Course.Name === data.selectCourses
       );
+
       // console.log(filteredData)
-      setFilteredEnrolledUser(filteredData);
+      const filtereddataaa = filteredData.map((data, index) => ({
+        ...data,
+        Index: index + 1,
+      }));
+      // console.log(filtereddataaa);
+      setFilteredEnrolledUser(filtereddataaa);
+      setPage(1);
       return;
     }
     if (!data.selectCourses || data.selectCourses === "") {
       const filteredData = enrolledUser.filter(
         (enrolled) => enrolled.User.FullName === data.User
       );
-      // console.log(filteredData)
-      setFilteredEnrolledUser(filteredData);
+
+      const filtereddataaa = filteredData.map((data, index) => ({
+        ...data,
+        Index: index + 1,
+      }));
+
+      setFilteredEnrolledUser(filtereddataaa);
+      setPage(1);
       return;
     } else {
       const filteredData = enrolledUser.filter(
@@ -67,8 +86,14 @@ const EnrolledUserList = () => {
           enrolled.User.FullName === data.User &&
           enrolled.Course.Name === data.selectCourses
       );
-      // console.log(filteredData)
-      setFilteredEnrolledUser(filteredData);
+
+      const filtereddataaa = filteredData.map((data, index) => ({
+        ...data,
+        Index: index + 1,
+      }));
+
+      setFilteredEnrolledUser(filtereddataaa);
+      setPage(1);
     }
   };
   //  console.log(CourseSearchOptions);
@@ -76,10 +101,29 @@ const EnrolledUserList = () => {
   // console.log(CourseDetails)
 
   const deleteEnrolledUser = () => {
+    // TO do : complete this deletinion
+  };
 
-    // TO do : complete this deletinion 
+  //paginaiton
+  // const listItems = 10;
+ 
+
+  const onPageChange = (newPage) =>{
+    if(newPage >= 1 && newPage <= totalPages){
+      setPage(newPage)
+    }
   }
-
+  let ListStart = (page - 1) * itemsPerPage;
+  let ListEnd = ListStart + itemsPerPage;
+ 
+  // let paginationvalues = await () =>{
+  //   
+  //               
+  //               
+  //               return{ListStart,ListEnd}
+  // }
+  // setPageList(filteredEnrolledUser.slice(ListStart,ListEnd))
+  // console.log(pagelist);
 
   return (
     <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full border border-gray-500 p-2 mx-1 rounded-lg">
@@ -122,7 +166,7 @@ const EnrolledUserList = () => {
               </button>
             </div>
           </form>
-          <table className="w-full mx-2 rounded-lg ml-5 ">
+          <table className="w-full mx-2 rounded-lg  ">
             <thead className="bg-black h-16">
               <tr className="p-5">
                 <th className=" rounded-tl-lg">S.no.</th>
@@ -132,45 +176,61 @@ const EnrolledUserList = () => {
                 <th className="max-sm:hidden">Date</th>
                 <th>Actions</th>
               </tr>
-            </thead>
+            </thead> 
+
             <tbody className="text-center text-lg">
               {filteredEnrolledUser.length === 0 ? (
                 <p className="text-center justify-center">No Enrolled User..</p>
               ) : (
-                filteredEnrolledUser.map(({ User, Course, Date }, index) => (
-                  <tr
-                    key={enrolledUser?._id}
-                    className={index % 2 === 0 ? `bg-blue-600` : `bg-black`}
-                  >
-                    <td>{index + 1}</td>
-                    <td>{User?.FullName}</td>
-                    <td className="max-sm:hidden">{User?.Email}</td>
-                    <td>{Course?.Name}</td>
-                    <td className="max-sm:hidden">{Date}</td>
-                    <td>
-                      {
-                        <button onClick={deleteEnrolledUser}>
-                          <div
-                            className="p-1 m-1 rounded-lg"
-                            style={{
-                              backgroundColor: "#1c1c1c",
-                            }}
-                          >
-                            <MdDelete
-                              className="w-8 h-auto p-1"
+                
+                filteredEnrolledUser
+                  .slice(ListStart, ListEnd)
+                  .map(({ User, Course, Date, Index }, index) => (
+                    <tr
+                      key={enrolledUser?._id}
+                      className={index % 2 === 0 ? `bg-blue-600` : `bg-black`}
+                    >
+                      <td>{Index != null ? Index : index + 1}</td>
+                      <td>{User?.FullName}</td>
+                      <td className="max-sm:hidden">{User?.Email}</td>
+                      <td>{Course?.Name}</td>
+                      <td className="max-sm:hidden">{Date}</td>
+                      <td>
+                        {
+                          <button onClick={deleteEnrolledUser}>
+                            <div
+                              className="p-1 m-1 rounded-lg"
                               style={{
-                                color: "#bd1414",
+                                backgroundColor: "#1c1c1c",
                               }}
-                            />
-                          </div>
-                        </button>
-                      }
-                    </td>
-                  </tr>
-                ))
+                            >
+                              <MdDelete
+                                className="w-8 h-auto p-1"
+                                style={{
+                                  color: "#bd1414",
+                                }}
+                              />
+                            </div>
+                          </button>
+                        }
+                         
+                      </td>
+                    </tr>
+                  ))
               )}
             </tbody>
-            <tfoot></tfoot>
+            <tfoot className="w-full justify-center bg-slate-500 " >
+              {console.log(totalPages)}
+              
+              <Pagination
+               totalPages = {totalPages} 
+               onPageChange = {onPageChange}
+               currentPage={page}
+               pageListLimit= {3}
+               
+               />
+            </tfoot>
+         
           </table>
         </div>
       )}
@@ -179,20 +239,4 @@ const EnrolledUserList = () => {
 };
 
 export default EnrolledUserList;
-{
-  /* <td className="text-center">{  <button>
-          <div
-            className="p-1 m-1 rounded-lg"
-            style={{
-              backgroundColor: "#1c1c1c",
-            }}
-          >
-            <MdDelete
-              className="w-8 h-auto p-1"
-              style={{
-                color: "#bd1414",
-              }}
-            />
-          </div>
-        </button>}</td> */
-}
+

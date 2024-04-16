@@ -11,6 +11,7 @@ import { IoReorderThreeOutline } from "react-icons/io5";
 const Header = () => {
   const isLogin = useSelector(islogin);
   const dispatch = useDispatch();
+  const isAdmin = useSelector((state) => state.Auth.Role);
   const navigate = useNavigate();
   const [toggle, setToggle] = useState(false);
 
@@ -26,7 +27,7 @@ const Header = () => {
       const response = await axios.post(
         "http://localhost:8000/api/v1/user/logout",
         {},
-        { withCredentials: true },
+        { withCredentials: true }
       );
       if (response.status === 200) {
         toast.success(response.data.data);
@@ -64,7 +65,13 @@ const Header = () => {
         <li className="p-1 m-1 hover:text-lg hover:text-purple-950 whitespace-nowrap md:mx-5 ">
           <NavLink to="/YourCourses">Your Courses</NavLink>
         </li>
+        {isAdmin === "Admin" && (
+          <li className="p-1 m-1 hover:text-lg hover:text-purple-950 whitespace-nowrap md:mx-5 ">
+            <NavLink to="/AdminHome">Admin</NavLink>
+          </li>
+        )}
       </ul>
+
       <button
         className="absolute right-2 m-1 md:hidden"
         onClick={togglenavLinks}
@@ -73,12 +80,20 @@ const Header = () => {
       </button>
       <div className="hidden md:flex md:mx-40">
         <Link to="/Login">
-          <p className={`${!isLogin ? `w-20 mt-3 p-2 text-center mx-40 rounded-lg border-x  bg--00` : `hidden`}`}>
+          <p
+            className={`${
+              !isLogin
+                ? `w-20 mt-3 p-2 text-center mx-40 rounded-lg border-x  bg--00`
+                : `hidden`
+            }`}
+          >
             Log In
           </p>
         </Link>
         <button
-          className={`${isLogin ? `w-20 mt-3 p-2 mx-40 rounded-lg border-x` : `hidden`}`}
+          className={`${
+            isLogin ? `w-20 mt-3 p-2 mx-40 rounded-lg border-x` : `hidden`
+          }`}
           onClick={LogOut}
         >
           Logout
