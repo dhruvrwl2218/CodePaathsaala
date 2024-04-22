@@ -1,12 +1,12 @@
 import multer from "multer"
 
-
 const storage = multer.diskStorage({
     destination:function(req,file,cb){
+       
         if(file.fieldname === "Thumbnail"){
             cb(null,"./public/img")
         }else if(file.fieldname === "StudyMaterial"){
-            cb(null,'./public/pdf')
+            cb(null,'./public/assests')
         } 
     },
     filename:function(req,file,cb){
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 }) 
 export const upload = multer({ 
     storage : storage,
-    
+       
  })
 // export const uploadDocs = multer({ 
 //     storage : storageDocs,

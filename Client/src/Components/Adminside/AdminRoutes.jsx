@@ -5,6 +5,8 @@ import LogIn from "../../Pages/Auth/LogIn";
 import UserNotAllowed from "./UserNotAllowed";
 import DashBoard from "./DashBoard";
 import { HiMenu } from "react-icons/hi";
+
+
 const AdminRoutes = () => {
   const Role = useSelector((state) => state.Auth.Role);
   console.log(Role);
@@ -33,6 +35,7 @@ const AdminRoutes = () => {
 };
 
 export default AdminRoutes;
+
 
 // let content;
 // switch (Role) {

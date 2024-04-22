@@ -35,13 +35,13 @@ const LogIn = () => {
 
         const { accessToken, refreshToken, user } = await response?.data?.data;
          
-        const accessexpiryDate = new Date();
-        accessexpiryDate.setDate(accessexpiryDate.getDate() + 1);
+        // const accessexpiryDate = new Date();
+        // accessexpiryDate.setDate(accessexpiryDate.getDate() + 1);
 
-        const refreshexpiryDate =  new Date();
-        refreshexpiryDate.setDate(refreshexpiryDate.getDate() + 15);
+        // const refreshexpiryDate =  new Date();
+        // refreshexpiryDate.setDate(refreshexpiryDate.getDate() + 15);
 
-          console.log(refreshexpiryDate + accessexpiryDate);
+        //   console.log(refreshexpiryDate + accessexpiryDate);
 
         // Cookies.set('accessToken', accessToken, { expires: accessexpiryDate , path: '/'});
         // Cookies.set('refreshToken', refreshToken, { expires: refreshexpiryDate , path: '/'});

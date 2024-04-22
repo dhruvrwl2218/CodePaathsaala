@@ -28,20 +28,24 @@ router.route("/add").post(
   AddCourse
 );
 
-router.route("/remove").post(RemoveCourse);
+router.route("/remove/:CourseId").delete(RemoveCourse);
 
-router.route("/addFiles").put(
-  upload.fields([
-    {
-      name : "StudyMaterial",
-    }
-    
-  ]),UploadFiles
+router.route("/addFiles/:_id").put(
+  
+  // upload.fields([
+  //   {
+  //     name : "StudyMaterial",
+  //   }
+     
+  // ]),
+  upload.array("StudyMaterial", 5),
+  UploadFiles
 )
 
 router.route("/ReadOne/:_id").get(CourseByID);
 
-router.route("/UpdateCourse").put(updatedCourse)
+router.route("/UpdateCourse").patch(updatedCourse)
+
 //User Routes
 router.route("/AllCourses").get(GetCourses);
 
@@ -49,11 +53,5 @@ router.route("/:level").get(CoursesByLevel);
 
 // router.route("/checkout-session").post(stripePayment);
 
-
-
-
-
-
-
-
 export default router;
+  

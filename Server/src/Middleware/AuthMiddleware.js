@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { ApiError } from "../Utils/Errors.js";
+import {ApiResponse} from "../Utils/ApiResponse.js"
 import { User } from "../Models/UserModel.js";
 
 const VerifyUser = async (req,res,next) => {
@@ -24,7 +25,7 @@ const VerifyUser = async (req,res,next) => {
   console.log(user)
 
   if(!user){
-    throw new ApiError(505,"user not avialable")
+    throw new ApiResponse(505,"user not avialable")
   }
 
  req.user = user

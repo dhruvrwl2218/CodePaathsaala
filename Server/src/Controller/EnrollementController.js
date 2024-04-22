@@ -132,6 +132,39 @@ export const EnrolledUserCourses = async (req,res)=>{
   }
 }
 
+export const adminStats = async(req,res) =>{
+  
+}
+export const deleteEnrollment = async(req,res) =>{
+  const {_id} = req.params;
+
+  console.log(_id);
+
+  if(!_id){
+    return res.status(401).json(new ApiResponse(401,{},"Enrollment id was not there"))
+  }
+try {
+  
+    const Enrollement = await Enroll.find({_id});
+  
+    if(!Enrollement){
+      // return res.status(401).json(new ApiResponse(401,{},"No enrollment were there with this id"))
+      throw new Error(401,{},"No enrollment were there with this id ")
+    }
+  
+    const deleteEnrollment = await Enroll.deleteOne({_id});
+
+    console.log(deleteEnrollment);
+    if(deleteEnrollment.deletedCount > 0){
+      return res.status(200).json(new ApiResponse(200,{deleteEnrollment},"enrollment deleted succesfully!"));
+    }
+    
+} catch (error) {
+  console.log(error)
+  return res.status(error.statuscode).json(error);
+}
+  
+}
 // {
 
 //    //    if(updatedCourseDoc){

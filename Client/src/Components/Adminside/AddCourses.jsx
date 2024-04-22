@@ -58,7 +58,7 @@ const AddCourses = () => {
           <label className="block mb-5 w-1/2 text-xl max-sm:w-full " htmlFor="">
             Name :
             <input
-              type="text"
+              type="file"
               className="block shadow-sm bg-neutral-800 text-neutral-300 mt-1  p-1 rounded-lg w-2/3 "
               {...register("Name", { required: true })}
             />

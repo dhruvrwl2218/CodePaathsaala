@@ -50,7 +50,15 @@ userschema.pre('save', async function(next){
 })
 
 userschema.methods.PasswordCheck = async function(Password){
-    return await  bcrypt.compare(Password,this.Password)
+    console.log(Password)
+   try {
+     const result = await bcrypt.compare(Password,this.Password)
+     console.log(result)
+     return result;
+   } catch (error) {
+    console.log(error)
+    return error
+   }
 }
 
 userschema.methods.GenerateAccessToken = async function(){
@@ -58,7 +66,7 @@ userschema.methods.GenerateAccessToken = async function(){
     return jwt.sign({_id : this._id},
         process.env.ACCESS_TOKEN_KEY,
         {expiresIn:'1d'})
-        
+         
 
    } catch (error) {
         console.log(error)
@@ -66,9 +74,12 @@ userschema.methods.GenerateAccessToken = async function(){
  }
  
  userschema.methods.GenerateRefreshToken = async function (){
-    return jwt.sign({_id : this._id},
+
+      return jwt.sign({_id : this._id},
         process.env.REFRESH_TOKEN_KEY,
         {expiresIn:'15d'})
+
+       
  }
 
 

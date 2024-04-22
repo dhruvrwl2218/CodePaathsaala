@@ -3,7 +3,11 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import Pagination from "./Pagination";
+import CourseUserDeletion from "./Pop-ups/CourseUserDeletion";
+import { toast } from "react-toastify";
 const EnrolledUserList =  () => {
+
+
   const [enrolledUser, setEnrolledUser] = useState();
   const [filteredEnrolledUser, setFilteredEnrolledUser] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +15,8 @@ const EnrolledUserList =  () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage,setItemsPerPage] = useState(8)
   const [totalPages , setTotalPages] = useState(0)
+
+
 
   useEffect(() => {
     const FetchEnrolledUser = async () => {
@@ -96,34 +102,38 @@ const EnrolledUserList =  () => {
       setPage(1);
     }
   };
+
   //  console.log(CourseSearchOptions);
   // console.log(enrolledUser)
   // console.log(CourseDetails)
 
-  const deleteEnrolledUser = () => {
-    // TO do : complete this deletinion
-  };
-
-  //paginaiton
-  // const listItems = 10;
- 
 
   const onPageChange = (newPage) =>{
     if(newPage >= 1 && newPage <= totalPages){
       setPage(newPage)
     }
   }
+  
   let ListStart = (page - 1) * itemsPerPage;
   let ListEnd = ListStart + itemsPerPage;
  
-  // let paginationvalues = await () =>{
-  //   
-  //               
-  //               
-  //               return{ListStart,ListEnd}
-  // }
-  // setPageList(filteredEnrolledUser.slice(ListStart,ListEnd))
-  // console.log(pagelist);
+
+  const deleteEnrollement = async(_id) => {
+    console.log("Enrolled User" + _id)
+    try {
+      const res = await axios.delete(`http://localhost:8000/api/v1/Enroll/deleteEnrollment/${_id}`);
+
+      console.log(res);
+      if(res.status === 200){
+        toast.success("Enrollment deleted successfully!")
+      }else{
+        toast.error(res.error)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(res.error)
+    }
+  }
 
   return (
     <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full border border-gray-500 p-2 mx-1 rounded-lg">
@@ -185,9 +195,11 @@ const EnrolledUserList =  () => {
                 
                 filteredEnrolledUser
                   .slice(ListStart, ListEnd)
-                  .map(({ User, Course, Date, Index }, index) => (
+                  .map(({ User, Course, Date, Index ,_id}, index) => (
+                    
                     <tr
-                      key={enrolledUser?._id}
+                      key={_id}
+                      
                       className={index % 2 === 0 ? `bg-blue-600` : `bg-black`}
                     >
                       <td>{Index != null ? Index : index + 1}</td>
@@ -196,8 +208,8 @@ const EnrolledUserList =  () => {
                       <td>{Course?.Name}</td>
                       <td className="max-sm:hidden">{Date}</td>
                       <td>
-                        {
-                          <button onClick={deleteEnrolledUser}>
+                        { 
+                          <button onClick={()=>deleteEnrollement(_id)}>
                             <div
                               className="p-1 m-1 rounded-lg"
                               style={{
@@ -216,11 +228,11 @@ const EnrolledUserList =  () => {
                          
                       </td>
                     </tr>
+                  
                   ))
               )}
             </tbody>
             <tfoot className="w-full justify-center bg-slate-500 " >
-              {console.log(totalPages)}
               
               <Pagination
                totalPages = {totalPages} 
@@ -240,3 +252,21 @@ const EnrolledUserList =  () => {
 
 export default EnrolledUserList;
 
+
+
+
+
+
+
+  // let paginationvalues = await () =>{
+  //   
+  //               
+  //               
+  //               return{ListStart,ListEnd}
+  // }
+  // setPageList(filteredEnrolledUser.slice(ListStart,ListEnd))
+  // console.log(pagelist);
+
+  
+  //paginaiton
+  // const listItems = 10;

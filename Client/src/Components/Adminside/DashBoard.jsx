@@ -1,7 +1,9 @@
 import React from 'react'
 import { NavLink} from 'react-router-dom'
 
+
 const DashBoard = () => {
+
   return (
     <div className="flex flex-col max-sm:hidden ">
       <section id='sidebar' className='h-full'>

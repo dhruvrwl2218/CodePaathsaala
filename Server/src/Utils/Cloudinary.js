@@ -26,4 +26,13 @@ cloudinary.config({
         return null
     }
   }
+
+  const UploadByTags = async ()=>{
+
+  }
+
+  const deleteCourseFiles = async ()=>{
+    
+  }
+
   export default uploadFilesCloudinary
