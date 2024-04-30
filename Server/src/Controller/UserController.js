@@ -12,13 +12,19 @@ const GenerateAccessAndRefreshToken = async (user) => {
   const refreshToken = await user.GenerateRefreshToken();
 
   try {
-    user.refreshToken = refreshToken;
-   const newdata = await  user.save({ validateBeforeSave: false });
+    await User.updateOne({ _id: user._id }, { $set: { refreshToken: refreshToken } });
+  } catch (error) {
+    throw new Error("Error updating refreshToken");
+  }
+  // try {
+  //   user.refreshToken = refreshToken;
+  //  const newdata = await user.save();
 
   //  console.log(newdata)
-  } catch (error) {
-    error;
-  }
+
+  // } catch (error) {
+  //   error; 
+  // }
 
   return { accessToken, refreshToken };
 };
@@ -30,7 +36,7 @@ export const UserSignIn = async (req, res) => {
 
   // console.log(params);
 
-  console.log(`${FullName},${Email},${Password}`);
+  // console.log(`${FullName},${Email},${Password}`);
 
   if ([FullName, Email, Password].some((e) => e?.trim() === "")) {
     // throw new ApiError("All the credentails are needed",Error)
@@ -50,41 +56,42 @@ export const UserSignIn = async (req, res) => {
     //  return new ApiResponse(500,"Email is not valid")
     return res.status(409).json(new ApiResponse(409, "Email is not valid"));
   }
-
-  const UserCheck = await User.findOne({ Email });
-
-  if (UserCheck) {
-    // res.send("User already exits")
-    // throw new ApiError(409, "User with email or username already exists");
-    //   return new ApiResponse(409,"user Already exites");
-    return res.status(409).json(new ApiResponse(409, "user Already exits"));
-  }
-  console.log(Email);
-
-  Role = process.env.EMAIL === Email ? "Admin" : Role;
-
-  const user = await User.create({
-    FullName: FullName,
-    Email: Email,
-    Password: Password,
-    Role: Role,
-  });
-
-  const ConfirmUser = User.findById(user.id);
-
-  if (!ConfirmUser) {
-    new ApiResponse(500, "Somethings went wrong while Signing In");
-  }
-
-  res.json(new ApiResponse(200, user, "user Regestired successfullly!"));
-};
+try {
+  
+    const UserCheck = await User.findOne({ Email });
+  
+    if (UserCheck) {
+      throw new ApiError(409, "User with email or username already exists");
+      // return res.status(409).json(new ApiResponse(409, "user Already exits"));
+    }
+    // console.log(Email);
+  
+    Role = process.env.EMAIL === Email ? "Admin" : Role;
+    //more you can add the array of emails which are of admin's ,
+    // and loop it and check if email sent by user as any of the eamil from that array then Role would be admin
+  
+    const user = await User.create({
+      FullName: FullName,
+      Email: Email,
+      Password: Password,
+      Role: Role,
+    });
+  
+    const ConfirmUser = User.findById(user.id);
+  
+    if (!ConfirmUser) {
+      new ApiResponse(500, "Somethings went wrong while Signing In");
+    }
+  
+    res.json(new ApiResponse(200, user, "user Regestired successfullly!"));
+  
+} catch (error) {
+  console.log(error)
+  res.status(500).json(new ApiResponse(500,error))
+}
+}
 export const UserLogIn = async (req, res) => {
-  // check fileds are not empty then
-  // next is email or username is present in the db
-  // password match
-  // generate the access and refresh Token
-  // send response and cookies with refresh and access Token
-
+ 
   const { Email, Password } = req.body;
   // console.log(`${Email},${Password}`);
 
@@ -99,33 +106,36 @@ try {
     // console.log(user);
 
     if(!user){
-      throw new ApiError(401, "User with this email is not present in db");
+      throw new ApiError(401,{user}, "User with this email is not present in db");
     }
-  
+    
     const isPasswordCorrect = await user.PasswordCheck(Password);
   
-    console.log(isPasswordCorrect);
+    // console.log(isPasswordCorrect);
   
+    
     if (!isPasswordCorrect) {
       throw new ApiError(500, "wrong Password",);
     }
   
     const { accessToken, refreshToken } = await GenerateAccessAndRefreshToken(user);
+   
+    // console.log(accessToken);
+    // console.log(refreshToken);
   
-    console.log(accessToken);
-    console.log(refreshToken);
-  
-    const option = {
-      // secure : true,
-      httpOnly: true,
-      // origin : process.env.CORS_ORIGIN,
-      // SameSite: 'None'
-    };
+ 
+    // const option = {
+    //   // secure : true,
+    //   httpOnly: true,
+    //   expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    //   // origin : process.env.CORS_ORIGIN,
+    //   // SameSite: 'None'
+    // };
   
     res
       .status(200)
-      .cookie("accessToken", accessToken, option)
-      .cookie("refreshToken", refreshToken, option)
+      .cookie("accessToken", accessToken, {expires: new Date(Date.now() + 24 * 60 * 60 * 1000),httpOnly: true} )
+      .cookie("refreshToken", refreshToken, {expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),httpOnly: true} )
       .json(
         new ApiResponse(
           200,
@@ -140,21 +150,9 @@ try {
 };
 
 export const Logout = async (req, res) => {
-  //   const {_id} = req.body
-
-  //   console.log(req.body)
-  //   console.log(_id)
-
-  //   if(!_id){
-  //    return res.status(444)
-  //    .json(new ApiResponse(444,"No user details been sent"))
-  //   }
-  console.log("inside the logout");
-  console.log(req.user._id);
-  console.log(req.user.FullName);
-
+  
   const Userr = await User.findOneAndUpdate(
-    req.user._id,
+    {_id : req.user._id},
     { $set: { refreshToken: "" } },
     { new: true }
   );
@@ -180,12 +178,12 @@ export const Logout = async (req, res) => {
 
 export const ForgotPassword = async (req, res) => {
   const { Email } = req.body;
-  console.log(Email);
-  console.log(req.body);
+  // console.log(Email);
+  // console.log(req.body);
   try {
     const user = await User.findOne({ Email: Email });
 
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       return res.status(404).json(new ApiResponse(404, "User not found"));
@@ -197,7 +195,7 @@ export const ForgotPassword = async (req, res) => {
       { expiresIn: "10m" }
     );
 
-    console.log(token);
+    // console.log(token);
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -399,20 +397,6 @@ export const deleteUser = async (req, res) => {
     res.status(error.statuscode).json(error);
   }
 };
-
-
-
-
-
-
-//things to be done for the user sign in
-
-//   > take the data then check if there are not empty
-//   >next check email is proper email typeof is right or not
-//   >user token genreration
-//   >encrypt the Password
-//   >save the details in Db
-//   >then send the response with cookie of access token
 
 // const referer = req.headers.referer;
 //     console.log('Referer:', referer);

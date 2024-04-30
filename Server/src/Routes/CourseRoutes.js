@@ -31,7 +31,7 @@ router.route("/add").post(
 router.route("/remove/:CourseId").delete(RemoveCourse);
 
 router.route("/addFiles/:_id").put(
-  
+
   // upload.fields([
   //   {
   //     name : "StudyMaterial",

@@ -22,8 +22,8 @@ const CourseSchema = new Schema(
         },  
         StudyMaterial: [
             {
-                FileName : {type : String},
-                FileUrl : {type : String},
+             FileName : {type : String},
+             FileUrl : {type : String},
             }
         ],
         Level : {

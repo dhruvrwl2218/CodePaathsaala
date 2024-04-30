@@ -4,6 +4,7 @@ import cors from "cors"
 import userRouter from "./Routes/UserRoutes.js"
 import CourseRouter from "./Routes/CourseRoutes.js"
 import EnrollRouter from "./Routes/EnrollementRoutes.js"
+import UtilityRouter from './Routes/UtilityRoutes.js'
 const app = express();
 
 app.use(cors({
@@ -36,6 +37,6 @@ app.post('/',(req,res,)=>{
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/Course",CourseRouter)
 app.use("/api/v1/Enroll",EnrollRouter)
-
+app.use('/api/v1/Utility',UtilityRouter )
 
 export {app}

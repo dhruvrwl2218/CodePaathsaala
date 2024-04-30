@@ -3,11 +3,12 @@ import Header from './Components/Header'
 import Footer from './Components/Footer'
 import { Outlet } from 'react-router-dom'
 import "./index.css"
+
 const App = () => {
   return (
-    <div>
+    <div className='bg-black'>
        <Header/>
-      <Outlet/>
+      <Outlet />
       <Footer/>
     </div>
   )

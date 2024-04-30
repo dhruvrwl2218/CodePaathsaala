@@ -4,6 +4,9 @@ import { SiInstagram } from "react-icons/si";
 import { BsTelegram } from "react-icons/bs";
 import { RiTwitterXLine } from "react-icons/ri";
 import { CiLinkedin } from "react-icons/ci";
+import { BiLogoDiscordAlt } from "react-icons/bi";
+import { FaLongArrowAltRight } from "react-icons/fa";
+
 const Footer = () => {
   return (
     <div className="text-white bg-black pt-20 px-3 font-serif">
@@ -16,13 +19,19 @@ const Footer = () => {
             </span>{" "}
             your tech journey now
           </p>
+          <div className="w-full mx-2  flex">
           <label htmlFor="">
             <input
               type="email"
-              placeholder="Your Email"
-              className="w-full m-2 p-4 rounded-3xl text-start bg-indigo-100 md:w-full"
+              placeholder="Your Email "
+              className="w-96 m-1 p-4 rounded-l-3xl text-start bg-indigo-100  mr-0"
             />
           </label>
+          <button className="p-3 rounded-r-3xl m-1 ml-0 bg-indigo-100 border-l-2 border-gray-700">
+            <FaLongArrowAltRight className="text-2xl right-0 text-gray-600 "/>
+            </button>
+          
+          </div>
         </div>
         <div className="hidden md:block">
           <img
@@ -67,6 +76,7 @@ const Footer = () => {
         <div className="flex justify-around m-2">
           <SiInstagram className="text-4xl p-1" />
           <BsTelegram className="text-4xl p-1" />
+          <BiLogoDiscordAlt className="text-4xl p-1" />
           <RiTwitterXLine className="text-4xl p-1" />
           <CiLinkedin className="text-4xl" />
         </div>
@@ -111,3 +121,7 @@ export default Footer;
 //     <li>mail</li></ul>
 //   </div>
 // </div>
+
+
+// 
+// 

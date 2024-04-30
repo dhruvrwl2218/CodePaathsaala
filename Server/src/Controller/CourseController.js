@@ -10,31 +10,28 @@ export const AddCourse = async (req, res) => {
 
   const fields = [Name, CourseId, Description, Level, Duration, Price];
 
-  console.log(fields);
+  // console.log(fields);
 
   if (fields.some((field) => field.trim(" ") === "")) {
     throw new ApiError(505, "all the fields are nessccary!");
   }
-  console.log(req);
-  console.log(req.files);
+  // console.log(req);
+  // console.log(req.files);
+
   const ThumbnailPath = req.files?.Thumbnail[0]?.path;
-  console.log(ThumbnailPath);
+
+  // console.log(ThumbnailPath);
 
   if (!ThumbnailPath) {
     return res.status(409).json(new ApiResponse(409, "thumbnail needed!"));
   }
 
   const StudyMaterialPath = req.files?.StudyMaterial[0]?.path;
-  console.log(StudyMaterialPath);
+  // console.log(StudyMaterialPath);
 
   const Thumbnail = await uploadFilesCloudinary(ThumbnailPath);
   const StudyMaterial = await uploadFilesCloudinary(StudyMaterialPath);
 
-  console.log(Thumbnail.secure_url);
-  console.log("i love tits");
-  console.log(Thumbnail.original_filename);
-  console.log(StudyMaterial.secure_url);
-  console.log(StudyMaterial.original_filename);
 
   let CreatedCourse;
 
@@ -52,7 +49,7 @@ export const AddCourse = async (req, res) => {
         FileUrl: StudyMaterial.secure_url,
       },
     });
-    console.log(CreatedCourse);
+    // console.log(CreatedCourse);
   } catch (error) {
     console.log(error);
     // in catch dlt the cloudinary files then send the error response 
@@ -76,16 +73,16 @@ export const AddCourse = async (req, res) => {
 };
 
 export const RemoveCourse = async (req, res) => {
-  const {  CourseId } = req.params;
+  const { CourseId } = req.params;
 
-  console.log(CourseId)
+  // console.log(CourseId)
 try {
  
   const isCourseThere = await Course.findOne({_id : CourseId});
-  console.log(isCourseThere)
+  // console.log(isCourseThere)
 
     // here get the list of files first and remove them from the 
-  // cloundinary then proceed to dlt the course
+    // cloundinary then proceed to dlt the course
 
   if (!isCourseThere){
     throw new ApiError(505,{}, "no such Course is there ..")
@@ -100,13 +97,9 @@ try {
   return res.status(200).json(new ApiResponse(200, {result}, "course has been deleted"));
 
 } catch (error) {
-  console.log(error)
-  res.status(error.statuscode).json(new ApiResponse(error))
-  
+  // console.log(error)
+  res.status(error.statuscode).json(new ApiResponse(error)) 
 }
-   
-
-
 };
 
 export const GetCourses = async (req, res) => {
@@ -133,7 +126,7 @@ export const CoursesByLevel = async (req, res) => {
 
   const Courses = await Course.find({ Level: level });
 
-  console.log(Courses);
+  // console.log(Courses);
 
   if (Courses.length === 0) {
     return res
@@ -159,34 +152,33 @@ export const UploadFiles = async (req, res) => {
   // console.log(req.files);
   const studymaterial = req.files;
 
-  console.log(studymaterial);
+  // console.log(studymaterial);
   
   const url = [];
   try {
     for (const files of studymaterial) {
-      console.log(files.path);
+      // console.log(files.path);
 
-      const { secure_url: FileName, original_filename: FileUrl } =
+      const { secure_url: FileUrl, original_filename: FileName } =
         await uploadFilesCloudinary(files?.path);
       // console.log(individualUrl);
 
       url.push({ FileName, FileUrl });
     }
 
-    console.log("andar he apan filhal");
-    console.log(url);
+    // console.log("andar he apan filhal");
+    // console.log(url);
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     return res.status(error.statuscode?errorstatuscode:500)
     .json(new ApiResponse
       (error.statuscode?errorstatuscode:500,
         "error while file upload to cloud",
       error
-    
     ))
   }
-  console.log("aagye bahar");
-  console.log(url);
+  // console.log("aagye bahar");
+  // console.log(url);
 
   try {
     let updatedCourse = await Course.updateOne(
@@ -196,13 +188,13 @@ export const UploadFiles = async (req, res) => {
       }
     ).exec(); 
 
-    console.log(updatedCourse);
+    // console.log(updatedCourse);
  
     if (updatedCourse.nModified === 0) {
       // return res.status(500);
       throw new ApiError(500,{updatedCourse},"not able to update with new data ...")
     } else {
-      console.log("updated success")
+      // console.log("updated success")
       return res
         .status(200)
         .json(
@@ -214,7 +206,7 @@ export const UploadFiles = async (req, res) => {
         );
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(error.statuscode).json(error)
   }
 };
@@ -227,13 +219,13 @@ export const CourseByID = async (req, res) => {
 
     // console.log(CourseData)
     if (!CourseData) {
-      new ApiError(500, "no Course avilable with this id");
+       throw new ApiError(500, "no Course avilable with this id");
     }
     res
       .status(200)
       .json(new ApiResponse(200, CourseData, "got course details.."));
   } catch (error) {
-    new ApiError(500, "Error occured while fetching data", error);
+    res.status(error.statuscode?error.statuscode:500).json(new ApiResponse(500, "Error occured while fetching data", error));
   }
 };
 
@@ -242,17 +234,6 @@ export const updatedCourse = async (req, res) => {
   // const _id = req.body._id;
   const { updatedfields, _id } = req.body;
 
-  //   const _id = "65ebf7678d951c0d6db3e70c"
-  // const updatedfileds = {
-  //  Description : "Git chalaoge toh geet ki tarah contacts bana paaoge",
-  //  CourseId :"Git with Geet"
-  // }
-  console.log(updatedfields);
-  console.log(_id);
-  console.log(req.body);
-  // if(!_id || !updatedfileds){
-  //   return res.status(400).json(new ApiResponse(400,"Plz provide the Course id or fieds that needed to be updated"))
-  // }
   try {
     const Update = await Course.findByIdAndUpdate(
       _id,
@@ -262,8 +243,9 @@ export const updatedCourse = async (req, res) => {
 
     if (!Update) {
       return res
-        .status(400)
-        .json(new ApiResponse(400, "Error while updatation"));
+        // .status(400)
+        // .json(new ApiResponse(400, "Error while updatation"));
+        throw new ApiError(400,Update, "Error while updatation")
     }
 
     res
@@ -272,9 +254,11 @@ export const updatedCourse = async (req, res) => {
         new ApiResponse(200, Update, "Course Details updated successfully")
       );
   } catch (error) {
-    return res.status(400).json(new ApiResponse(500, "Updatation fails"));
+    return res.status(500).json(new ApiResponse(500, "Updatation fails",error));
   }
 };
+
+
 
 //   const { CourseId } = req.body;
 

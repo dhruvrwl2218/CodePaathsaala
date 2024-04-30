@@ -11,13 +11,13 @@ import { CourseEnrolledUser,
 const router = Router();
 
 
-router.route("/EnrollUser").post(VerifyUser,Enrollement);
+router.route("/EnrollUser").post(Enrollement);//VerifyUser,
 
 router.route('/EnrolledUser').get(GetEnrolledUser);
 
 router.route('/CourseEnrolledUser').get(CourseEnrolledUser);
 
-router.route('/EnrolledCourses/:User_id').get(VerifyUser,EnrolledUserCourses);
+router.route('/EnrolledCourses/:User_id').get(EnrolledUserCourses);  //VerifyUser,
 
 router.route('/stats').get(adminStats);
 
