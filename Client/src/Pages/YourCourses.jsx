@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
 import UserCourseDisplay from "../Components/UserCourseDisplay";
+import { toast } from "react-toastify";
 
 const YourCourses = () => {
   const User_id = useSelector((state) => state.Auth.User_id);
   const [fetchedCourse, setFetchedCourse] = useState();
-  const [coursecontent, setCourseContent] = useState(false);
-  
+  const dispatch = useDispatch();
+  // const [coursecontent, setCourseContent] = useState(false);
 
   useEffect(() => {
-    console.log(User_id);
 
     const fetchEnrolledCourses = async () => {
       try {
@@ -21,11 +21,31 @@ const YourCourses = () => {
             // headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        console.log(response?.data?.data);
         setFetchedCourse(response?.data?.data);
-       
       } catch (error) {
-        console.log(error);
+        // console.log(error.response.status);
+        if (error.response.status === 401) {
+          try {
+            const res = await axios.get(
+              "http://localhost:8000/api/v1/user/refreshTokens",
+              {
+                withCredentials: true,
+                // headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+            console.log(res);
+            if (res.status === 200) {
+              fetchEnrolledCourses();
+            }
+          } catch (error) {
+            console.log(error);
+            dispatch(logout());
+            toast.error("session out")      //'error.response.message'
+            Navigate("/Login");
+          }
+        } else {
+          toast.error("User session out"); // get the error message 
+        }
       }
     };
     fetchEnrolledCourses();
@@ -33,17 +53,16 @@ const YourCourses = () => {
 
   return (
     <div className="grid grid-cols-12 ">
-       <div className="flex flex-wrap justify-center bg-black col-span-8 col-start-3 max-md:col-span-12 max-md:col-start-1">
-     {fetchedCourse?.map((Course)=>(
-      <UserCourseDisplay props={Course}/>
-     ))}
-    </div>
+      <div className="flex flex-wrap justify-center bg-black col-span-8 col-start-3 max-md:col-span-12 max-md:col-start-1">
+        {fetchedCourse?.map((Course) => (
+          <UserCourseDisplay props={Course} />
+        ))}
+      </div>
     </div>
   );
 };
 
 export default YourCourses;
-
 
 // in this we would have 2 section or div where one is with all the description
 //  and all and other will contains the files of the courses if user clicks on the\

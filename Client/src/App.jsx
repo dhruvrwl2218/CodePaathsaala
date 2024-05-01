@@ -8,8 +8,8 @@ const App = () => {
   return (
     <div className='bg-black'>
        <Header/>
-      <Outlet />
-      <Footer/>
+        <Outlet />
+        <Footer/>
     </div>
   )
 }

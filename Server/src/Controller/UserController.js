@@ -277,12 +277,12 @@ export const RefreshAccessToken = async (req, res) => {
 
   if (!token) {
     res
-      .status(401)
+      .status(403)
       .json(
-        new ApiResponse(
-          401,
+        new ApiError(
+          403,
           {},
-          "refresh Token is not avilable anauthorized user!"
+          "refresh Token is not avilable unauthorized user!"
         )
       );
   }

@@ -6,13 +6,14 @@ import { User } from "../Models/UserModel.js";
 const VerifyUser = async (req,res,next) => {
  
  const EncodedAccessToken = req?.cookies?.accessToken;
- console.log(EncodedAccessToken)
- console.log(req?.headers?.cookies)
- console.log(req?.cookies) 
- console.log(req?.headers) 
+//  console.log(EncodedAccessToken)
+//  console.log(req?.headers?.cookies)
+//  console.log(req?.cookies) 
+//  console.log(req?.headers) 
  
  if(!EncodedAccessToken){
-    throw new ApiError(400,"NO Access Token")
+    // throw new ApiError(400,"NO Access Token");
+    return res.status(401).json(new ApiError(403,'Plz provide the acesstoken'))
  } 
  console.log(EncodedAccessToken)
 
@@ -31,6 +32,6 @@ const VerifyUser = async (req,res,next) => {
  req.user = user
  next()
 
-}
+} 
 
 export default VerifyUser;

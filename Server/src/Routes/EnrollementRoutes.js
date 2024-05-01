@@ -17,10 +17,10 @@ router.route('/EnrolledUser').get(GetEnrolledUser);
 
 router.route('/CourseEnrolledUser').get(CourseEnrolledUser);
 
-router.route('/EnrolledCourses/:User_id').get(EnrolledUserCourses);  //VerifyUser,
+router.route('/EnrolledCourses/:User_id').get(VerifyUser,EnrolledUserCourses);  //
 
 router.route('/stats').get(adminStats);
-
+ 
 router.route('/deleteEnrollment/:_id').delete(deleteEnrollment);
 
 export default router;   
