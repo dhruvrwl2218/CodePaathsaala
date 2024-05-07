@@ -56,9 +56,9 @@ const Header = () => {
         <li className="p-1 m-1 hover:text-lg hover:text-purple-950 md:mx-5">
           <NavLink to="/">Home</NavLink>
         </li>
-        <li className="p-1 m-1 hover:text-lg hover:text-purple-950 md:mx-5">
+        {/* <li className="p-1 m-1 hover:text-lg hover:text-purple-950 md:mx-5">
           <NavLink to="/About">About</NavLink>
-        </li>
+        </li> */}
         <li className="p-1 m-1 hover:text-lg hover:text-purple-950 md:mx-5">
           <NavLink to="/Courses">Courses</NavLink>
         </li>

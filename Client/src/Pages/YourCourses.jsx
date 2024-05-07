@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector ,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import UserCourseDisplay from "../Components/UserCourseDisplay";
 import { toast } from "react-toastify";
+import { logout } from "../store/AuthSlice";
 
 const YourCourses = () => {
   const User_id = useSelector((state) => state.Auth.User_id);
-  const [fetchedCourse, setFetchedCourse] = useState();
+  const [fetchedCourse, setFetchedCourse] = useState([]);
   const dispatch = useDispatch();
   // const [coursecontent, setCourseContent] = useState(false);
 
   useEffect(() => {
-
     const fetchEnrolledCourses = async () => {
       try {
         const response = await axios.get(
@@ -27,7 +27,7 @@ const YourCourses = () => {
         if (error.response.status === 401) {
           try {
             const res = await axios.get(
-              "http://localhost:8000/api/v1/user/refreshTokens",
+              `http://localhost:8000/api/v1/user/refreshTokens/${User_id}`,
               {
                 withCredentials: true,
                 // headers: { "Content-Type": "multipart/form-data" },
@@ -37,14 +37,14 @@ const YourCourses = () => {
             if (res.status === 200) {
               fetchEnrolledCourses();
             }
-          } catch (error) {
-            console.log(error);
+          } catch (err) {
+            console.log(err);
             dispatch(logout());
-            toast.error("session out")      //'error.response.message'
+            toast.error("session out"); //'error.response.message'
             Navigate("/Login");
           }
         } else {
-          toast.error("User session out"); // get the error message 
+          toast.error("User session out"); // get the error message
         }
       }
     };
@@ -54,9 +54,13 @@ const YourCourses = () => {
   return (
     <div className="grid grid-cols-12 ">
       <div className="flex flex-wrap justify-center bg-black col-span-8 col-start-3 max-md:col-span-12 max-md:col-start-1">
-        {fetchedCourse?.map((Course) => (
-          <UserCourseDisplay props={Course} />
-        ))}
+        {fetchedCourse.length <= 0 ? (
+          <div className="top-40 left-40">
+            <p>You haven't enrolled in any of the courses</p>
+          </div>
+        ) : (
+          fetchedCourse?.map((Course) => <UserCourseDisplay props={Course} />)
+        )}
       </div>
     </div>
   );

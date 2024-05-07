@@ -19,7 +19,7 @@ const userschema = new Schema({
         min : 8, 
     },
     Role :{
-        type : String,
+        type : String, 
         default : "User"
     }, 
     // PhoneNumber:{

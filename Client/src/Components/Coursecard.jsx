@@ -5,19 +5,17 @@ import axios from "axios";
 
 const Coursecard = ({
   Name,
-  Css = "",
-  
+  Css = "", 
   Level,
   Img,
   Duration,
   Price,
   Description,
+  _id,
+  checkout,
   ...props
 }) => {
   
-  const EnrollUser = async()=>{
-    console.log(enroll)
-  }
   return (
    <div className={`flex flex-col bg-black text-white gap-2 p-3 rounded-xl m-3  font-serif text-semibold ${Css}
    border border-slate-600 `}>
@@ -34,7 +32,7 @@ const Coursecard = ({
     {/* <div className="hidden sm:block">
       Description : {Description}
     </div> */}
-    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={EnrollUser}>Buy</button>
+    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={()=>checkout(Price,_id,)}>Buy</button>
     </div>
    
   )

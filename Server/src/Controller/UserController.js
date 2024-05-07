@@ -275,17 +275,24 @@ export const RefreshAccessToken = async (req, res) => {
 
   const token = req.cookies.refreshToken;
 
+  console.log(req.param._id)
+
   if (!token) {
+    const newuser = await User.updateOne( 
+      {_id : req.params._id},
+      {$set : {refreshToken : ""}}
+    )
+    console.log(newuser);
     res
       .status(403)
       .json(
-        new ApiError(
+        new ApiResponse(
           403,
           {},
           "refresh Token is not avilable unauthorized user!"
         )
       );
-  }
+  }else{
 
   console.log(token)
   
@@ -346,7 +353,7 @@ export const RefreshAccessToken = async (req, res) => {
     console.log(error)
     return res.status(error.status).json(new ApiResponse(error));
   }
-   
+}
 };
 
 export const deleteUser = async (req, res) => {

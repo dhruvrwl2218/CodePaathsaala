@@ -4,9 +4,12 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
+import { useNavigate } from "react-router";
+
 
 const Courses = () => {
   // Settings for React Slick carousel
+  const navigate = useNavigate();
 const settings = {
   dots: true,
   infinite: true,
@@ -52,9 +55,56 @@ const settings = {
     res();
   }, []);
 
-  {
-    /* {course?.map((cor)=>console.log(cor))} */
+  const checkout = async(amount,_id) => {
+    console.log(amount + _id)
+
+   const auth =  JSON.parse(localStorage.getItem('AuthState'));
+
+   console.log(auth.User_id);
+
+   if(!auth.islogin){
+    navigate('/Login')
+   }
+
+   const enrolldata = {User_id : _id , Course_id :_id};
+
+   localStorage.setItem('EnrollUser',JSON.stringify(enrolldata));
+
+   const {data:{key}} = await axios.get("http://localhost:8000/api/v1/Utility/getKey");
+
+   console.log(key)
+   
+   const {data :{order}} = await axios.post("http://localhost:8000/api/v1/Utility/checkout",{amount})
+
+   console.log(order)
+   console.log(window)
+
+   const options ={
+    key,
+    amount:order.amount,
+    currency:"INR",
+    name:"CodeCraft Academy",
+    description:"Razorpay tutorial",
+    image:"https://avatars.githubusercontent.com/u/162804817?s=400&v=4",
+    order_id:order.id,
+    callback_url:"http://localhost:8000/api/v1/Utility/paymentverification",
+    prefill:{
+      name:"sidharth sharma", 
+      email:"sidsharma112001@gmail.com",
+      contact:"1234567890"
+    },
+    notes:{
+      "address":"razorapy official"
+    },
+    theme:{
+      "color":"#3399cc"
+    }
+  };
+  const razor = new window.Razorpay(options);
+  razor.open();
+
   }
+  
   return (
     <>
       <div className="bg-black">
@@ -78,6 +128,8 @@ const settings = {
                     Css=""
                     Duration={beginner?.Duration}
                     Price = {beginner?.Price}
+                    _id = {beginner?._id}
+                    checkout = {checkout}
                   />
                 </div>
               ))}
@@ -114,6 +166,8 @@ const settings = {
                   Css=""
                   Duration={Duration}
                   Price = {Price}
+                  _id = {_id}
+                  checkout = {checkout}
                 />
               </div>
             ))}
@@ -148,6 +202,8 @@ const settings = {
                   Css=""
                   Duration={Duration}
                   Price = {Price}
+                  _id = {_id}
+                  checkout = {checkout}
                 />
               </div>
             ))}

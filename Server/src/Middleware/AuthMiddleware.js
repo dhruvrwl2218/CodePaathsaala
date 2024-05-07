@@ -13,7 +13,7 @@ const VerifyUser = async (req,res,next) => {
  
  if(!EncodedAccessToken){
     // throw new ApiError(400,"NO Access Token");
-    return res.status(401).json(new ApiError(403,'Plz provide the acesstoken'))
+    return res.status(401).json(new ApiError(401,'Plz provide the acesstoken'))
  } 
  console.log(EncodedAccessToken)
 

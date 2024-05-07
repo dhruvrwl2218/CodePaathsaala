@@ -5,11 +5,12 @@ import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 
 export const Enrollement = async (req, res) => {
-  const { email, courseId } = req.body;
+  const { User_id, courseId ,payment_id , order_id , signature} = req.body;
 
-  console.log(email, courseId);
+  console.log(User_id, courseId);
+  console.log(payment_id , order_id , signature);
 
-  if (email === "" || courseId === "") {
+  if (User_id === "" || courseId === "") {
     res.status(400).json(new ApiResponse(400, "Empty fields are not allowed"));
   }
   if (!email || !courseId) {
@@ -17,15 +18,16 @@ export const Enrollement = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ Email: email }, { _id: 1 });
+    const user = await User.findOne({_id : User_id});
 
     if (!user) {
-      // console.log("user not found witht his id");
+      // console.log("user not found witht his id"); 
       throw new ApiError(
         400,
         "Can't enroll as user with this email has not logged-in or registerd :("
       );
     }
+    
 
     const newEnrollment = new Enroll({ User: user._id, Course: courseId });
 
