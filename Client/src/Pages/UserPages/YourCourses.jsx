@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import UserCourseDisplay from "../Components/UserCourseDisplay";
+import {UserCourseDisplay} from "../../Components/User-Page-Components";
 import { toast } from "react-toastify";
-import { logout } from "../store/AuthSlice";
+import { logout } from "../../store/AuthSlice";
 
 const YourCourses = () => {
   const User_id = useSelector((state) => state.Auth.User_id);

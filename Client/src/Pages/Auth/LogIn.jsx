@@ -51,7 +51,7 @@ const LogIn = () => {
         // localStorage.setItem("refershToken", refreshToken);
         // console.log(user)
         // console.log(user._id)
-        // console.log(user.Role)
+        console.log(user.Role)
         dispatch(login( {User_id : user._id , Role : user.Role}));
         reset();
         navigate("/");

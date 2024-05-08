@@ -2,7 +2,8 @@ import React, { Children } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-// import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
+
+
 import {
   Route,
   createBrowserRouter,
@@ -10,39 +11,26 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-//Auth
-import LogIn from "./Pages/Auth/LogIn.jsx";
-import SignIn from "./Pages/Auth/SignIn.jsx";
-import ResetPassword from "./Pages/Auth/ResetPassword.jsx";
-import ForgotPass from "./Pages/Auth/ForgotPass.jsx";
-
-
-//Main pages with navigation
-import Home from "../src/Pages/Home.jsx";
-import About from "./Pages/About.jsx";
-import Courses from "./Pages/Courses.jsx";
-import YourCourses from "./Pages/YourCourses.jsx";
-
-
-import AdminRoutes from "./Components/Adminside/AdminRoutes.jsx";
-import RestrictedPath from "./Components/RestrictedPath.jsx";
-import EnrollementSucess from "./Components/EnrollementSucess.jsx";
-
 //for redux global states
 import { Provider } from "react-redux";
 import { store } from "./store/Store.js";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+//Auth
+import {LogIn,SignIn,ResetPassword,ForgotPass} from "./Pages/Auth";
+
+//Main pages with navigation
+import{ Home,About,Courses,YourCourses} from "./Pages/UserPages";
+
+
+import {AdminRoutes} from "./Components/Admin-Page-Components";
+import RestrictedPath from "./Components/Restricted-Page-Components/RestrictedPath.jsx";
+import {EnrollmentSucess} from "./Components/User-Page-Components";
 
 //Admin side components and pages
-import AddCourses from "./Components/Adminside/AddCourses.jsx";
-import CourseList from "./Components/Adminside/CourseList.jsx";
-import EditCourse from "./Components/Adminside/EditCourse.jsx";
-import AdminHome from "./Components/Adminside/AdminHome.jsx";
-import EnrolledUserList from "./Components/Adminside/EnrolledUserList.jsx";
+import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
 
 const publicRoutes = [
   <Route key="home" path="/" element={<Home />} />,
@@ -59,7 +47,7 @@ const authRoutes = [
 
 const privateUserRoutes = [
   <Route key="your-courses" path="/YourCourses" element={<YourCourses />} />,
-  <Route key="success" path="/Success" element={<EnrollementSucess />} />,
+  <Route key="success" path="/Success" element={<EnrollmentSucess />} />,
 ];
 
 const adminRoutes = [
@@ -87,6 +75,30 @@ const router = createBrowserRouter(
     </Route>
   )
 );
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <ToastContainer
+        position="top-right"
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        autoClose={5000}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition:Bounce
+      />
+      <RouterProvider router={router} />
+    </Provider>
+  </React.StrictMode>
+);
+
+
 
 
 // const router = createBrowserRouter(
@@ -122,26 +134,6 @@ const router = createBrowserRouter(
 //   )
 // );
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ToastContainer
-        position="top-right"
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        autoClose={5000}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition:Bounce
-      />
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
-);
 
 {
   /* <Router>

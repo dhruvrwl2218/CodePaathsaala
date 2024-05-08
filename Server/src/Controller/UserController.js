@@ -323,6 +323,9 @@ export const RefreshAccessToken = async (req, res) => {
   console.log( "aur ji ye lo " + token)
 
   if (token !== user?.refreshToken) {
+    // there could be 2 case if someone have old refresh token and trying to get in via
+    // that or there could be bug by which your refresh token got refreshed but not got updated in the db 
+    //**(errors here check and test needed)
     throw new ApiError(400, {}, "Refresh token does'nt matches with user has Provided");
    }
 
@@ -351,7 +354,7 @@ export const RefreshAccessToken = async (req, res) => {
 
   } catch (error) {
     console.log(error)
-    return res.status(error.status).json(new ApiResponse(error));
+    return res.status(error.statuscode).json(new ApiResponse(error));
   }
 }
 };

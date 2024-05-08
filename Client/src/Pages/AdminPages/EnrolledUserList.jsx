@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
-import Pagination from "./Pagination";
-import CourseUserDeletion from "./Pop-ups/CourseUserDeletion";
+import {Pagination} from "../../Components/Admin-Page-Components";
+import {CourseUserDeletion} from "../../Components/Admin-Page-Components/Pop-ups";
 import { toast } from "react-toastify";
 const EnrolledUserList =  () => {
 

@@ -1,5 +1,4 @@
 import React from "react";
-import '../index.css'
 // import {loadStripe} from "@stripe/stripe-js"
 import axios from "axios";
 

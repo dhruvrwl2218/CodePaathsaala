@@ -6,14 +6,12 @@ const EnrollmentSucess = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect =
-    (() => {
+  useEffect(() => {
       const loc = new URLSearchParams(location.search);
       const paymentRef = loc.get("refrence");
 
       handlepaymentSuccess(paymentRef);
-    },
-    [location.search]);
+    },[location.search]);
 
   const handlepaymentSuccess = async (paymentRef) => {
     const {} = paymentRef;
@@ -35,6 +33,7 @@ const EnrollmentSucess = () => {
       toast.error("Issue while enrolling ,transaction has been completed,,");
     }
   };
+
   return <div className="">
     <div className="rounded-full w-32 bg-green-800">
         <p className="text-2xl text-white">Success</p>

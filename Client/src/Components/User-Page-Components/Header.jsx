@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { islogin, logout } from "../store/AuthSlice";
+import { islogin, logout } from "../../store/AuthSlice";
 import { IoReorderThreeOutline } from "react-icons/io5";
 
 const Header = () => {

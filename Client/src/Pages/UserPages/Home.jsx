@@ -1,5 +1,5 @@
 import React,{useRef,useEffect} from "react";
-import Coursecard from "../Components/Coursecard";
+import {Coursecard } from "../../Components/User-Page-Components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -81,7 +81,7 @@ const Home = () => {
           <p className="m-5 p-2 text-3xl w-full font-semibold" >Ongoing Live Batches</p></div>
         <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">  
         <Slider  {...settings} ref={sliderRef}>
-        <Coursecard 
+        <Coursecard  
         Name= 'Python'
         Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
         Description="With this setup, the Coursecard component will receive the
@@ -139,7 +139,7 @@ const Home = () => {
         Css="w-96 mx-auto"
         Duration = "3 Month"
         />
-        <Coursecard 
+        <Coursecard
         Name= 'Python'
         Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
         Description="With this setup, the Coursecard component will receive the
@@ -149,7 +149,7 @@ const Home = () => {
         Level="Begginer"
         Css="w-96 mx-auto"
         Duration = "3 Month"
-        ></Coursecard>
+        ></Coursecard >
         <Coursecard 
         Name= 'Python'
         Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'

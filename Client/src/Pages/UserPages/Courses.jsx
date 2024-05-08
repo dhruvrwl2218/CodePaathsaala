@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Coursecard from "../Components/Coursecard";
+import {Coursecard} from "../../Components/User-Page-Components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

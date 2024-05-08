@@ -4,8 +4,8 @@ import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
 import {useNavigate} from "react-router-dom";
-import CourseUserDeletion from "./Pop-ups/CourseUserDeletion";
-import AddFiles from "./Pop-ups/AddFiles";
+import {CourseUserDeletion , AddFiles } from "../../Components/Admin-Page-Components/Pop-ups";
+
 
 
 const CourseList = () => {

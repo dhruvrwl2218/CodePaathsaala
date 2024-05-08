@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 import { useSelector } from 'react-redux'
-import LogIn from '../Pages/Auth/LogIn';
+import{ LogIn } from '../../Pages/Auth';
 // import { useState } from 'react';
 
 const RestrictedPath = () => {
