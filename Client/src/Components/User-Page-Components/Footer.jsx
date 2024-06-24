@@ -40,11 +40,13 @@ const Footer = () => {
           />
         </div>
       </div>
-      <div className="flex flex-wrap mt-8 justify-center md:justify-around">
+      <div className="flex flex-wrap justify-center md:justify-around ">
         <div className="">
           <img
-            className="rounded-full w-48 "
-            src="https://tse2.mm.bing.net/th?id=OIP.0VFhxtUhtC1xJMqe4nmSBgHaE8&pid=Api&P=0&h=180g"
+            className="rounded-full w-44 "
+            // src="https://tse2.mm.bing.net/th?id=OIP.0VFhxtUhtC1xJMqe4nmSBgHaE8&pid=Api&P=0&h=180g"
+           
+           src="Nerd Niche (1).gif"
             alt="logo"
           />
           <p className="w-60 mt-5 text-md text-indigo-300 md:w-full ">
@@ -71,7 +73,7 @@ const Footer = () => {
           Let's Chat!
         </p>
         <a className="w-full text-center text-md" href="#">
-          d@gmail.com
+          codePathsaala.com
         </a>
         <div className="flex justify-around m-2">
           <SiInstagram className="text-4xl p-1" />
@@ -80,7 +82,7 @@ const Footer = () => {
           <RiTwitterXLine className="text-4xl p-1" />
           <CiLinkedin className="text-4xl" />
         </div>
-        <div className="w-full text-center p-1 mt-2 text-sm">Copyright © 2024 Sorting d Technologies Pvt Ltd. All Rights Reserved.</div>
+        <div className="w-full text-center p-1 mt-2 text-sm">Copyright © 2024 Sorting Code Pathsaala Pvt Ltd. All Rights Reserved.</div>
       </div>
     </div>
   );
@@ -88,40 +90,3 @@ const Footer = () => {
 
 export default Footer;
 
-// <div className="grid gap-2 grid-cols-12 bg-black text-white" >
-//   <div className="col-start-2 col-span-6">
-//     <h2 className="text-emerald-700">Start Your Journey Here</h2>
-//     <h2>Get Your Dreams Here.</h2>
-//     <Link><button className="w-15 border-b-2 px-5">Sign In </button></Link>
-//   </div>
-//   <div className=" col-span-4">
-//      <img src="https://images.pexels.com/photos/5473302/pexels-photo-5473302.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-//       alt="img"  className="rounded-full w-20"/></div>
-//   <div className="col-start-2 col-span-3">
-//     <Logo className = {`w-20 rounded-full`}/>
-//     <p>Tamso Maa Jyoti Gamaye</p></div>
-
-//   <ul className=" col-span-2">
-//   <li>About</li>
-//   <li>Alumunai's</li>
-//   <li>Docs</li>
-//   </ul>
-
-//   <ul className=" col-span-3">
-//   <li>Query's and Grivences</li>
-//   <li>Terms and Conditions</li>
-//   <li>Cookies Policy</li>
-//   </ul>
-//   <div className=" col-span-2">
-//     <p>Let's Connect!</p>
-//     <ul>
-//       <li>ig</li>
-//     <li>utube</li>
-//     <li>x/twitter</li>
-//     <li>mail</li></ul>
-//   </div>
-// </div>
-
-
-// 
-// 

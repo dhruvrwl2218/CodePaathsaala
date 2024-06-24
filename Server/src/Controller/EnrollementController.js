@@ -5,16 +5,17 @@ import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 
 export const Enrollement = async (req, res) => {
-  const { User_id, courseId ,payment_id , order_id , signature} = req.body;
+  console.log(req.body)
+  const { User_id, Course_id } = req.body;  //,payment_id , order_id , signature   
+ 
+  console.log(User_id, Course_id);
+  // console.log(payment_id , order_id , signature);
 
-  console.log(User_id, courseId);
-  console.log(payment_id , order_id , signature);
-
-  if (User_id === "" || courseId === "") {
-    res.status(400).json(new ApiResponse(400, "Empty fields are not allowed"));
+  if (User_id === "" || Course_id === "") {
+   return  res.status(400).json(new ApiResponse(400, "Empty fields are not allowed"));
   }
-  if (!email || !courseId) {
-    res.status(400).json(new ApiResponse(400, "fields values is not there"));
+  if (!User_id || !Course_id) {
+    return res.status(400).json(new ApiResponse(400, "fields values is not there"));
   }
 
   try {
@@ -24,12 +25,12 @@ export const Enrollement = async (req, res) => {
       // console.log("user not found witht his id"); 
       throw new ApiError(
         400,
-        "Can't enroll as user with this email has not logged-in or registerd :("
+        "Not able to find the user in Db :("
       );
     }
-    
-
-    const newEnrollment = new Enroll({ User: user._id, Course: courseId });
+  //here you can also check wheather there is any user earlier enrolled
+  // for the same course then give the response with the already enrolled .
+    const newEnrollment = new Enroll({ User: user._id, Course: Course_id });
 
     const Enrolled = await newEnrollment.save();
 

@@ -40,9 +40,9 @@ const Header = () => {
   };
   return (
     <nav className="bg-black text-white flex gap-4 h-20 shadow-md shadow-indigo-400 z-1 sticky">
-      <div className="m-1  border-x rounded-lg lg:mx-80 ">
+      <div className=" rounded-lg lg:mx-72 mx-80">
         <Link to="/">
-          <Logo className={`px-2 w-20 rounded-2xl `} />
+          <Logo className={` w-full pt-5 `} />
         </Link>
       </div>
 
@@ -83,7 +83,7 @@ const Header = () => {
           <p
             className={`${
               !isLogin
-                ? `w-20 mt-3 p-2 text-center mx-40 rounded-lg border-x  bg--00`
+                ? `w-20 mt-3 p-2 text-center mx-40 rounded-lg  bg--00`
                 : `hidden`
             }`}
           >
@@ -92,7 +92,7 @@ const Header = () => {
         </Link>
         <button
           className={`${
-            isLogin ? `w-20 mt-3 p-2 mx-40 rounded-lg border-x` : `hidden`
+            isLogin ? `w-20 mt-3 p-2 mx-40 rounded-lg` : `hidden`
           }`}
           onClick={LogOut}
         >

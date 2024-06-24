@@ -19,6 +19,7 @@ const VideoViewer = ({VideoUrl,CloseFiles}) => {
     height= "100%"
     controls = {true} 
     />
+    
     </div>
   )
  } catch (error) {

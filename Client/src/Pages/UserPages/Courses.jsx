@@ -55,55 +55,76 @@ const settings = {
     res();
   }, []);
 
-  const checkout = async(amount,_id) => {
-    console.log(amount + _id)
+  // const checkout = async(amount,_id) => {
+  //   console.log(amount + _id)
 
-   const auth =  JSON.parse(localStorage.getItem('AuthState'));
+  //  const auth =  JSON.parse(localStorage.getItem('AuthState'));
+
+  //  console.log(auth.User_id);
+
+  //  if(!auth.islogin){
+  //   navigate('/Login')
+  //  }
+
+  //  const enrolldata = {User_id : _id , Course_id :_id};
+
+  //  localStorage.setItem('EnrollUser',JSON.stringify(enrolldata));
+
+  //  const {data:{key}} = await axios.get("http://localhost:8000/api/v1/Utility/getKey");
+
+  //  console.log(key)
+   
+  //  const {data :{order}} = await axios.post("http://localhost:8000/api/v1/Utility/checkout",{amount})
+
+  //  console.log(order)
+  //  console.log(window)
+
+  //  const options ={
+  //   key,
+  //   amount:order.amount,
+  //   currency:"INR",
+  //   name:"CodeCraft Academy",
+  //   description:"Razorpay tutorial",
+  //   image:"https://avatars.githubusercontent.com/u/162804817?s=400&v=4",
+  //   order_id:order.id,
+  //   callback_url:"http://localhost:8000/api/v1/Utility/paymentverification",
+  //   prefill:{
+  //     name:"sidharth sharma", 
+  //     email:"sidsharma112001@gmail.com",
+  //     contact:"1234567890"
+  //   },
+  //   notes:{
+  //     "address":"razorapy official"
+  //   },
+  //   theme:{
+  //     "color":"#3399cc"
+  //   }
+  // };
+  // const razor = new window.Razorpay(options);
+  // razor.open();
+
+  // }
+
+  const checkout = async(Course_id)=>{
+    const auth =  JSON.parse(localStorage.getItem('AuthState'));
 
    console.log(auth.User_id);
+   console.log(Course_id);
 
    if(!auth.islogin){
     navigate('/Login')
    }
-
-   const enrolldata = {User_id : _id , Course_id :_id};
-
-   localStorage.setItem('EnrollUser',JSON.stringify(enrolldata));
-
-   const {data:{key}} = await axios.get("http://localhost:8000/api/v1/Utility/getKey");
-
-   console.log(key)
-   
-   const {data :{order}} = await axios.post("http://localhost:8000/api/v1/Utility/checkout",{amount})
-
-   console.log(order)
-   console.log(window)
-
-   const options ={
-    key,
-    amount:order.amount,
-    currency:"INR",
-    name:"CodeCraft Academy",
-    description:"Razorpay tutorial",
-    image:"https://avatars.githubusercontent.com/u/162804817?s=400&v=4",
-    order_id:order.id,
-    callback_url:"http://localhost:8000/api/v1/Utility/paymentverification",
-    prefill:{
-      name:"sidharth sharma", 
-      email:"sidsharma112001@gmail.com",
-      contact:"1234567890"
+  
+   const response = await axios.post(
+    "http://localhost:8000/api/v1/Enroll/EnrollUser",{
+      User_id : auth.User_id, 
+      Course_id : Course_id
     },
-    notes:{
-      "address":"razorapy official"
-    },
-    theme:{
-      "color":"#3399cc"
-    }
-  };
-  const razor = new window.Razorpay(options);
-  razor.open();
+    { withCredentials: true }
+  );
 
   }
+
   
   return (
     <>

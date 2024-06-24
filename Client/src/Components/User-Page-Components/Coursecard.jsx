@@ -19,7 +19,7 @@ const Coursecard = ({
    <div className={`flex flex-col bg-black text-white gap-2 p-3 rounded-xl m-3  font-serif text-semibold ${Css}
    border border-slate-600 `}>
     <div>
-      <img src={Img} alt="thumbnail" className="rounded-xl w-full border-indigo-100" />
+      <img src={Img} alt="thumbnail" className="rounded-xl w-full border-indigo-100 h-60" />
     </div>
     <div>
       <p className="text-2xl p-2 text-indigo-400 font-semibold">{Name} ({Level})</p>
@@ -28,10 +28,10 @@ const Coursecard = ({
       <p >Duration : {Duration}</p>
       <p >₹ {Price?Price:1000}</p>
     </div>
-    {/* <div className="hidden sm:block">
+    {/* <div className="hidden sm:block">w
       Description : {Description}
     </div> */}
-    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={()=>checkout(Price,_id,)}>Buy</button>
+    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={()=>checkout(_id)}>Buy</button>
     </div>
    
   )

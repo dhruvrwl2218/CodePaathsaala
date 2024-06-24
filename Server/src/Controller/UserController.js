@@ -275,7 +275,7 @@ export const RefreshAccessToken = async (req, res) => {
 
   const token = req.cookies.refreshToken;
 
-  console.log(req.param._id)
+  // console.log("param -id " + req.param._id)
 
   if (!token) {
     const newuser = await User.updateOne( 
@@ -294,17 +294,17 @@ export const RefreshAccessToken = async (req, res) => {
       );
   }else{
 
-  console.log(token)
+  console.log("token" + token)
   
   try {
   
   const decodedrefreshToken =  jwt.verify(token, process.env.REFRESH_TOKEN_KEY);
 
-  console.log(decodedrefreshToken);
+  console.log("decoded ..." + decodedrefreshToken);
 
   const { _id } = decodedrefreshToken;
 
-  console.log(_id);
+  console.log( "DEc ID"  + _id);
 
   if (!_id) {
      throw new ApiError(400, {}, "Refresh token is not valid !!");
@@ -322,16 +322,17 @@ export const RefreshAccessToken = async (req, res) => {
 
   console.log( "aur ji ye lo " + token)
 
-  if (token !== user?.refreshToken) {
-    // there could be 2 case if someone have old refresh token and trying to get in via
+  // there could be 2 case if someone have old refresh token and trying to get in via
     // that or there could be bug by which your refresh token got refreshed but not got updated in the db 
     //**(errors here check and test needed)
+  if (token !== user?.refreshToken) {
     throw new ApiError(400, {}, "Refresh token does'nt matches with user has Provided");
    }
 
   const { accessToken, refreshToken } = await GenerateAccessAndRefreshToken(user);
 
-  console.log(accessToken, refreshToken);
+  console.log("AF" + accessToken);
+  console.log( "RF" + refreshToken)
 
   const options = {
     // secure : true,

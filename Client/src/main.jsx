@@ -22,7 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {LogIn,SignIn,ResetPassword,ForgotPass} from "./Pages/Auth";
 
 //Main pages with navigation
-import{ Home,About,Courses,YourCourses} from "./Pages/UserPages";
+import{ Home,About,Courses,YourCourses,Issue} from "./Pages/UserPages";
 
 
 import {AdminRoutes} from "./Components/Admin-Page-Components";
@@ -32,10 +32,19 @@ import {EnrollmentSucess} from "./Components/User-Page-Components";
 //Admin side components and pages
 import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
 
+// import { pdfjs } from 'react-pdf';
+
+
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   'pdfjs-dist/build/pdf.worker.min.js',
+//   import.meta.url,
+// ).toString();
+
 const publicRoutes = [
   <Route key="home" path="/" element={<Home />} />,
   <Route key="about" path="/About" element={<About />} />,
   <Route key="courses" path="/Courses" element={<Courses />} />,
+  <Route key= "issuePage" path="/IssuePage" element={<Issue/>}/>,
 ];
 
 const authRoutes = [
@@ -78,7 +87,7 @@ const router = createBrowserRouter(
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <ToastContainer
         position="top-right"
@@ -95,7 +104,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       />
       <RouterProvider router={router} />
     </Provider>
-  </React.StrictMode>
+  //  {/* </React.StrictMode>  */}
 );
 
 

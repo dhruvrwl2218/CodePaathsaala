@@ -10,7 +10,6 @@ import { CourseEnrolledUser,
 
 const router = Router();
 
-
 router.route("/EnrollUser").post(Enrollement);//VerifyUser,
 
 router.route('/EnrolledUser').get(GetEnrolledUser);

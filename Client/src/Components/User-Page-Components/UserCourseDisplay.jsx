@@ -3,26 +3,19 @@ import { RiFolderVideoLine } from "react-icons/ri";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import VideoViewer from './VideoViewer';
 import PdfViewer from './PdfViewer';
-import { pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
 
 import { FaFilePdf } from "react-icons/fa6";
 
 
 const UserCourseDisplay = ({props}) => {
-  
-  
-
+  console.log("here are yor props")
+  console.log(props)
   const[coursecontent,setCourseContent] = useState(false);
-  const [filesPage,setFilesPage] = useState(false);
+  const[filesPage,setFilesPage] = useState(false);
   const[fileDetail,setFileDetail] = useState();
 
-    // console.log("same-diff")
-    // console.log(props)
+  
   const fileExtension = (url) =>{
     console.log(url)
     const URL = url.toLowerCase();
@@ -72,7 +65,7 @@ const UserCourseDisplay = ({props}) => {
           <span className="p-1 font-semibold text-lg">Language:</span>
           English
         </p>
-        <p><span className="p-1 font-semibold text-lg">Duration :</span>{props.Duration}</p>
+        <p><span className="p-1 font-semibold text-lg">Duration :</span>{props?.Duration}</p>
       </div>
       <div className="shadow-sm shadow-indigo-400 p-5 m-5 text-center">
         <button
@@ -94,7 +87,7 @@ const UserCourseDisplay = ({props}) => {
               key={Content.FileUrl}
               onClick={()=> Openfiles(Content.FileUrl)}
             >
-              <div className='flex  justify-between '>
+              <div className='flex  justify-between'>
               <div>{fileExtension(Content.FileUrl) === 'mp4'?
               <RiFolderVideoLine className='size-8 mx-2 pt-2 mr-12 '/>:
               <FaFilePdf className='size-8 mx-2 pt-2 mr-12 '/>}
@@ -115,7 +108,7 @@ const UserCourseDisplay = ({props}) => {
         className="p-2 m-2"
       />
       <p className="p-2 my-2 max-sm:hidden">
-        <span className="p-1 font-semibold text-lg w-full">Discription:</span>
+        <span className="p-1 font-semibold text-lg w-full">Description:</span>
         {props?.Description}
       </p>
     </div>

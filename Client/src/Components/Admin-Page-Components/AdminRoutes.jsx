@@ -8,11 +8,12 @@ import { HiMenu } from "react-icons/hi";
 import { PiUsersThreeFill } from "react-icons/pi";
 import { useNavigate } from "react-router";
 
+
 const AdminRoutes = () => {
   const Role = useSelector((state) => state.Auth.Role);
-  console.log(Role);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+ 
   return (
     <div className="bg-black">
       {Role === "Admin"?(

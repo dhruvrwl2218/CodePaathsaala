@@ -73,6 +73,11 @@ export const AddCourse = async (req, res) => {
 };
 
 export const RemoveCourse = async (req, res) => {
+  // In this controller add the functionality to dlt the
+  // files from the cloudinary and all the enrollments made in that 
+  //course so that it does'nt reflect the errors on the client-side..
+  //(just for edge cases like it happens tht user have enrolled in the course and you just dlt it like tht)
+
   const { CourseId } = req.params;
 
   // console.log(CourseId)
@@ -80,9 +85,6 @@ try {
  
   const isCourseThere = await Course.findOne({_id : CourseId});
   // console.log(isCourseThere)
-
-    // here get the list of files first and remove them from the 
-    // cloundinary then proceed to dlt the course
 
   if (!isCourseThere){
     throw new ApiError(505,{}, "no such Course is there ..")
@@ -359,3 +361,4 @@ export const updatedCourse = async (req, res) => {
 //   })
 //   res.json({id:session.id})
 // }
+ 

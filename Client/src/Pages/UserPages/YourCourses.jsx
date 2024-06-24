@@ -27,7 +27,7 @@ const YourCourses = () => {
         if (error.response.status === 401) {
           try {
             const res = await axios.get(
-              `http://localhost:8000/api/v1/user/refreshTokens/${User_id}`,
+              `http://localhost:8000/api/v1/user/refreshTokens`,
               {
                 withCredentials: true,
                 // headers: { "Content-Type": "multipart/form-data" },

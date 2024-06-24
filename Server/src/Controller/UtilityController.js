@@ -86,3 +86,7 @@ export const paymentverification = async (req, res) => {
     res.status(400).json(new ApiError(400,"error while making the transaction"))
   }
 };
+
+// export const checkToken = (_,res) =>{
+//     res.status(200).josn("you got the token go-ahead")
+// }

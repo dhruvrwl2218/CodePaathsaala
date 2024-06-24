@@ -25,7 +25,7 @@ router.route("/forgot-Password").post(ForgotPassword)
 
 router.route("/reset-Password/:token").post(ResetPassword)
 
-router.route("/refreshTokens/:_id").get(RefreshAccessToken);
+router.route("/refreshTokens/").get(RefreshAccessToken);
 
 router.route("/removeUser/:_id").delete(deleteUser);
 

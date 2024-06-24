@@ -1,52 +1,72 @@
-import React,{useRef,useEffect} from "react";
-import {Coursecard } from "../../Components/User-Page-Components";
+import React, { useRef, useEffect,useState } from "react";
+import { Coursecard } from "../../Components/User-Page-Components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Instructor from "../../Components/User-Page-Components/Instructor";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const sliderRef = useRef(null);
-
+  const [course, setCourse] = useState(null);
   useEffect(() => {
-      const interval = setInterval(() => {
-          if (sliderRef.current) {
-              sliderRef.current.slickNext();
-          }
-      }, 3000); // Change the interval as needed (in milliseconds)
+    const res = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/Course/AllCourses",
+          { withCredentials: true }
+        );
+        // console.log(response)
+        setCourse(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-      return () => clearInterval(interval);
+    res();
   }, []);
-  
+
+
+   useEffect(() => {
+    const interval = setInterval(() => {
+      if (sliderRef.current) {
+        sliderRef.current.slickNext();
+      }
+    }, 3000); // Change the interval as needed (in milliseconds)
+
+    return () => clearInterval(interval);
+  }, []);
 
   const settings = {
-      dots: false,
-      arrows: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 2,
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 3000, // Adjust the autoplay speed (in milliseconds)
-      responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 1,
-          },
+    dots: false,
+    arrows: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000, // Adjust the autoplay speed (in milliseconds)
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
         },
-        {
-          breakpoint: 640,
-          settings: {
-            slidesToShow: 1,
-          },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
         },
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 2,
-          },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
         },
-      ],
+      },
+    ],
   };
 
   return (
@@ -56,121 +76,83 @@ const Home = () => {
         <div className=" bg-black p-16 mt-20 font-serif text-indigo-100 border-x rounded-lg hover:shadow-md hover:shadow-indigo-400">
           <p className="text-5xl font-bold md:text-8xl">
             Navigate the Nexus of{" "}
-            <span className="block text-indigo-600">Technology</span>{" "}
+            <span className="block text-indigo-400">Technology</span>{" "}
             <span className="text-xl block my-3 p-1">
               Ignite Your Future with Our Exclusive Courses!
             </span>
           </p>
           <div className="flex mt-24 mb-5 justify-center ">
-            <button className="p-3 mx-5 font-semi-bold  text-lg rounded-xl border-x border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900">
-              View Courses
-            </button>
+            <Link to={'/Courses'}>
+             <p className="p-3 mx-5 font-semi-bold  text-lg rounded-xl border-x border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900">View Courses</p>
+             </Link>
             <a
               href="#"
               className="p-3 mx-5 text-lg font-semi-bold rounded-xl  border border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900"
             >
-              View Updates
+              View Updates  
             </a>
           </div>
         </div>
       </div>
-
-      //Live Lectures
+      //Live Lectures this section will be made dynamic when live lecture
+      functionality will be added in this application
       <div className="flex flex-col justify-center my-20 p-5 text-white lg:mx-80   ">
         <div className=" flex flex-row justify-center mx-auto text-indigo-300">
-          <p className="m-5 p-2 text-3xl w-full font-semibold" >Ongoing Live Batches</p></div>
-        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">  
-        <Slider  {...settings} ref={sliderRef}>
-        <Coursecard  
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        />
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        ></Coursecard>
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        ></Coursecard>
-       </Slider>
-       
+          <p className="m-5 p-2 text-3xl w-full font-semibold">
+            Ongoing Live Batches
+          </p>
+        </div>
+        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">
+        <Slider {...settings} ref={sliderRef}>
+          {
+              course && course.filter((itmes)=>itmes.Name.includes('live')).map((liveCourse)=>(
+                <Coursecard
+                Name={liveCourse.Name}
+                Img={liveCourse.Thumbnail}
+                Description = {liveCourse.Description}
+                Level={liveCourse.Level}
+                Css="w-96 mx-auto"
+                Duration={liveCourse.Duration}
+                Price = {liveCourse.Price}
+                _id = {liveCourse._id}
+              />
+              ))
+              
+          }
+          </Slider>
         </div>
       </div>
-
       <div className="grid grid-cols-12 p-2 m-2">
-          <hr className="col-start-3 col-span-8 m-8" />
-        </div>
-     //for recorded lectures 
-     <div className="flex flex-col justify-center my-20 p-5 text-white lg:mx-80   ">
+        <hr className="col-start-3 col-span-8 m-8" />
+      </div>
+      //for recorded lectures
+      <div className="flex flex-col justify-center my-20 p-5 text-white lg:mx-80   ">
         <div className=" flex flex-row justify-center mx-auto text-indigo-300">
-          <p className="m-5 p-2 text-3xl w-full font-semibold" >Recorded Lectures</p></div>
-        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">  
-        <Slider  {...settings} ref={sliderRef}>
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        />
-        <Coursecard
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        ></Coursecard >
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Description="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css="w-96 mx-auto"
-        Duration = "3 Month"
-        ></Coursecard>
-       </Slider>
-       
+          <p className="m-5 p-2 text-3xl w-full font-semibold">
+            Recorded Lectures
+          </p>
+        </div>
+        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">
+          <Slider {...settings} ref={sliderRef}>
+            {course && course.filter((itmes) => !itmes.Name.includes('live')).map((recorded) => (
+              <Coursecard
+                Name={recorded.Name}
+                Img={recorded.Thumbnail}
+                Description = {recorded.Description}
+                Level={recorded.Level}
+                Css="w-96 mx-auto"
+                Duration={recorded.Duration}
+                Price = {recorded.Price}
+                _id = {recorded._id}
+              />
+            ))}
+          </Slider>
         </div>
       </div>
-
       <div className="grid grid-cols-12 p-2 m-2">
-          <hr className="col-start-3 col-span-8 m-8" />
-        </div>
-
-      //features 
+        <hr className="col-start-3 col-span-8 m-8" />
+      </div>
+      //features
       <div
         className="w-full font-serif shadow-sm rounded-2xl hover:shadow-xl shadow-yellow-100  text-xl flex-col justify-center p-5 mt-24 text-white  border-y-slate-50
         md:flex  
@@ -223,76 +205,14 @@ const Home = () => {
           </p>
         </div>
       </div>
+
+      //tutors and mentors  //flex flex-wrap justify-center
+      <div className=" my-20 text-white p-5 bg-neutral-800 lg:mx-80">
+        <p className="p-5 text-4xl font-bold text-indigo-500 text-center">Our Instructor</p>
+        <Instructor />
+      </div> 
     </div>
   );
 };
 
 export default Home;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{
-  /* <div className="grid grid-cols-12 p-2 "                                                                 
-        <hr className="col-start-3 col-span-9 "/>
-      </div>
-      <section className="grid grid-cols-12" id='TopCourses'>
-        <div className="m-2 text-3xl p-2 col-start-3 col-span-6 font-semibold underline ">Top Courses</div>
-        <div className='col-start-3 col-span-3 align-middle justify-center p-5'>
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Discription="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css=""
-        Duration = "3 Month"
-        >
-        </div>
-        <div className='col-start-6 col-span-3 align-middle justify-center p-5'>
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Discription="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css=""
-        Duration = "3 Month"
-        />
-        </div>
-        <div className='col-start-9 col-span-3 align-middle justify-center p-5'>
-        <Coursecard 
-        Name= 'Python'
-        Img='https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png'
-        Discription="With this setup, the Coursecard component will receive the
-         props Name, Discription, Level, and Img from the Courses 
-        component and render them accordingly. Make sure to adjust 
-        the props and values according to your actual data and requirements."
-        Level="Begginer"
-        Css=""
-        Duration = "3 Month"
-        />
-        </div>
-        
-      </section>
-      <div className="grid grid-cols-12 p-2 m-2" >
-        <hr className="col-start-3 col-span-9 "/>
-      </div>
-      */
-}
