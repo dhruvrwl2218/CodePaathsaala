@@ -8,7 +8,8 @@
 // FORGOT_PASS_TOKEN_KEY =
 
 
-// EMAIL = 
+// EMAIL = "this email address will help you send the varification msg to the user in case of there pass =word change"
+// >>>> sign in and log in with this email address to see the admin functionality.
 // PASSWORD = 
 
 

@@ -76,7 +76,7 @@ const Home = () => {
         <div className=" bg-black p-16 mt-20 font-serif text-indigo-100 border-x rounded-lg hover:shadow-md hover:shadow-indigo-400">
           <p className="text-5xl font-bold md:text-8xl">
             Navigate the Nexus of{" "}
-            <span className="block text-indigo-400">Technology</span>{" "}
+            <span className="block text-indigo-500">Technology</span>{" "}
             <span className="text-xl block my-3 p-1">
               Ignite Your Future with Our Exclusive Courses!
             </span>
@@ -97,7 +97,7 @@ const Home = () => {
       //Live Lectures this section will be made dynamic when live lecture
       functionality will be added in this application
       <div className="flex flex-col justify-center my-20 p-5 text-white lg:mx-80   ">
-        <div className=" flex flex-row justify-center mx-auto text-indigo-300">
+        <div className=" flex flex-row justify-center mx-auto text-indigo-500">
           <p className="m-5 p-2 text-3xl w-full font-semibold">
             Ongoing Live Batches
           </p>
@@ -127,7 +127,7 @@ const Home = () => {
       </div>
       //for recorded lectures
       <div className="flex flex-col justify-center my-20 p-5 text-white lg:mx-80   ">
-        <div className=" flex flex-row justify-center mx-auto text-indigo-300">
+        <div className=" flex flex-row justify-center mx-auto text-indigo-500">
           <p className="m-5 p-2 text-3xl w-full font-semibold">
             Recorded Lectures
           </p>

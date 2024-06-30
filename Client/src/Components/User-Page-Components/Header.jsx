@@ -92,7 +92,7 @@ const Header = () => {
         </Link>
         <button
           className={`${
-            isLogin ? `w-20 mt-3 p-2 mx-40 rounded-lg` : `hidden`
+            isLogin ? `h-12 mt-3 p-1 px-2 mx-40 rounded-lg bg-indigo-600` : `hidden`
           }`}
           onClick={LogOut}
         >

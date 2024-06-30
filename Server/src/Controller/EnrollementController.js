@@ -5,7 +5,7 @@ import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 
 export const Enrollement = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   const { User_id, Course_id } = req.body;  //,payment_id , order_id , signature   
  
   console.log(User_id, Course_id);
