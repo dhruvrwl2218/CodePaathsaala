@@ -1,23 +1,23 @@
-PORT = 
-CORS_ORIGIN = 
-DB_URL = 
+// PORT = 
+// CORS_ORIGIN = 
+// DB_URL = 
 
-REFRESH_TOKEN_KEY = 
-ACCESS_TOKEN_KEY= 
+// REFRESH_TOKEN_KEY = 
+// ACCESS_TOKEN_KEY= 
 
-FORGOT_PASS_TOKEN_KEY = 
-
-
-// EMAIL = "this email address will help you send the varification msg to the user in case of there pass =word change"
-// >>>> sign in and log in with this email address to see the admin functionality.
-// PASSWORD = 
+// FORGOT_PASS_TOKEN_KEY = 
 
 
+// // EMAIL = "this email address will help you send the varification msg to the user in case of there pass =word change"
+// // >>>> sign in and log in with this email address to see the admin functionality.
+// // PASSWORD = 
 
-RAZORPAY_SECRET = ""
-RAZORPAY_KEY = ""
 
-CLOUDINARY_NAME = 
-CLOUDINARY_API_KEY = 
-CLOUDINARY_API_SECRET=
-CLOUDINARY_URL = 
+
+// RAZORPAY_SECRET = ""
+// RAZORPAY_KEY = ""
+
+// CLOUDINARY_NAME = 
+// CLOUDINARY_API_KEY = 
+// CLOUDINARY_API_SECRET=
+// CLOUDINARY_URL = 
