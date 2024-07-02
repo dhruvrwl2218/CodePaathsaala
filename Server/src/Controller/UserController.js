@@ -6,7 +6,8 @@ import { ApiResponse } from "../Utils/ApiResponse.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { errorMonitor } from "nodemailer/lib/xoauth2/index.js";
+import pkg from 'nodemailer/lib/xoauth2/index.js';
+const { errorMonitor } = pkg;
 
 const GenerateAccessAndRefreshToken = async (user) => {
   const accessToken = await user.GenerateAccessToken();
