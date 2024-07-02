@@ -49,7 +49,7 @@ const Header = () => {
       <ul
         className={`${
           toggle
-            ? `flex flex-col gap-4 absolute top-16 w-full bg-purple-900 bg-opacity-30 shadow shadow-md-blue-600 item-center text-center py-2 `
+            ? `flex flex-col gap-4 absolute top-16 w-full bg-indigo-700 bg-opacity-30 shadow shadow-md-blue-600 item-center text-center py-2 `
             : `hidden  md:flex md:flex-row md:mt-3 `
         } `}
       >
@@ -83,7 +83,7 @@ const Header = () => {
           <p
             className={`${
               !isLogin
-                ? `w-20 mt-3 p-2 text-center mx-40 rounded-lg  bg--00`
+                ? `h-12 mt-3 p-1 px-2 mx-40 rounded-lg bg-indigo-600`
                 : `hidden`
             }`}
           >

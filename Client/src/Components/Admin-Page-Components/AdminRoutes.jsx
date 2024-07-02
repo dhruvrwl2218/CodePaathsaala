@@ -21,7 +21,7 @@ const AdminRoutes = () => {
         <nav className="flex w-full justify-start text-white bg-black p-1 gap-2 mb-8 shadow-md shadow-slate-400">
         <div className="w-64 max-sm:hidden">logo</div>
         <button><HiMenu  className="text-3xl"/></button>
-        <p className="text-4xl text-nowrap ">Admin DashBoard</p>
+        <p className="text-4xl text-nowrap text-indigo-500 ">Admin DashBoard</p>
         <button onClick={(e)=> navigate('/')}><PiUsersThreeFill className="text-3xl"/></button>
       </nav>
       <div className="flex justify-center bg-black mx-24 max-md:mx-2">
@@ -41,14 +41,5 @@ const AdminRoutes = () => {
 export default AdminRoutes;
 
 
-// let content;
-// switch (Role) {
-//     case "Admin":
-//         content = <Outlet/>
-//         break;
-//     case "User" :
-//         content = <UserNotAllowed/>
-//         break;
-//     default:
-//         content = <LogIn/>;
-// }
+// admin-side fixes to be done 
+// > pagination , admin dashboard , admin header and side-bar
