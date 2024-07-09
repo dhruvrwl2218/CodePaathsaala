@@ -4,6 +4,7 @@ import { User } from "../Models/UserModel.js";
 import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 import crypto from "crypto";
+import Razorpay from 'razorpay'
 //this model is for utility as req or end-points which does'nt belong to any
 // of one specific model or envolves multiple models then this controller is used
 
@@ -40,10 +41,11 @@ export const getKey = async (req , res) =>{
 export const checkout = async (req, res) => {
   const { amount } = req.body;
 
-  const instance = new reazorpay({
+  const instance = new Razorpay({
     key_id: process.env.KEY,
     key_secret: process.env.SECRET,
   });
+  
   const options = {
     amount: Number(amount * 100),
     currency: "INR",

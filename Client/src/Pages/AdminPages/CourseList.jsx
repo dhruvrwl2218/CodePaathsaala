@@ -56,12 +56,13 @@ const CourseList = () => {
 
   return (
     <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-sm:w-full ">
+      <div className="text-4xl font-semibold text-indigo-500 mb-6 w-full text-center mx-4 bg-neutral-800 px-8 p-1">Listed Courses</div>
       {popup != false && <div className = " bg-indigo-800 opacity-70 fixed inset-0 flex items-center justify-center z-50 max-sm:mx-10">
         {adddlt[0] === "addFiles" ? <AddFiles api = {adddlt[1]} removePopUp = {removePopUp} />:<CourseUserDeletion removePopUp = {removePopUp} api = {adddlt[1]}/>}
         </div>}
       <table className="w-full m-4 mt-0 p-5">
         <thead>
-          <tr className="h-16 text-lg bg-neutral-800 shadow-md shadow-white max-sm:text-sm">
+          <tr className="h-16 text-lg bg-neutral-800 shadow-md max-sm:text-sm text-indigo-400 ">
             <th>Image</th>
             <th>Name</th>
             <th>Level</th>
@@ -72,8 +73,9 @@ const CourseList = () => {
           </tr>
         </thead>
         <tbody>
-          {course?.map(({_id,Name,Description,Level,Thumbnail,Duration,Price})=>(
-            <tr className="p-2 text-lg max-h-10 bg-neutral-900 max-sm:text-sm border">
+          {course?.map(({_id,Name,Description,Level,Thumbnail,Duration,Price},index)=>(
+            <tr 
+            className={index % 2 === 0 ? `bg-indigo-900` : `bg-black`}>
               <td className="w-1/4  "><img src={Thumbnail} alt="Thumbnail" className="w-1/2 h-auto rounded-xl m-2" /></td>
               <td className="w-1/6 text-wrap text-center ">{Name}</td>
             <td className="w-1/8 text-center ">{Level}</td>

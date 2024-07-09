@@ -8,9 +8,9 @@ router.route('/adminStats').get(VerifyUser,AdminStats);
 
 router.route('/checkout').post(checkout);
 
-router.route('razorPayKey').get(getKey);
+router.route('/razorPayKey').get(getKey);
 
-router.route('paymentverification').post(paymentverification);
+router.route('/paymentverification').post(paymentverification);
 
 // router.route('checkToken').get(VerifyUser,checkToken);
 

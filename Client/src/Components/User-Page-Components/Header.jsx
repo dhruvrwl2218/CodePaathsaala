@@ -39,7 +39,7 @@ const Header = () => {
     }
   };
   return (
-    <nav className="bg-black text-white flex gap-4 h-20 shadow-md shadow-indigo-400 z-1 sticky">
+    <nav className=" text-white flex gap-4 h-20 shadow-md  z-1 sticky bg-neutral-900"> 
       <div className=" rounded-lg lg:mx-72 mx-80">
         <Link to="/">
           <Logo className={` w-full pt-5 `} />

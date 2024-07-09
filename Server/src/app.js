@@ -21,19 +21,6 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
- 
- 
-// app.post('/',(req,res,)=>{
-    
-//     console.log(req.body)
-//     const {data}= req.body;
-//     console.log(data)
-//     res.send('arre deewano mujhe pehchano...')
-// })
-
-
-//Routes 
-
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/Course",CourseRouter)
 app.use("/api/v1/Enroll",EnrollRouter)

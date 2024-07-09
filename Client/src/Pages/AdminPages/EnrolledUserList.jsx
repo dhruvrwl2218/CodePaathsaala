@@ -137,22 +137,23 @@ const EnrolledUserList =  () => {
   }
 
   return (
-    <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full border border-gray-500 p-2 mx-1 rounded-lg">
+    <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full p-8 pt-0 mx-1 rounded-lg">
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <div className="text-gray-200 w-full">
+          <div className="text-4xl w-full text-indigo-500 p-2 text-center font-semibold bg-neutral-800">Enrolled User's</div>
           <form
-            className="h-12 ml-5 bg-grey-100 flex justify-between"
+            className=" bg-grey-100 flex justify-between p-5 "
             onSubmit={handleSubmit(SearchUsers)}
           >
-            <div>
+            <div className="flex w-full justify-between">
               <select
                 name="SelectCourse"
                 id="drop-down"
                 {...register("selectCourses")}
                 defaultValue=""
-                className="bg-neutral-800 p-1  border border-gray-500 rounded-l-3xl w-40"
+                className="bg-neutral-800 p-3 rounded-l-3xl w-full"
               >
                 <option value="">Search by Course</option>
                 {CourseSearchOptions.map((CourseName, index) => (
@@ -163,14 +164,14 @@ const EnrolledUserList =  () => {
               </select>
               <input
                 type="text"
-                className="rounded-r-3xl bg-neutral-800 p-1  border border-gray-500"
+                className="rounded-r-3xl bg-neutral-800 p-3 border-l w-full"
                 placeholder="UserName"
                 {...register("User")}
               />
             </div>
             <div>
               <button
-                className="bg-neutral-800 px-2 py-1  border border-gray-500 rounded-lg"
+                className="p-3 rounded-xl ml-12 bg-indigo-600"
                 {...register}
               >
                 Search
@@ -178,7 +179,7 @@ const EnrolledUserList =  () => {
             </div>
           </form>
           <table className="w-full mx-2 rounded-lg  ">
-            <thead className="bg-black h-16">
+            <thead className=" h-16 bg-neutral-800">
               <tr className="p-5">
                 <th className=" rounded-tl-lg">S.no.</th>
                 <th>User Name</th>
@@ -201,7 +202,7 @@ const EnrolledUserList =  () => {
                     <tr
                       key={_id}
                       
-                      className={index % 2 === 0 ? `bg-blue-600` : `bg-black`}
+                      className={index % 2 === 0 ? `bg-indigo-900` : `bg-black`}
                     >
                       <td>{Index != null ? Index : index + 1}</td>
                       <td>{User?.FullName}</td>
@@ -228,23 +229,19 @@ const EnrolledUserList =  () => {
                         }
                          
                       </td>
-                    </tr>
-                  
+                    </tr>     
                   ))
               )}
             </tbody>
-            <tfoot className="w-full justify-center bg-slate-500 " >
-              
+          </table>
+          <div className="flex justify-center px-2 mt-8 bg-neutral-800">
               <Pagination
                totalPages = {totalPages} 
                onPageChange = {onPageChange}
                currentPage={page}
-               pageListLimit= {3}
-               
+               pageListLimit= {3} 
                />
-            </tfoot>
-         
-          </table>
+              </div>         
         </div>
       )}
     </div>

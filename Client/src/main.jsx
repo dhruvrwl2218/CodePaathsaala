@@ -32,6 +32,7 @@ import {EnrollmentSucess} from "./Components/User-Page-Components";
 //Admin side components and pages
 import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
 
+import {TermsOfServicePage,PrivacyPolicyPage,RefundPolicyPage} from './Pages/other/index.js'
 // import { pdfjs } from 'react-pdf';
 
 
@@ -67,7 +68,12 @@ const adminRoutes = [
   <Route key="enrolled-user" path="/EnrolledUser" element={<EnrolledUserList />} />,
 ];
 
-const allRoutes = publicRoutes.concat(authRoutes, privateUserRoutes, adminRoutes);
+const OtherRoutes =[
+  <Route key="refund" path="/RefundPolicy" element={<RefundPolicyPage/>} />,
+  <Route key="Privacy" path="/PrivacyPolicy" element={<PrivacyPolicyPage/>} />,
+  <Route key="T&S" path="/Terms&services" element={<TermsOfServicePage/>} />,
+]
+const allRoutes = publicRoutes.concat(authRoutes, privateUserRoutes, adminRoutes, OtherRoutes);
 
 
 const router = createBrowserRouter(
@@ -75,6 +81,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       {publicRoutes}
       {authRoutes}
+      {OtherRoutes}
       <Route element={<RestrictedPath />}>
         {privateUserRoutes}
       </Route>

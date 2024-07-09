@@ -9,51 +9,16 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="text-white bg-black pt-20 px-3 font-serif">
-      <div className="flex flex-col md:flex-row md:mx-auto md:justify-around ">
-        <div className="basis-1/3">
-          {" "}
-          <p className="text-2xl mx-3 mb-3 md:underline">
-            <span className="text-indigo-400 font-semi-bold text-6xl ">
-              Ace{" "}
-            </span>{" "}
-            your tech journey now
-          </p>
-          <div className="w-full mx-2  flex">
-          <label htmlFor="">
-            <input
-              type="email"
-              placeholder="Your Email "
-              className="w-96 m-1 p-4 rounded-l-3xl text-start bg-indigo-100  mr-0"
-            />
-          </label>
-          <button className="p-3 rounded-r-3xl m-1 ml-0 bg-indigo-100 border-l-2 border-gray-700">
-            <FaLongArrowAltRight className="text-2xl right-0 text-gray-600 "/>
-            </button>
-          
-          </div>
-        </div>
-        <div className="hidden md:block">
+    <div className="text-white pt-20 px-3 font-serif border-t border-neutral-800 ">
+      
+      <div className="flex flex-wrap  justify-between md:mx-80 ">
+        
           <img
-            src="https://www.freeiconspng.com/thumbs/success-icon/success-icon-11.png"
-            alt="sucess img"
-          />
-        </div>
-      </div>
-      <div className="flex flex-wrap justify-center md:justify-around ">
-        <div className="">
-          <img
-            className="rounded-full w-44 "
-            // src="https://tse2.mm.bing.net/th?id=OIP.0VFhxtUhtC1xJMqe4nmSBgHaE8&pid=Api&P=0&h=180g"
-           
+            className="w-48 "
            src="Nerd Niche (1).gif"
             alt="logo"
           />
-          <p className="w-60 mt-5 text-md text-indigo-300 md:w-full ">
-            "Break the Binary Barrier: Forge Your Path with Our Dynamic
-            Courses!"
-          </p>
-        </div>
+          
 
         <div className="text-sm text-indigo-300 md:flex gap-10 md:text-md">
           <ul className="mx-auto">
@@ -62,13 +27,13 @@ const Footer = () => {
             <li className="p-2">Updates</li>
           </ul>
           <ul className="">
-            <li className="p-2">Terms of Use</li>
-            <li className="p-2">Privacy Policy</li>
-            <li className="p-2">Refund and Cancellation Policy</li>
+            <Link to={"/Terms&services"}><li className="p-2">Terms of Use</li></Link>
+            <Link to={"/PrivacyPolicy"}><li className="p-2">Privacy Policy</li></Link>
+            <Link to={"/RefundPolicy"}><li className="p-2">Refund and Cancellation Policy</li></Link>
           </ul>
         </div>
       </div>
-      <div className="flex flex-col align-middle mt-10 bg-neutral-800">
+      <div className="flex flex-col align-middle mt-10 bg-neutral-900">
         <p className="w-full text-center text-3xl text-indigo-300">
           Let's Chat!
         </p>

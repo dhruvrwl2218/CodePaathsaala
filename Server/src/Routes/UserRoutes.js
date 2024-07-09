@@ -1,38 +1,32 @@
 import { Router } from "express";
 import {
-    UserLogIn,
-    UserSignIn,
-    Logout,
-    ForgotPassword,
-    ResetPassword,
-    RefreshAccessToken,
-    deleteUser
-}from '../Controller/UserController.js'
+  UserLogIn,
+  UserSignIn,
+  Logout,
+  ForgotPassword,
+  ResetPassword,
+  RefreshAccessToken,
+  deleteUser,
+} from "../Controller/UserController.js";
 import VerifyUser from "../Middleware/AuthMiddleware.js";
 
 const router = Router();
- 
-router.route('/SignIn/:Role')
-.post(UserSignIn)
 
-router.route('/logIn')
-.post(UserLogIn)
+router.route("/SignIn/:Role").post(UserSignIn);
 
-router.route('/logout')
-.post(VerifyUser,Logout);
+router.route("/logIn").post(UserLogIn);
 
-router.route("/forgot-Password").post(ForgotPassword)
+router.route("/logout").post(VerifyUser, Logout);
 
-router.route("/reset-Password/:token").post(ResetPassword)
+router.route("/forgot-Password").post(ForgotPassword);
+
+router.route("/reset-Password/:token").post(ResetPassword);
 
 router.route("/refreshTokens/").get(RefreshAccessToken);
 
 router.route("/removeUser/:_id").delete(deleteUser);
 
 export default router;
-
- 
-
 
 // console.log("u re in routes")
 

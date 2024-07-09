@@ -25,7 +25,7 @@ export const Enrollement = async (req, res) => {
       // console.log("user not found witht his id"); 
       throw new ApiError(
         400,
-        "Not able to find the user in Db :("
+        "Plz Sign/Login first!"
       );
     }
   //here you can also check wheather there is any user earlier enrolled
@@ -176,9 +176,6 @@ export const adminStats = async (req, res) => {};
 export const deleteEnrollment = async (req, res) => {
   const { _id } = req.params;
 
-  // console.log(_id);
-
-
   if (!_id) {
     return res
       .status(401)
@@ -212,43 +209,3 @@ export const deleteEnrollment = async (req, res) => {
     return res.status(error.statuscode).json(error);
   }
 };
-// {
-
-//    //    if(updatedCourseDoc){
-// //     throw new ApiError(500,"uCD",Error)
-// //    }
-
-//    const Enrolled = await newEnrollment.save()
-
-//    //    if(updatedCourseDoc){
-// //     throw new ApiError(500,"uCD",Error)
-// //    }
-
-//    console.log(Enrolled._id)
-
-// //    user.EnrolledCourses.push(Enrolled._id);
-
-// //    const UpdatedUser = user.save()
-
-// //       if(updatedCourseDoc){
-// //     throw new ApiError(500,"uCD",Error)
-// //    }
-
-// //    console.log(UpdatedUser);
-
-// //    const course = await Course.findById(courseId)
-
-// //       if(updatedCourseDoc){
-// //     throw new ApiError(500,"uCD",Error)
-// //    }
-
-// //    course.EnrolledUser.push(Enrolled._id);
-
-// //    const updatedCourseDoc = await course.save();
-
-// //    if(updatedCourseDoc){
-// //     throw new ApiError(500,"uCD",Error)
-// //    }
-// //    console.log(updatedCourseDoc)
-
-// }s

@@ -102,7 +102,7 @@ const Home = () => {
             Ongoing Live Batches
           </p>
         </div>
-        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">
+        <div className="rounded-2xl p-5 bg-neutral-900 shadow-sm shadow-slate-200">
         <Slider {...settings} ref={sliderRef}>
           {
               course && course.filter((itmes)=>itmes.Name.includes('live')).map((liveCourse)=>(
@@ -132,7 +132,7 @@ const Home = () => {
             Recorded Lectures
           </p>
         </div>
-        <div className="rounded-2xl p-5 bg-neutral-800 shadow-sm shadow-slate-200">
+        <div className="rounded-2xl p-5 bg-neutral-900 shadow-sm shadow-slate-200">
           <Slider {...settings} ref={sliderRef}>
             {course && course.filter((itmes) => !itmes.Name.includes('live')).map((recorded) => (
               <Coursecard
@@ -207,7 +207,7 @@ const Home = () => {
       </div>
 
       //tutors and mentors  //flex flex-wrap justify-center
-      <div className=" my-20 text-white p-5 bg-neutral-800 lg:mx-80">
+      <div className=" my-20 text-white p-5 bg-neutral-900 lg:mx-80">
         <p className="p-5 text-4xl font-bold text-indigo-500 text-center">Our Instructor</p>
         <Instructor />
       </div> 
