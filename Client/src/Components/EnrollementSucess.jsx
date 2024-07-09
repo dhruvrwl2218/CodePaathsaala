@@ -6,8 +6,7 @@ const EnrollmentSucess = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect =
-    (() => {
+  useEffect = (() => {
       const loc = new URLSearchParams(location.search);
       const paymentRef = loc.get("refrence");
 
