@@ -103,9 +103,9 @@ const EditCourse = () => {
   };
 
   return (
-    <div className="border-2 flex  w-3/5 ml-5 rounded-xl bg-neutral-900 text-white">
-      <div className="flex flex-col ">
-        <legend className="text-center text-3xl p-2 my-2 font-bold">
+    <div className="flex  w-3/5  rounded-xl bg-black text-white mx-8">
+      <div className="flex flex-col shadow-sm shadow-indigo-400 ">
+        <legend className="text-center text-4xl p-2 mx-16  font-semibold text-indigo-400 bg-neutral-800">
           Edit Course
         </legend>
         {fetchedcourse && (
@@ -114,67 +114,67 @@ const EditCourse = () => {
  onSubmit={handleSubmit(editCourse)}
  encType="multipart/form-data"
 >
- <label className="block mb-5 w-1/2 text-xl max-sm:w-full " htmlFor="">
+ <label className="block mb-5 w-1/2 text-xl max-sm:w-full text-indigo-500" htmlFor="">
    Name :
    <input
      type="text"
-     className="block bg-neutral-800 text-neutral-300  mt-1  p-1 rounded-lg w-2/3"
+     className="block shadow-sm bg-neutral-800 text-neutral-300 mt-1  p-1 rounded-lg w-2/3 "
      {...register("Name", { required: true })}
    />
  </label>
 
- <label className="block mb-5 text-xl w-1/2 max-sm:w-full">
+ <label className="block mb-5 text-xl w-1/2 max-sm:w-full text-indigo-500">
    CourseId :
    <input
      type="text"
-     className="block border bg-neutral-800 text-neutral-300  mt-1  p-1 rounded-lg w-2/3"
+     className="block bg-neutral-800 text-neutral-300 mt-1  p-1 rounded-lg w-2/3"
      {...register("CourseId", { required: true })}
    />
  </label>
 
- <label className="block mb-5 text-xl w-1/2 max-sm:w-full">
+ <label className="block mb-5 text-xl w-1/2 max-sm:w-full text-indigo-500">
    Price
    <input
      type="text"
-     className="block border bg-neutral-800 text-neutral-300 mt-1 p-1 rounded-lg w-2/3"
+     className="block  bg-neutral-800 text-neutral-300 mt-1 p-1 rounded-lg w-2/3"
      {...register("Price", { required: true })}
    />
  </label>
 
- <label className="block mb-5 text-xl w-1/2 max-sm:w-full" htmlFor="">
+ <label className="block mb-5 text-xl w-1/2 max-sm:w-full text-indigo-500" htmlFor="">
    Duration :
    <input
      type="text"
-     className="block border bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
+     className="block  bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
      {...register("Duration")}
    />
  </label>
 
- <label className="block mb-5 text-xl w-1/2 max-sm:w-full" htmlFor="">
+ <label className="block mb-5 text-xl w-1/2 max-sm:w-full text-indigo-500" htmlFor="">
    Thumbnail :
    <input
      type="File"
-     className="block border bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
+     className="block  bg-neutral-800 text-neutral-300  mt-1 w-2/3  p-1 rounded-lg"
      {...register("Thumbnail")}// { required: true }
    />
  </label>
 
- <label className="block mb-5 text-xl w-1/2 max-sm:w-full" htmlFor="">
+ <label className="block mb-5 text-xl w-1/2 max-sm:w-full text-indigo-500" htmlFor="">
    Files/pdf :
    <input
      type="File"
-     className="block border bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
+     className="block  bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
      {...register("StudyMaterial")}
      multiple
    />
  </label>
- <label className="mb-5 block text-xl w-1/2 max-sm:w-full">
+ <label className="mb-5 block text-xl w-1/2 max-sm:w-full text-indigo-500">
    Select Level :
    <select
      name="level"
      id=""
      {...register("Level")}
-     className=" mt-1 block w-2/3 p-1 rounded-lg bg-neutral-800 text-neutral-300"
+     className=" mt-1 block w-2/3 p-1 rounded-lg  bg-neutral-800 text-neutral-300 "
    >
      <option value="Beginner">Beginner</option>
      <option value="Intermediate">Intermediate</option>
@@ -182,20 +182,20 @@ const EditCourse = () => {
    </select>
  </label>
 
- <label className="block mb-12 text-xl w-1/2 max-sm:w-full" htmlFor="discription">
+ <label className="block mb-12 text-xl w-1/2 max-sm:w-full text-indigo-600" htmlFor="discription">
    Discription :
    <textarea
      name="Description"
      id="Description"
      cols="3"
      rows="3"
-     className="block border  mt-1 w-2/3  p-1 rounded-lg bg-neutral-800 text-neutral-300"
+     className="block  mt-1 w-2/3  p-1 rounded-lg  bg-neutral-800 text-neutral-300"
      {...register("Description", { required: true })}
    ></textarea>
  </label>
  <input
    type="submit"
-   className="border m-2 text-xl  rounded-xl bg-blue-500 p-2 w-1/3 max-sm:w-full"
+   className="m-2 text-xl rounded-xl bg-indigo-600 p-2 w-1/3 max-sm:w-full"
  />
 </form>
 )}

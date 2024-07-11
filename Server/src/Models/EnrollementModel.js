@@ -3,9 +3,9 @@ import mongoose,{Schema} from "mongoose";
 
 const EnrollementSchema = new Schema(
     {
-        // Email : {
+        // _id :{
         //     type : String,
-        //     required : true,
+        //     required :true,
         //     unique : true
         // },
         User : {
@@ -16,9 +16,16 @@ const EnrollementSchema = new Schema(
             type : Schema.Types.ObjectId,
             ref : 'Course'
         },
-        // CourseDuration:{
-        //     type : Number,
-        // }
+        status: { type: String,
+                  enum: ['pending', 'completed', 'failed', 'refunded'], default: 'pending' 
+        },
+        PaymentDetails : {
+            amount : {type:Number},
+            paymentDate : {type : Date},
+            razorpayOrderId: { type: String, required: true },
+            razorpayPaymentId: { type: String, required: true },
+            razorpaySignature: { type: String, required: true },
+        }
     },
     {
         timestamps : true,

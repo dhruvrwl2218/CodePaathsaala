@@ -31,7 +31,7 @@ const Coursecard = ({
     {/* <div className="hidden sm:block">w
       Description : {Description}
     </div> */}
-    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={()=>checkout(_id)}>Buy</button>
+    <button className = "bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600" onClick={()=>checkout(Price,_id,Name)}>Buy</button>
     </div>
    
   )

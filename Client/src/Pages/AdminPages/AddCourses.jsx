@@ -45,7 +45,7 @@ const AddCourses = () => {
   };
 
   return (
-    <div className=" flex  w-3/5  rounded-xl bg-black text-white  mx-8">
+    <div className=" flex  w-3/5  rounded-xl bg-black text-white mx-8">
       <div className="flex flex-col shadow-sm shadow-indigo-400">
         <legend className="text-center text-4xl p-2 mx-16  font-semibold text-indigo-400 bg-neutral-800">
           Add Course

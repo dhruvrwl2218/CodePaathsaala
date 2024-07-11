@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 
 const Courses = () => {
@@ -37,6 +38,17 @@ const settings = {
     },
   ],
 };
+
+const loadRazorpay = () => {
+  return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error('Razorpay SDK failed to load'));
+      document.body.appendChild(script);
+  });
+};
+
   const [course, setCourse] = useState(null);
   useEffect(() => {
     const res = async () => {
@@ -55,76 +67,90 @@ const settings = {
     res();
   }, []);
 
-  const checkout = async(amount,_id) => {
-    console.log(amount + _id)
+  
+  const checkout = async(Price,_id,Name) => {
 
    const auth =  JSON.parse(localStorage.getItem('AuthState'));
-
-   console.log(auth.User_id);
 
    if(!auth.islogin){
     navigate('/Login')
    }
 
-   const enrolldata = {User_id : _id , Course_id :_id};
+   const enrolldata = {User_id : auth.User_id , Course_id :_id};
 
    localStorage.setItem('EnrollUser',JSON.stringify(enrolldata));
 
-   const {data:{key}} = await axios.get("http://localhost:8000/api/v1/Utility/getKey");
-
-   console.log(key)
+   await loadRazorpay();
    
-   const {data :{order}} = await axios.post("http://localhost:8000/api/v1/Utility/checkout",{amount})
 
-   console.log(order)
-   console.log(window)
+  try {
+    const res = await axios.post("http://localhost:8000/api/v1/Enroll/getKey",enrolldata);
+    // console.log(res.data.data.key)
+    if(res.status !== 200){
+      throw res;
+    }
 
+    const key = res.data.data.key;
+
+    const res2 = await axios.post("http://localhost:8000/api/v1/Enroll/checkout",{amount : Price})
+
+    if(res2 !== 200){
+      throw res2;
+    }
+
+    const order = res2.data.data.order;
+
+     
    const options ={
     key,
     amount:order.amount,
     currency:"INR",
     name:"CodePathsaala",
-    description:"Razorpay tutorial",
+    description:`Get access to our exclusive ${Name} course`,
     image:"/logohead.png",
     order_id:order.id,
-    callback_url:"http://localhost:8000/api/v1/Utility/paymentverification",
+    // callback_url:"http://localhost:8000/api/v1/Utility/paymentverification",
+    handler : async (response) => {
+      const paymentResponse = {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            ...enrolldata
+      }
+
+       try {
+        const enrolled = await axios.post('http://localhost:8000/api/v1/Enroll/paymentVerification',paymentResponse);
+        if(enrolled.status === 200){
+          toast.success(enrolled.response.data.message)
+          navigate('/YourCourses');
+        }
+       } catch (error) {
+        console.log(error)
+         toast.error(error.response.data.message)
+       }
+    },
     prefill:{
-      name:"sidharth sharma", 
-      email:"sidsharma112001@gmail.com",
+      name:"razorpay user", 
+      email:"razorpayuser@gmail.com",
       contact:"1234567890"
     },
     notes:{
-      "address":"razorapy official"
+      "address":"Jaipur,Rajasthan"
     },
     theme:{
-      "color":"#3399cc"
+      "color":"#4169E1"
     }
   };
   const razor = new window.Razorpay(options);
   razor.open();
 
+  } catch (error) {
+    console.log(error)
+    console.log(error.response.data.message)
+    toast.error(error.response.data.message)
   }
-
-  // const checkout = async(Course_id)=>{
-  //   const auth =  JSON.parse(localStorage.getItem('AuthState'));
-
-  //  console.log(auth.User_id);
-  //  console.log(Course_id);
-
-  //  if(!auth.islogin){
-  //   navigate('/Login')
-  //  }
-  
-  //  const response = await axios.post(
-  //   "http://localhost:8000/api/v1/Enroll/EnrollUser",{
-  //     User_id : auth.User_id, 
-  //     Course_id : Course_id
-  //   },
-  //   { withCredentials: true }
-  // );
-
-  // }
-
+   
+}
   
   return (
     <>
@@ -240,172 +266,25 @@ const settings = {
 
 export default Courses;
 
-// const sliderSettings = {
-//   dots: true,
-//   infinite: true,
-//   speed: 500,
-//   slidesToShow: 3, // Number of slides to show at once
-//   slidesToScroll: 1, // Number of slides to scroll
-//   autoplay: true,
-//   autoplaySpeed: 2000,
-//   responsive: [
-//     {
-//       breakpoint: 768,
-//       settings: {
-//         slidesToShow: 2,
-//       },
-//     },
-//     {
-//       breakpoint: 480,
-//       settings: {
-//         slidesToShow: 1,
-//       },
-//     },
-//   ],
-// };
 
 
-// <div className="bg-slate-300">
-//   <section className="grid grid-cols-12" id="beginner">
-//     <div className="m-2 text-3xl p-2 col-start-3 col-span-6 font-semibold underline">
-//       Begginer's
-//     </div>
-//     <Slider {...settings}>
-//     <div className="col-start-3 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-6 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-9 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     </Slider>
-//   </section>
+// temporary
+  // const checkout = async(Course_id)=>{
+  //   const auth =  JSON.parse(localStorage.getItem('AuthState'));
 
-//
+  //  console.log(auth.User_id);
+  //  console.log(Course_id);
 
-//   <section className="grid grid-cols-12" id="Intermediate">
-//     <div className="m-2 text-3xl p-2 col-start-3 col-span-6 font-semibold underline">
-//       Intermediate
-//     </div>
-//     <div className="col-start-3 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-6 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-9 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//   </section>
+  //  if(!auth.islogin){
+  //   navigate('/Login')
+  //  }
+  
+  //  const response = await axios.post(
+  //   "http://localhost:8000/api/v1/Enroll/EnrollUser",{
+  //     User_id : auth.User_id, 
+  //     Course_id : Course_id
+  //   },
+  //   { withCredentials: true }
+  // );
 
-//   <div className="grid grid-cols-12 p-2 m-2">
-//     <hr className="col-start-3 col-span-9 " />
-//   </div>
-
-//   <section className="grid grid-cols-12" id="Intermediate">
-//     <div className="m-2 text-3xl p-2 col-start-3 col-span-6 font-semibold underline">
-//       Advance
-//     </div>
-//     <div className="col-start-3 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-6 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//     <div className="col-start-9 col-span-3 align-middle justify-center p-5">
-//       <Coursecard
-//         Name="Python"
-//         Img="https://cdn.pixabay.com/photo/2023/12/18/14/30/winter-8456170_960_720.png"
-//         Discription="With this setup, the Coursecard component will receive the
-//      props Name, Discription, Level, and Img from the Courses
-//     component and render them accordingly. Make sure to adjust
-//     the props and values according to your actual data and requirements."
-//         Level="Begginer"
-//         Css=""
-//         Duration="3 Month"
-//       />
-//     </div>
-//   </section>
-// </div>
+  // }
