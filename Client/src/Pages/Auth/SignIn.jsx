@@ -90,7 +90,7 @@ const SignIn = () => {
             <input
               type="submit"
               name="Sign In "
-              className="m-3 p-1 rounded-md w-3/4 bg-blue-700  text-white"
+              className="m-3 p-1 rounded-md w-3/4 bg-indigo-600  text-white"
             />
           </form>
         </div>

@@ -53,7 +53,7 @@ const LogIn = () => {
           <p className="w-full text-center text-3xl  font-bold">Log in</p>
           <form
             onSubmit={handleSubmit(Send)}
-            className="flex flex-wrap text-center  text-black p-2 justify-center"
+            className="flex flex-wrap text-center text-black p-2 justify-center"
           >
             <input
               type="email"
@@ -70,10 +70,10 @@ const LogIn = () => {
             <input
               type="submit"
               name="Sign In"
-              className="m-3 p-1 rounded-xl w-3/4 bg-blue-700  text-white"
+              className="m-3 p-1 rounded-xl w-3/4 bg-indigo-600  text-white"
             />
           </form>
-          <div className=" w-full flex flex-wrap justify-center">
+          <div className=" w-full flex flex-wrap justify-center text-gray-400">
             <Link to="/Forgot-Password">
               <button className="">Forgot Password?</button>
             </Link>

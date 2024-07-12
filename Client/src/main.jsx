@@ -32,7 +32,7 @@ import {EnrollmentSucess} from "./Components/User-Page-Components";
 //Admin side components and pages
 import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
 
-import {TermsOfServicePage,PrivacyPolicyPage,RefundPolicyPage} from './Pages/other/index.js'
+import {TermsOfServicePage,PrivacyPolicyPage,RefundPolicyPage,PageNF} from './Pages/other'
 // import { pdfjs } from 'react-pdf';
 
 
@@ -43,7 +43,7 @@ import {TermsOfServicePage,PrivacyPolicyPage,RefundPolicyPage} from './Pages/oth
 
 const publicRoutes = [
   <Route key="home" path="/" element={<Home />} />,
-  <Route key="about" path="/About" element={<About />} />,
+  // <Route key="about" path="/About" element={<About />} />,
   <Route key="courses" path="/Courses" element={<Courses />} />,
   <Route key= "issuePage" path="/IssuePage" element={<Issue/>}/>,
 ];
@@ -68,7 +68,7 @@ const adminRoutes = [
   <Route key="enrolled-user" path="/EnrolledUser" element={<EnrolledUserList />} />,
 ];
 
-const OtherRoutes =[
+const OtherRoutes = [
   <Route key="refund" path="/RefundPolicy" element={<RefundPolicyPage/>} />,
   <Route key="Privacy" path="/PrivacyPolicy" element={<PrivacyPolicyPage/>} />,
   <Route key="T&S" path="/Terms&services" element={<TermsOfServicePage/>} />,
@@ -88,6 +88,7 @@ const router = createBrowserRouter(
       <Route element={<AdminRoutes />}>
         {adminRoutes}
       </Route>
+      <Route path="*" element = {<PageNF/>}/>
     </Route>
   )
 );

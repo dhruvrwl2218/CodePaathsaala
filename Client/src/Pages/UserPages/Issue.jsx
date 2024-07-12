@@ -3,29 +3,24 @@ import Accordion from "../../Components/User-Page-Components/Accordion";
 import { MdOutlineMessage } from "react-icons/md";
 
 const faqData = [
-    {title:"kuch bhi puch lett kys hi farak penda hai",
-     content:"we will be back to you after a while beacause we does'nt care about your problem you just enroll in course in give us money that's all matters"
+    {title:"I am unable to login. What should I do ?",
+     content:"If you are unable to login, it may be due to incorrect email ID or a typing mistake. Please submit your query using the Support Form link and our team will respond within the next 48 hours."
     },
-    {title:"kuch bhi puch lett kys hi farak penda hai",
-    content:"we will be back to you after a while beacause we does'nt care about your problem you just enroll in course in give us money that's all matters"
+    {title:"How can I join the Discord server after purchasing the course?",
+    content:"To join the Discord server for CodeHelp, you will receive an email invitation containing a one-time invite link. This email will be sent to the email address associated with your CodeHelp account. Please monitor your inbox for this email.Once you receive the email, simply click on the one-time invite link provided. This link will redirect you to the Discord platform, where you can create a Discord account or log in to your existing account. After successful login, you will gain access to the CodeHelp Discord server.If you haven't received the email invitation, please ensure that you have checked your spam or junk folders. Sometimes, email providers may filter unfamiliar emails into these folders. If you still cannot locate the email, feel free to contact our support team for further assistance."
     },
-    {title:"kuch bhi puch lett kys hi farak penda hai",
-    content:"we will be back to you after a while beacause we does'nt care about your problem you just enroll in course in give us money that's all matters"
+    {title:"I mistakenly bought the course and need a refund. What is the refund policy?",
+    content:"As per the CodeHelp policy, we have a strict no refund and no cancellation policy.Refunds are only provided in cases where the course has not been allotted to you after payment."
     },
-    {title:"kuch bhi puch lett kys hi farak penda hai",
-    content:"we will be back to you after a while beacause we does'nt care about your problem you just enroll in course in give us money that's all matters"
+    {title:"What should I do if I am facing a lag issue in video recordings?",
+    content:"If you are experiencing a lag issue in video recordings, please create a screen recording of the issue you are facing and provide the details using the Support Form .Our team will review your submission and assist you accordingly."
     },
-    {title:"kuch bhi puch lett kys hi farak penda hai",
-    content:"we will be back to you after a while beacause we does'nt care about your problem you just enroll in course in give us money that's all matters"
+    {title:"I am not financially strong, but I want to study from your courses. Is there any financial aid available?",
+    content:"We have allocated a total of 50 seats for students who are facing financial constraints.You can apply for financial aid for the course by completing the application form Support Form.Please allow 7 business days for the response to your application, as our team will carefully review each submission."
     }
 ]
 const Issue = () => {
-    const[isOpen,setIsopen] = useState(null);
-
-    const handleToggle = (index) => {
-        setIsopen(open === index ? null : index);
-    }
-
+    
   return (
     <div className="text-white flex flex-wrap lg:flex-nowrap  max-lg:mx-5 mx-80 p-3 ">
       <div className="max-lg:w-full w-1/2 ">
@@ -36,8 +31,9 @@ const Issue = () => {
                 key={index}
                 title={item.title}
                 content={item.content}
-                isOpen={isOpen === index}
-                onClick={()=> handleToggle(index)}/>
+                // isOpen={isOpen === index}
+                // onClick={()=> handleToggle(index)}
+                />
             ))}
         </div>
       </div>
