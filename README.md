@@ -10,6 +10,7 @@ This is online Course App where where the user can enroll in any Course and get 
 ![videos in lec](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/a12c6503-44fa-4161-8727-b597cfa2d4e6)
 
 #admin side pages
+
 ![ListedCourses](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/4ce0a9e6-61a6-4f50-8527-16ce1647aaf9)
 ![EnrolledUser](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/b0421458-b5ba-488f-8edd-8a8f0e8492f1)
 ![addcourses](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/da8d981e-73af-4e10-97df-75bc84270363)
