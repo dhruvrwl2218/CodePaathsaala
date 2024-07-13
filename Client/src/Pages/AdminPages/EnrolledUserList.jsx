@@ -26,16 +26,17 @@ const EnrolledUserList =  () => {
           `http://localhost:8000/api/v1/Enroll/EnrolledUser`,
           {
             withCredentials: true,
-            // headers: { "Content-Type": "multipart/form-data" },
+            
           }
         );
-        // console.log(res)
-        // console.log(res?.data?.data?.enrollments);
+      
         setEnrolledUser(res.data.data.enrollments);
         setFilteredEnrolledUser(res.data.data.enrollments);
         setIsLoading(false);
+
       } catch (error) {
         console.log(error);
+        toast.error()
       }
     };
     FetchEnrolledUser();
@@ -122,13 +123,18 @@ const EnrolledUserList =  () => {
   const deleteEnrollement = async(_id) => {
     console.log("Enrolled User" + _id)
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/Enroll/deleteEnrollment/${_id}`);
+      const res = await axios.delete(`http://localhost:8000/api/v1/Enroll/deleteEnrollment/${_id}`, {
+        withCredentials: true,
+        // headers: { "Content-Type": "multipart/form-data" },
+      });
 
       console.log(res);
       if(res.status === 200){
         toast.success("Enrollment deleted successfully!")
       }else{
         toast.error(res.error)
+        throw res.data
+        
       }
     } catch (error) {
       console.log(error)

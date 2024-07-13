@@ -120,7 +120,7 @@ export const GetEnrolledUser = async (req, res) => {
     //     const _id = enrollment._id;
 
     // })
-    console.log(enrollments);
+    // console.log(enrollments);
     res
       .status(200)
       .json(
@@ -138,9 +138,6 @@ export const GetEnrolledUser = async (req, res) => {
 
 export const CourseEnrolledUser = async (req, res) => {
   const { course_id } = req.body;
-
-  // console.log(course_id);
-  // console.log(req.body);
 
   if (!course_id) {
     res
@@ -236,7 +233,7 @@ export const EnrolledUserCourses = async (req, res) => {
 
 export const deleteEnrollment = async (req, res) => {
   const { _id } = req.params;
-
+console.log("params"+_id)
   if (!_id) {
     return res
       .status(401)
@@ -244,15 +241,16 @@ export const deleteEnrollment = async (req, res) => {
   }
   try {
     const Enrollement = await Enroll.find({ _id });
-
+    console.log(Enrollement)
     if (!Enrollement) {
+      
       // return res.status(401).json(new ApiResponse(401,{},"No enrollment were there with this id"))
       throw new Error(401, {}, "No enrollment were there with this id ");
     }
 
     const deleteEnrollment = await Enroll.deleteOne({ _id });
 
-    // console.log(deleteEnrollment);
+    console.log(deleteEnrollment);
 
     if (deleteEnrollment.deletedCount > 0) {
       return res
