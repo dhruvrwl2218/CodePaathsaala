@@ -4,7 +4,7 @@ import {app} from "./app.js"
 
 DataBaseConnection()
 .then(()=>{
-    app.listen(process.env.PORT)
+    app.listen(process.env.PORT || 8000)
     console.log(`app is listing to port ${process.env.PORT}`)
 
 })

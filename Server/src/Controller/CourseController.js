@@ -19,7 +19,6 @@ export const AddCourse = async (req, res) => {
   }
 
   const StudyMaterialPath = req.files?.StudyMaterial[0]?.path;
-  // console.log(StudyMaterialPath);
 
   const Thumbnail = await uploadFilesCloudinary(ThumbnailPath);
   const StudyMaterial = await uploadFilesCloudinary(StudyMaterialPath);
@@ -81,7 +80,7 @@ export const RemoveCourse = async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, { result }, "course has been deleted"));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res
       .status(error.statuscode ? error.statuscode : 500)
       .json(new ApiResponse(error));
@@ -106,7 +105,7 @@ export const GetCourses = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(error.statuscode ? error.statuscode : 400).json(error);
   }
 };
@@ -130,7 +129,7 @@ export const CoursesByLevel = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(error.statuscode).json(error.message);
   }
 };
@@ -186,7 +185,7 @@ export const UploadFiles = async (req, res) => {
         );
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(error.statuscode).json(error);
   }
 };
@@ -237,19 +236,19 @@ export const updatedCourse = async (req, res) => {
       { new: true }
     );
 
-    if (!Update) {
-      return res.status(400);
-      // .json(new ApiResponse(400, "Error while updatation"));
-      throw new ApiError(400, Update, "Error while updatation");
-    }
-    console.log(Update);
+    // if (!Update) {
+    //   return res.status(400);
+    //   // .json(new ApiResponse(400, "Error while updatation"));
+    //   throw new ApiError(400, Update, "Error while updatation");
+    // }
+    // console.log(Update);
     res
       .status(200)
       .json(
         new ApiResponse(200, Update, "Course Details updated successfully")
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res
       .status(error.statusocde ? error.statuscode : 500)
       .json(
@@ -261,103 +260,3 @@ export const updatedCourse = async (req, res) => {
       );
   }
 };
-
-//   const { CourseId } = req.body;
-
-//   const studyMaterial = req.files?.StudyMaterial[0]?.path;
-//   const studyMaterial2 = req.files?.StudyMaterial[1]?.path;
-//   console.log(studyMaterial2);
-//   const cloud = await uploadFilesCloudinary(studyMaterial);
-
-//   if (!cloud) {
-//     throw new ApiError(500, "Error while files to the cloud :(  ", Error);
-//   }
-
-//   const UpdatedCourse = async (CourseId, cloud) => {
-//     try {
-//       const updatedCourse = await Course.findByIdAndUpdate(
-//         CourseId,
-//         { $push: { StudyMaterial: cloud.secure_url } },
-//         { new: true }
-//       );
-//       if(updatedCourse === null){
-//        return new ApiError(500,"no course with this is availabel")
-//       }
-//       return updatedCourse;
-//     } catch (error) {
-//        return  res.status(500)
-//         .json(new ApiError(500,"error wile saving the data in db",Error))
-//     }
-//   };
-//   const newUpdatedCourse = await UpdatedCourse(CourseId,cloud)
-
-//   console.log(newUpdatedCourse)
-//   return res.json(
-//     new ApiResponse(200, newUpdatedCourse, "your files had been added :)")
-//   );
-// };
-// const UpdatedCourse = await Course.findByIdAndUpdate(CourseId,{$push:{StudyMaterial : cloud}},{ new: true },(err, updatedDocument)=>{
-//     if(err){
-//         console.log(err)
-//         throw new ApiError(500,"error occured while updating the files in db..",err)
-//     }else{
-//         console.log(updatedDocument)
-//     }
-// } )
-// const studyMaterial = req.files?.StudyMaterial;
-
-// const urls = [];
-// studyMaterial.map((files)=>{
-//     urls.add = uploadFilesCloudinary(files?.path)
-// })
-
-// lavdaya bata diya tune ki promises juthe hote h
-//   Promise.all(studymaterial.map(async(files)=>{
-//     console.log(files.path);
-//     const individualUrl = await(uploadFilesCloudinary(files?.path))
-//     console.log(individualUrl)
-//     url.push(individualUrl)
-// }))
-// import stripe from "stripe";
-
-// export const stripePayment = async(req,res)=>{
-//   const {Name,Price} = req.body;
-//   const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY)
-// //   const paymentIntent = await stripeInstance.paymentIntents.create({
-// //     amount: 1099,
-// //     currency: 'usd',
-// //     description: 'Software development services',
-// //   });
-
-// // const customer = await stripe.customers.create({
-// //   name: 'Jenny Rosen',
-// //   address: {
-// //     line1: '510 Townsend St',
-// //     postal_code: '98140',
-// //     city: 'San Francisco',
-// //     state: 'CA',
-// //     country: 'US',
-// //   },
-// // });
-//   const session = await stripeInstance.checkout.sessions.create({
-//     payment_method_types :["card"],
-//     line_items: [
-//       {
-//         price_data: {
-//           currency: 'inr',
-//           product_data: {
-//             name:Name,
-//             // images: [Course.url], // URL of the product image
-//           },
-//              unit_amount: Price * 100,
-//         },
-//         quantity: 1,
-//       },
-//     ],
-//     mode: 'payment',
-//   success_url: 'http://localhost:5173/Sucess',
-//   cancel_url: 'http://localhost:5173/Courses',
-
-//   })
-//   res.json({id:session.id})
-// }

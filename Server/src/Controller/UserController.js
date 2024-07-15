@@ -6,7 +6,7 @@ import { ApiResponse } from "../Utils/ApiResponse.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import pkg from 'nodemailer/lib/xoauth2/index.js';
+import pkg from "nodemailer/lib/xoauth2/index.js";
 const { errorMonitor } = pkg;
 
 const GenerateAccessAndRefreshToken = async (user) => {
@@ -21,15 +21,6 @@ const GenerateAccessAndRefreshToken = async (user) => {
   } catch (error) {
     throw new Error("Error updating refreshToken");
   }
-  // try {
-  //   user.refreshToken = refreshToken;
-  //  const newdata = await user.save();
-
-  //  console.log(newdata)
-
-  // } catch (error) {
-  //   error;
-  // }
 
   return { accessToken, refreshToken };
 };
@@ -40,7 +31,6 @@ export const UserSignIn = async (req, res) => {
   let { Role } = req.params;
 
   if ([FullName, Email, Password].some((e) => e?.trim() === "")) {
-    // throw new ApiError("All the credentails are needed",Error)
     return res
       .status(500)
       .json(new ApiResponse(500, "All fields are required!"));
@@ -55,14 +45,13 @@ export const UserSignIn = async (req, res) => {
   if (!isValidEmail(Email)) {
     return res.status(409).json(new ApiResponse(409, "Email is not valid"));
   }
+
   try {
     const UserCheck = await User.findOne({ Email });
 
     if (UserCheck) {
       throw new ApiError(409, "User with email or username already exists");
-      // return res.status(409).json(new ApiResponse(409, "user Already exits"));
     }
-    // console.log(Email);
 
     Role = process.env.EMAIL === Email ? "Admin" : Role;
     //more you can add the array of emails which are of admin's ,
@@ -83,7 +72,7 @@ export const UserSignIn = async (req, res) => {
 
     res.json(new ApiResponse(200, user, "user Regestired successfullly!"));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json(new ApiResponse(500, error));
   }
 };
@@ -133,7 +122,7 @@ export const UserLogIn = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(error.statuscode).json(error);
   }
 };
@@ -157,7 +146,7 @@ export const Logout = async (req, res) => {
       .clearCookie("refreshToken", options)
       .json(new ApiResponse(200, "User Logged Out Succesfully"));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res
       .status(error.statuscode)
       .json(new ApiResponse(error.statuscode, "Error while logging out!"));
@@ -289,9 +278,7 @@ export const RefreshAccessToken = async (req, res) => {
           "Refresh token is not valid or may expired !!"
         );
       }
-      // there could be 2 case if someone have old refresh token and trying to get in via
-      // that or there could be bug by which your refresh token got refreshed but not got updated in the db
-      //**(errors here check and test needed)
+
       if (token !== user?.refreshToken) {
         throw new ApiError(
           400,
@@ -303,9 +290,6 @@ export const RefreshAccessToken = async (req, res) => {
       const { accessToken, refreshToken } = await GenerateAccessAndRefreshToken(
         user
       );
-
-      // console.log("AF" + accessToken);
-      // console.log("RF" + refreshToken);
 
       const options = {
         // secure : true,
@@ -326,7 +310,7 @@ export const RefreshAccessToken = async (req, res) => {
           )
         );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return res.status(error.statuscode).json(new ApiResponse(error));
     }
   }
@@ -346,7 +330,7 @@ export const deleteUser = async (req, res) => {
         )
       );
   }
-  console.log(_id);
+  // console.log(_id);
   try {
     const result = await User.deleteOne({ _id: _id });
 
@@ -369,7 +353,7 @@ export const deleteUser = async (req, res) => {
 
     res.status(200).json(200, {}, "User has been removed");
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(error.statuscode).json(error);
   }
 };

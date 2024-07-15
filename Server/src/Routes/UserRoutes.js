@@ -30,10 +30,3 @@ router.route("/removeUser/:_id").delete(VerifyUser,IsAdmin,deleteUser);
 
 export default router;
 
-// console.log("u re in routes")
-
-// router.route('/')
-// .post(RegisterUser)
-// .get(GetUser)
-// router.route('/ChangePassword')
-// .post(ChangePassword)
