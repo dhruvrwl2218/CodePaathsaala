@@ -34,7 +34,7 @@ const YourCourses = () => {
             //     // headers: { "Content-Type": "multipart/form-data" },
             //   }
             // );
-            const res = await axiosInstance.get('/user/refreshTokens');
+            const res = await axiosInstance.get('user/refreshTokens');
             // console.log(res);
             if (res.status === 200) {
               fetchEnrolledCourses();
@@ -54,11 +54,11 @@ const YourCourses = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-12 ">
-      <div className="flex flex-wrap justify-center bg-black col-span-8 col-start-3 max-md:col-span-12 max-md:col-start-1">
+    <div className="grid grid-cols-12 mt-40">
+      <div className="flex flex-wrap justify-center col-span-8 col-start-3 max-md:col-span-12 max-md:col-start-1">
         {fetchedCourse.length <= 0 ? (
-          <div className="top-40 left-40">
-            <p>You haven't enrolled in any of the courses</p>
+          <div className="top-40 left-40 p-24 text-5xl text-center font-semibold text-indigo-500">
+            <p>You haven't enrolled in any of the courses :(</p>
           </div>
         ) : (
           fetchedCourse?.map((Course) => <UserCourseDisplay props={Course} key={Course.Name} />)
