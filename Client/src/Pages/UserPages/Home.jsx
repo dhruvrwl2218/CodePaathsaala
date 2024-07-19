@@ -1,10 +1,10 @@
-import React, { useRef, useEffect,useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Coursecard } from "../../Components/User-Page-Components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Instructor from "../../Components/User-Page-Components/Instructor";
-import axios from "axios";
+import axiosInstance from '../../utils/AxiosInstance';
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -13,22 +13,23 @@ const Home = () => {
   useEffect(() => {
     const res = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/v1/Course/AllCourses",
-          { withCredentials: true }
-        );
-        // console.log(response)
+        // const response = await axios.get(
+        //   `http://localhost:8000/api/v1/Course/AllCourses`,
+        //   { withCredentials: true }
+        // );
+        const response = await axiosInstance.get('Course/AllCourses')
+        
         setCourse(response.data.data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        toast.error(error.message);
       }
     };
 
     res();
   }, []);
 
-
-   useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       if (sliderRef.current) {
         sliderRef.current.slickNext();
@@ -82,14 +83,16 @@ const Home = () => {
             </span>
           </p>
           <div className="flex mt-24 mb-5 justify-center ">
-            <Link to={'/Courses'}>
-             <p className="p-3 mx-5 font-semi-bold  text-lg rounded-xl border-x border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900">View Courses</p>
-             </Link>
+            <Link to={"/Courses"}>
+              <p className="p-3 mx-5 font-semi-bold  text-lg rounded-xl border-x border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900">
+                View Courses
+              </p>
+            </Link>
             <a
               href="#"
               className="p-3 mx-5 text-lg font-semi-bold rounded-xl  border border-emerald-900 whitespace-nowrap hover:shadow-lg hover:shadow-emerald-900"
             >
-              View Updates  
+              View Updates
             </a>
           </div>
         </div>
@@ -103,22 +106,22 @@ const Home = () => {
           </p>
         </div>
         <div className="rounded-2xl p-5 bg-neutral-900 shadow-sm shadow-slate-200">
-        <Slider {...settings} ref={sliderRef}>
-          {
-              course && course.filter((itmes)=>itmes.Name.includes('live')).map((liveCourse)=>(
-                <Coursecard
-                Name={liveCourse.Name}
-                Img={liveCourse.Thumbnail}
-                Description = {liveCourse.Description}
-                Level={liveCourse.Level}
-                Css="w-96 mx-auto"
-                Duration={liveCourse.Duration}
-                Price = {liveCourse.Price}
-                _id = {liveCourse._id}
-              />
-              ))
-              
-          }
+          <Slider {...settings} ref={sliderRef}>
+            {course &&
+              course
+                .filter((itmes) => itmes.Name.includes("live"))
+                .map((liveCourse) => (
+                  <Coursecard key={liveCourse._id}
+                    Name={liveCourse.Name}
+                    Img={liveCourse.Thumbnail}
+                    Description={liveCourse.Description}
+                    Level={liveCourse.Level}
+                    Css="w-96 mx-auto"
+                    Duration={liveCourse.Duration}
+                    Price={liveCourse.Price}
+                    _id={liveCourse._id}
+                  />
+                ))}
           </Slider>
         </div>
       </div>
@@ -134,18 +137,21 @@ const Home = () => {
         </div>
         <div className="rounded-2xl p-5 bg-neutral-900 shadow-sm shadow-slate-200">
           <Slider {...settings} ref={sliderRef}>
-            {course && course.filter((itmes) => !itmes.Name.includes('live')).map((recorded) => (
-              <Coursecard
-                Name={recorded.Name}
-                Img={recorded.Thumbnail}
-                Description = {recorded.Description}
-                Level={recorded.Level}
-                Css="w-96 mx-auto"
-                Duration={recorded.Duration}
-                Price = {recorded.Price}
-                _id = {recorded._id}
-              />
-            ))}
+            {course &&
+              course
+                .filter((itmes) => !itmes.Name.includes("live"))
+                .map((recorded) => (
+                  <Coursecard key={recorded._id}
+                    Name={recorded.Name}
+                    Img={recorded.Thumbnail}
+                    Description={recorded.Description}
+                    Level={recorded.Level}
+                    Css="w-96 mx-auto"
+                    Duration={recorded.Duration}
+                    Price={recorded.Price}
+                    _id={recorded._id}
+                  />
+                ))}
           </Slider>
         </div>
       </div>
@@ -205,12 +211,13 @@ const Home = () => {
           </p>
         </div>
       </div>
-
-      //tutors and mentors  //flex flex-wrap justify-center
+      //tutors and mentors //flex flex-wrap justify-center
       <div className=" my-20 text-white p-5 bg-neutral-900 lg:mx-80">
-        <p className="p-5 text-4xl font-bold text-indigo-500 text-center">Our Instructor</p>
+        <p className="p-5 text-4xl font-bold text-indigo-500 text-center">
+          Our Instructor
+        </p>
         <Instructor />
-      </div> 
+      </div>
     </div>
   );
 };

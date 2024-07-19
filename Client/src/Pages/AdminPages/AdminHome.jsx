@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch} from "react-redux"
-import axios from "axios";
+import axiosInstance from '../../utils/AxiosInstance';
 import { Navigate } from "react-router";
 const AdminHome = () => {
   const [data, setData] = useState();
@@ -8,29 +8,22 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchstats = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/Utility/adminStats",
-          { withCredentials: true }
-        );
-        console.log(res.data.data.data);
+        
+        const res = await axiosInstance.get('Utility/adminStats');
+        // console.log(res.data.data.data);
         setData(res.data.data.data);
       } catch (error) {
         // console.log(error.response.status);
         if (error.response.status === 401) {
           try {
-            const res = await axios.get(
-              "http://localhost:8000/api/v1/user/refreshTokens",
-              {
-                withCredentials: true,
-                // headers: { "Content-Type": "multipart/form-data" },
-              }
-            );
-            console.log(res);
+           
+            const res = await axiosInstance.get('user/refreshTokens')
+            // console.log(res);
             if (res.status === 200) {
               fetchstats();
             }
           } catch (error) {
-            console.log(error);
+            // console.log(error);
             dispatch(logout());
             toast.error();
             Navigate("/Login");

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import {Pagination} from "../../Components/Admin-Page-Components";
 import {CourseUserDeletion} from "../../Components/Admin-Page-Components/Pop-ups";
 import { toast } from "react-toastify";
+import axiousInstance from "../../utils/AxiosInstance";
 
 const EnrolledUserList =  () => {
 
@@ -22,21 +22,16 @@ const EnrolledUserList =  () => {
   useEffect(() => {
     const FetchEnrolledUser = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8000/api/v1/Enroll/EnrolledUser`,
-          {
-            withCredentials: true,
-            
-          }
-        );
+        
+        const res = await axiousInstance.get('Enroll/EnrolledUser')
       
         setEnrolledUser(res.data.data.enrollments);
         setFilteredEnrolledUser(res.data.data.enrollments);
         setIsLoading(false);
 
       } catch (error) {
-        console.log(error);
-        toast.error()
+        // console.log(error);
+        toast.error(error.message)
       }
     };
     FetchEnrolledUser();
@@ -57,20 +52,15 @@ const EnrolledUserList =  () => {
     }, []);
 
   const SearchUsers = async (data) => {
-    // console.log(data);
-    // console.log(data.User);
-    // console.log(data.selectCourses);
+    
     if (!data.User || data.User === "") {
       const filteredData = await enrolledUser.filter(
         (enrolled) => enrolled.Course.Name === data.selectCourses
       );
-
-      // console.log(filteredData)
       const filtereddataaa = filteredData.map((data, index) => ({
         ...data,
         Index: index + 1,
       }));
-      // console.log(filtereddataaa);
       setFilteredEnrolledUser(filtereddataaa);
       setPage(1);
       return;
@@ -105,11 +95,6 @@ const EnrolledUserList =  () => {
     }
   };
 
-  //  console.log(CourseSearchOptions);
-  // console.log(enrolledUser)
-  // console.log(CourseDetails)
-
-
   const onPageChange = (newPage) =>{
     if(newPage >= 1 && newPage <= totalPages){
       setPage(newPage)
@@ -121,23 +106,16 @@ const EnrolledUserList =  () => {
  
 
   const deleteEnrollement = async(_id) => {
-    console.log("Enrolled User" + _id)
+    
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/Enroll/deleteEnrollment/${_id}`, {
-        withCredentials: true,
-        // headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axiousInstance.delete(`Enroll/deleteEnrollment/${_id}`)
 
-      console.log(res);
       if(res.status === 200){
         toast.success("Enrollment deleted successfully!")
-      }else{
-        toast.error(res.error)
-        throw res.data
-        
+      }else{        
+        throw res.data        
       }
     } catch (error) {
-      console.log(error)
       toast.error(res.error)
     }
   }

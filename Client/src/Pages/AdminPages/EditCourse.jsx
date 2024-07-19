@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router";
+import axiousInstance from "../../utils/AxiosInstance";
 
 const EditCourse = () => {
   const navigate = useNavigate();
@@ -20,16 +20,10 @@ const EditCourse = () => {
   useEffect(() => {
     const GetCoureseDetails = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8000/api/v1/Course/ReadOne/${_id}`,
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        const res = await axiousInstance.get(`Course/ReadOne/${_id}`)
         setFetchedCourse(res.data?.data);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message)
       }
     };
     GetCoureseDetails();
@@ -51,7 +45,7 @@ const EditCourse = () => {
 
   function findChangedKeys(obj1, obj2) {
     const changedKeys = {};
-    console.log("clicked2" + obj1 + obj2)
+   
     for (const key in obj1) {
       if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key)) {
         if (obj1[key] !== obj2[key]) {
@@ -63,14 +57,11 @@ const EditCourse = () => {
   }
 
   const editCourse = async (data) => {
-   console.log("clicked" + data)
-
+  
     const formData = new FormData();
     const updatedFields = findChangedKeys(data, fetchedcourse);
     
     delete updatedFields.StudyMaterial;
-
-    console.log(updatedFields);
 
    Object.keys(updatedFields).forEach((key)=>{
     if(key === "Thumbnail"){
@@ -81,24 +72,22 @@ const EditCourse = () => {
    
    })
     
-    console.log(formData)
     try {
-      const res = await axios.patch(
-        `http://localhost:8000/api/v1/Course/UpdateCourse/${_id}`,
+      
+      const res = await axiousInstance.patch(`Course/UpdateCourse/${_id}`,
         formData,
         {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
+              headers: { "Content-Type": "multipart/form-data" },
         }
-      );
-      console.log(res);
+      )
+      
       if (res.status === 200) {
         toast.success("Course has been updated");
         reset();
         navigate("/CourseList");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message)
     }
   };
 

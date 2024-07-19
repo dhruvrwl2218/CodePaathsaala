@@ -46,7 +46,7 @@ const Instructor = () => {
     <div>
         <Slider  {...settings} ref={sliderRef}>
       {InstructoreDetails.map((details) =>(
-        <div className="" >
+        <div className="" key={details.name}>
         <div className='justify-center flex'>
           <img
             src= {details.Img}

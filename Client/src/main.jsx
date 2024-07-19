@@ -27,7 +27,7 @@ import{ Home,About,Courses,YourCourses,Issue} from "./Pages/UserPages";
 
 import {AdminRoutes} from "./Components/Admin-Page-Components";
 import RestrictedPath from "./Components/Restricted-Page-Components/RestrictedPath.jsx";
-import {EnrollmentSucess} from "./Components/User-Page-Components";
+// import {EnrollmentSucess} from "./Components/User-Page-Components";
 
 //Admin side components and pages
 import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
@@ -57,7 +57,7 @@ const authRoutes = [
 
 const privateUserRoutes = [
   <Route key="your-courses" path="/YourCourses" element={<YourCourses />} />,
-  <Route key="success" path="/Success" element={<EnrollmentSucess />} />,
+  // <Route key="success" path="/Success" element={<EnrollmentSucess />} />,
 ];
 
 const adminRoutes = [

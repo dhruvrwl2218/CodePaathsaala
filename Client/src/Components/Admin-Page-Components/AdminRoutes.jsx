@@ -40,15 +40,3 @@ const AdminRoutes = () => {
 
 export default AdminRoutes;
 
-
-// let content;
-// switch (Role) {
-//     case "Admin":
-//         content = <Outlet/>
-//         break;
-//     case "User" :
-//         content = <UserNotAllowed/>
-//         break;
-//     default:
-//         content = <LogIn/>;
-// }

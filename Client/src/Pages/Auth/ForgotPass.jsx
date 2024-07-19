@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axiosInstance from "../../utils/AxiosInstance";
 import { toast } from "react-toastify";
 
 const ForgotPass = () => {
@@ -12,11 +12,12 @@ const ForgotPass = () => {
   } = useForm();
   const Send = async (data) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/user/forgot-Password",
-        data,
-        { withCredentials: true }
-      );
+      // const res = await axios.post(
+      //   `${process.env.url}user/forgot-Password`,
+      //   data,
+      //   { withCredentials: true }
+      // );
+      const res = await axiosInstance.post('user/forgot-Password',data);
       if (res.status === 200) {
         toast.success("Email sent successfully");
       } else {

@@ -139,7 +139,13 @@ export const UploadFiles = async (req, res) => {
 
   const studymaterial = req.files;
 
+  if(studymaterial.length < 0){
+    throw new ApiError(409,"havem't recieved the files")
+  }
+    
+  console.log(_id,studymaterial)
   const url = [];
+  
   try {
     for (const files of studymaterial) {
       const { secure_url: FileUrl, original_filename: FileName } =

@@ -1,9 +1,10 @@
 import React from "react";
 import { useParams } from "react-router";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axiosInstance from "../../utils/AxiosInstance";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -19,21 +20,21 @@ const ResetPassword = () => {
   const Send = async (data) => {
     console.log(data);
     try {
-      const res = axios.post(
-        `http://localhost:8000/api/v1/user/reset-Password/${token}`,
-        data,
-        { withCredentials: true }
-      );
+      // const res = axios.post(
+      //   `${process.env.url}/user/reset-Password/${token}`,
+      //   data,
+      //   { withCredentials: true }
+      // );
+      const res = axiosInstance.post(`/user/reset-Password/${token}`,data)
 
       if (res.status === 200) {
-        console.log("new pass saved");
         toast.success("Password updated Sucessfully!");
         Navigate("/Login");
       } else {
-        console.log(res.error);
+        throw res;
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(error);
     }
   };

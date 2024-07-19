@@ -6,12 +6,10 @@ import{ LogIn } from '../../Pages/Auth';
 
 const RestrictedPath = () => {
   const isLoggedIn = useSelector((state) => state.Auth.islogin);
-  console.log("For Protected Routes" + isLoggedIn);
-  // const [isLoggedIn,setIsLogged] = useState(true)
+ 
   return (
     <div>
-      {isLoggedIn ? <Outlet/>: <LogIn/>}
-     
+      {isLoggedIn ? <Outlet/>: <LogIn/>} 
     </div>
   )
 }

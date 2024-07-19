@@ -33,7 +33,7 @@ export const getKey = async (req, res) => {
 
 export const checkout = async (req, res) => {
   const { amount } = req.body;
-
+  console.log(amount)
   const instance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY,
     key_secret: process.env.RAZORPAY_SECRET,
@@ -43,10 +43,11 @@ export const checkout = async (req, res) => {
     amount: Number(amount * 100),
     currency: "INR",
   };
-
+  try {
+    
   const order = await instance.orders.create(options);
 
-  // console.log(order);
+  console.log(order);
 
   res
     .status(200)
@@ -57,6 +58,9 @@ export const checkout = async (req, res) => {
         "order Id has been cerated sucessfully :)..!"
       )
     );
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export const paymentverificationandEnrollment = async (req, res) => {
@@ -179,7 +183,7 @@ export const EnrolledUserCourses = async (req, res) => {
         new ApiResponse(
           401,
           {},
-          "User id is not recieved check wheather the user is logged in or any client side issue id there"
+          "there is some glitch here id not recieved"
         )
       );
   }
@@ -196,7 +200,7 @@ export const EnrolledUserCourses = async (req, res) => {
     if (!enrolledCourse) {
       throw new ApiError(500, "Internal server Error!");
     }
-    return res.status(200).json(new ApiResponse(error));
+    return res.status(200).json(new ApiResponse(200,enrolledCourse,"Course fetched successfully"));
   } catch (error) {
     // console.log(error);
     return res.status(error.statuscode).json(new ApiResponse(error));

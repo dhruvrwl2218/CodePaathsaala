@@ -3,10 +3,10 @@ import Logo from "./Logo";
 import { NavLink, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { islogin, logout } from "../../store/AuthSlice";
 import { IoReorderThreeOutline } from "react-icons/io5";
+import axiousInstance from "../../utils/AxiosInstance";
 
 const Header = () => {
   const isLogin = useSelector(islogin);
@@ -24,11 +24,7 @@ const Header = () => {
   };
   const LogOut = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/user/logout",
-        {},
-        { withCredentials: true }
-      );
+      const response = await axiousInstance.post(`user/logout`)
       if (response.status === 200) {
         toast.success(response.data.data);
         dispatch(logout());
@@ -39,7 +35,7 @@ const Header = () => {
     }
   };
   return (
-    <nav className=" text-white flex gap-4 h-20 shadow-md  z-1 sticky bg-neutral-900"> 
+    <nav className=" text-white flex gap-4 h-20 shadow-md  z-1 sticky bg-neutral-900">
       <div className=" rounded-lg lg:mx-72 mx-80">
         <Link to="/">
           <Logo className={` w-full pt-5 `} />
@@ -92,7 +88,9 @@ const Header = () => {
         </Link>
         <button
           className={`${
-            isLogin ? `h-12 mt-3 p-1 px-2 mx-40 rounded-lg bg-indigo-600` : `hidden`
+            isLogin
+              ? `h-12 mt-3 p-1 px-2 mx-40 rounded-lg bg-indigo-600`
+              : `hidden`
           }`}
           onClick={LogOut}
         >
@@ -100,26 +98,6 @@ const Header = () => {
         </button>
       </div>
     </nav>
-    //     <nav  className="bg-black grid  grid-col-6 md:grid-col-12 gap-3 text-white sticky top-0 z-10 ">
-    //     <div className=' mx-3 col-span-1 md:col-start-3 m-2 '><Link to = "/">
-    //         <Logo className={`px-2 w-20 rounded-2xl`}/>
-    //         </Link>
-    //     </div>
-    //     <ul> className="md:col-start-4 col-span-4 mt-2 flex items-center p-3 gap-4 "
-
-    //         <li className="p-1 m-1 hover:text-xl"><NavLink to ="/">Home</NavLink ></li>
-    //         <li className="p-1 m-1 hover:text-xl"><NavLink to ="/About">About</NavLink></li>
-    //         <li className="p-1 m-1 hover:text-xl"><NavLink to ="/Courses">Courses</NavLink></li>
-    //         <li className="p-1 m-1 hover:text-xl "><NavLink to ="/YourCourses">Your Courses</NavLink></li>
-
-    //     </ul>
-    //     <div className='mt-1 justify-space-around sm:col-start-8 col-span-2'>
-    //         {/* <Link to="/updates"><p className="mt-5 p-1 px-3 border border-r-2">updates</p></Link> */}
-    //         <Link to = "/Login"><p className="mt-3  p-1 px-4 border border-r-2 rounded-md w-20">Log in </p></Link>
-    //         {/* <button  className=" my-5 border border-r-2 px-3"
-    //         onClick={LogOut}>Logout</button> */}
-    //     </div>
-    // </nav>
   );
 };
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import axiosInstance from '../../utils/AxiosInstance';
 
 const AddCourses = () => {
   const navigate = useNavigate();
@@ -26,22 +26,16 @@ const AddCourses = () => {
       formData.append("Level", data.Level);
       formData.append("Description", data.Description);
 
-      const res = await axios.post(
-        "http://localhost:8000/api/v1/Course/add",
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      
+      const res = await axiosInstance.post('Course/add',formData,{headers: { "Content-Type": "multipart/form-data" }})
       toast.success("New Course Added");
       reset();
       navigate("/CourseList");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Error while Adding Course!")
     }
-    console.log(data);
+    
   };
 
   return (
@@ -97,12 +91,7 @@ const AddCourses = () => {
               type="File"
               className="block  bg-neutral-800 text-neutral-300  mt-1 w-2/3  p-1 rounded-lg"
               {...register("Thumbnail", { required: true })}
-              // onChange={(e) => {
-              //   // Handle file selection and update form value
-              //   if (e.target.files.length > 0) {
-              //     setValue('Thumbnail', e.target.files[0]);
-              //   }
-              // }}
+             
             />
           </label>
 
@@ -113,12 +102,7 @@ const AddCourses = () => {
               className="block  bg-neutral-800 text-neutral-300 mt-1 w-2/3  p-1 rounded-lg"
               {...register("StudyMaterial")}
               multiple
-              // onChange={(e) => {   , { required: true }
-              //   // Handle file selection and update form value
-              //   if (e.target.files.length > 0) {
-              //     setValue("StudyMaterial", e.target.files[0]);
-              //   }
-              // }}
+              
             />
           </label>
           <label className="mb-5 block text-xl w-1/2 max-sm:w-full text-indigo-500">

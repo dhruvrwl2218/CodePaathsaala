@@ -1,35 +1,30 @@
 import React,{useState}from 'react'
 import { useForm} from 'react-hook-form'
-import axios from 'axios';
+import axiousInstance from '../../../utils/AxiosInstance';
 import { toast } from "react-toastify";
 
-const AddFiles = ({removePopUp,api}) => {
+const AddFiles = ({removePopUp,_id}) => {
     
     const{handleSubmit,reset,register} = useForm();
 
-    // console.log(_id + removePopUp);
-
-  
     const AddFiles = async(data) =>{
       
-        // console.log(data.StudyMaterial)
-        // console.log(data.StudyMaterial.length)
         const formData = new FormData();
 
         for(let i = 0 ; i < data.StudyMaterial.length ; i++){
-          // console.log(data.StudyMaterial[i])
           formData.append('StudyMaterial',data.StudyMaterial[i]);
         }
         try {
-            const response = await axios.put(`${api}`,formData, {
-                withCredentials: true,
-                headers: { "Content-Type": "multipart/form-data" },
-              })
-              console.log(response);
+            // handle the errors here properly
+              const response = await axiousInstance.put(`Course/addFiles/${_id}`,
+                formData,
+                {headers : {"Content-Type" : "multipart/form-data"}}
+              )
+
               toast.success("New Files have been added Successfully!");
               
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             toast.error("Error while Adding Files :(..")
            
         }

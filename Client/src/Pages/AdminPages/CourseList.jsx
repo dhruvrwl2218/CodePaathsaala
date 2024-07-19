@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { HiOutlineDocumentAdd } from "react-icons/hi";
 import {useNavigate} from "react-router-dom";
 import {CourseUserDeletion , AddFiles } from "../../Components/Admin-Page-Components/Pop-ups";
-
-
+import axiousInstance from "../../utils/AxiosInstance";
 
 const CourseList = () => {
   const [course, setCourse] = useState([]);
@@ -18,14 +16,10 @@ const CourseList = () => {
   useEffect(() => {
     const Courses = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/Course/AllCourses",
-          { withCredentials: true }
-        );
-        console.log(res?.data?.data);
+        const res = await axiousInstance.get('Course/AllCourses')
         setCourse(res?.data?.data);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     };
     Courses();
@@ -37,17 +31,13 @@ const CourseList = () => {
   }
 
   const addFiles = (_id)=>{
-    console.log("Sec" + _id)
-    setAddDlt(["addFiles",`http://localhost:8000/api/v1/Course/addFiles/${_id}`])
-    setPopup(true);
-   
+    setAddDlt(["addFiles",_id])
+    setPopup(true);  
   }
 
-  
-  const deleteCourse = async (_id) =>{
-    console.log("First" + _id)
+  const deleteCourse = async (_id) =>{  
     setPopup(true);
-    setAddDlt(["deleteCourse",`http://localhost:8000/api/v1/Course/remove/${_id}`])
+    setAddDlt(["deleteCourse",_id])
   }
   
   const removePopUp = ()=>{
@@ -58,7 +48,7 @@ const CourseList = () => {
     <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-sm:w-full ">
       <div className="text-4xl font-semibold text-indigo-500 mb-6 w-full text-center mx-4 bg-neutral-800 px-8 p-1">Listed Courses</div>
       {popup != false && <div className = " bg-indigo-800 opacity-70 fixed inset-0 flex items-center justify-center z-50 max-sm:mx-10">
-        {adddlt[0] === "addFiles" ? <AddFiles api = {adddlt[1]} removePopUp = {removePopUp} />:<CourseUserDeletion removePopUp = {removePopUp} api = {adddlt[1]}/>}
+        {adddlt[0] === "addFiles" ? <AddFiles _id = {adddlt[1]} removePopUp = {removePopUp} />:<CourseUserDeletion removePopUp = {removePopUp} _id = {adddlt[1]}/>}
         </div>}
       <table className="w-full m-4 mt-0 p-5">
         <thead>
@@ -74,7 +64,7 @@ const CourseList = () => {
         </thead>
         <tbody>
           {course?.map(({_id,Name,Description,Level,Thumbnail,Duration,Price},index)=>(
-            <tr 
+            <tr key={_id}
             className={index % 2 === 0 ? `bg-indigo-900` : `bg-black`}>
               <td className="w-1/4  "><img src={Thumbnail} alt="Thumbnail" className="w-1/2 h-auto rounded-xl m-2" /></td>
               <td className="w-1/6 text-wrap text-center ">{Name}</td>
@@ -131,15 +121,3 @@ const CourseList = () => {
 export default CourseList;
 
 
-{/* 
-// {course?.map((items) => (
-//   <AdminCourseCard key={items._id}
-//     Name={items?.Name}
-//     Description={items?.Description}
-//     Level={items?.Level}
-//     Img={items?.Thumbnail}
-//     Duration={items?.Duration}
-//     Price={items?.Price}
-//     _id = {items?._id}
-//   />
-// ))} */}

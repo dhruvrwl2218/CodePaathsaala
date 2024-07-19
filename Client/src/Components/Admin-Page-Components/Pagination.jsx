@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Pagination = ({totalPages,onPageChange,currentPage,pageListLimit}) => {
-    console.log(totalPages)
+    // console.log(totalPages)
     const startPage = Math.max(currentPage - Math.floor(pageListLimit/2),1);
     const endPage = Math.min(currentPage + Math.floor(pageListLimit/2),totalPages);
 

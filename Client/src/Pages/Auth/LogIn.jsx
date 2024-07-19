@@ -1,11 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/AuthSlice";
+import axiosInstance from "../../utils/AxiosInstance";
 // import Cookies from 'js-cookie';
 
 const LogIn = () => {
@@ -22,19 +22,15 @@ const LogIn = () => {
 
   const Send = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/user/LogIn",
-        data,
-        { withCredentials: true }
-      );
-      console.log(response);
+      // const response = await axios.post(`${process.env.url}/user/LogIn`, data, {
+      //   withCredentials: true,
+      // });
+      const response = await axiosInstance.post('user/LogIn',data)
 
       if (response.status === 200) {
         toast.success("user logged In Sucessfully!");
 
         const { accessToken, refreshToken, user } = await response?.data?.data;
-
-        console.log(user.Role);
         dispatch(login({ User_id: user._id, Role: user.Role }));
         reset();
         navigate("/");
@@ -42,7 +38,7 @@ const LogIn = () => {
         toast.error(response.message);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("error while logging in :(");
     }
   };

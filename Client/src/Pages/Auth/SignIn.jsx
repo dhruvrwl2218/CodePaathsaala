@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axiosInstance from "../../utils/AxiosInstance";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
@@ -15,17 +15,13 @@ const SignIn = () => {
 
   const send = async (data) => {
     try {
-      const response = await axios.post(
-        `http://localhost:8000/api/v1/user/SignIn/User`,
-        data,
-        { withCredentials: true }
-      );
+      // const response = await axios.post(
+      //   `${process.env.url}/user/SignIn/User`,
+      //   data,
+      //   { withCredentials: true }
+      // );
+      const response = await axiosInstance.post(`user/SignIn/User`,data)
 
-      console.log(response);
-      console.log(response?.status);
-      // console.log(response?.data?.statusCode)
-      // console.log(response.data.message)
-      // console.log(response.message)
       if (response.status === 200) {
         toast.success("User Successfully Registered!", {
           position: "top-right",
@@ -42,9 +38,7 @@ const SignIn = () => {
         navigate("/Login");
       }
     } catch (error) {
-      // console.log(error);
-      // console.log(error.response.message)
-      // console.log(error.response.data.data)
+      
       if (error)
         toast.error(error.response.data.data, {
           position: "top-right",
