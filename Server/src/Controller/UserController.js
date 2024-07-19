@@ -93,7 +93,8 @@ export const UserLogIn = async (req, res) => {
         "User with this email is not present in db"
       );
     }
-
+     
+    console.log(Password);
     const isPasswordCorrect = await user.PasswordCheck(Password);
 
     if (!isPasswordCorrect) {
@@ -169,7 +170,7 @@ export const ForgotPassword = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id },
       process.env.FORGOT_PASS_TOKEN_KEY,
-      { expiresIn: "10m" }
+      { expiresIn: "5m" }
     );
 
     const transporter = nodemailer.createTransport({
@@ -186,8 +187,8 @@ export const ForgotPassword = async (req, res) => {
       subject: "Reset Password",
       html: `<h1>Reset Your Password</h1>
       <p>Click on the following link to reset your password:</p>
-      <a href="http://localhost:5173/reset-password/${token}">http://localhost:5173/reset-password/${token}</a>
-      <p>The link will expire in 10 minutes.</p>
+      <a href="http://localhost:5173/reset-password/${token}">Password reset</a>
+      <p>The link will expire in 5 minutes.</p>
       <p>If you didn't request a password reset, please ignore this email.</p>`,
     };
     transporter.sendMail(mailOptions, (err, info) => {
@@ -208,6 +209,7 @@ export const ForgotPassword = async (req, res) => {
   }
 };
 
+// address the issue here may getting the status 200 fake response 
 export const ResetPassword = async (req, res) => {
   let { new_password } = req.body;
 
@@ -216,18 +218,23 @@ export const ResetPassword = async (req, res) => {
       req.params.token,
       process.env.FORGOT_PASS_TOKEN_KEY
     );
-
+ 
+    console.log(decodedToken)
     if (!decodedToken) {
       throw new ApiError(401).json(401, "Invalid token");
     }
 
     const user = await User.findOne({ _id: decodedToken.userId });
 
+    console.log(user)
+
     if (!user) {
       throw new ApiError(401).json(401, "no user found");
     }
 
     new_password = await bcrypt.hash(new_password, 12);
+
+    console.log("pass" + new_password)
 
     user.Password = new_password;
     await user.save();
@@ -292,10 +299,9 @@ export const RefreshAccessToken = async (req, res) => {
       );
 
       const options = {
-        // secure : true,
+        secure : true,
         httpOnly: true,
-        // origin : process.env.CORS_ORIGIN,
-        // SameSite: 'None'
+        SameSite: 'None'       
       };
 
       res

@@ -20,11 +20,7 @@ const ResetPassword = () => {
   const Send = async (data) => {
     console.log(data);
     try {
-      // const res = axios.post(
-      //   `${process.env.url}/user/reset-Password/${token}`,
-      //   data,
-      //   { withCredentials: true }
-      // );
+      
       const res = axiosInstance.post(`/user/reset-Password/${token}`,data)
 
       if (res.status === 200) {
@@ -34,8 +30,9 @@ const ResetPassword = () => {
         throw res;
       }
     } catch (error) {
-      // console.log(error);
-      toast.error(error);
+      console.log(error);
+      toast.error(error.data.message);
+      Navigate("/Forgot-Password");
     }
   };
 
