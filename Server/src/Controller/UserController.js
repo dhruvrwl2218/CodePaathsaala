@@ -109,10 +109,14 @@ export const UserLogIn = async (req, res) => {
       .cookie("accessToken", accessToken, {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: true,       
+        sameSite: 'None',
       })
       .cookie("refreshToken", refreshToken, {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: true,       
+        sameSite: 'None',
       })
       .json(
         new ApiResponse(
@@ -137,8 +141,8 @@ export const Logout = async (req, res) => {
 
     const options = {
       httpOnly: true,
-      // origin : process.env.CORS_ORIGIN,
-      SameSite: "None",
+      secure: true,
+      sameSite: 'None',
     };
     res
       .status(200)
@@ -244,9 +248,10 @@ export const RefreshAccessToken = async (req, res) => {
   if (!token) {
     const newuser = await User.updateOne(
       { _id: req.params._id },
-      { $set: { refreshToken: "" } }
+      { $set: { refreshToken: "" } },
+      { new: true }
     );
-
+    console.log(newuser);
     res
       .status(403)
       .json(
@@ -292,10 +297,9 @@ export const RefreshAccessToken = async (req, res) => {
       );
 
       const options = {
-        // secure : true,
+        secure : true,
         httpOnly: true,
-        // origin : process.env.CORS_ORIGIN,
-        // SameSite: 'None'
+        SameSite: 'None'
       };
 
       res
