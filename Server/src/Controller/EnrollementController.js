@@ -5,7 +5,7 @@ import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 import crypto from "crypto";
 import Razorpay from "razorpay";
-import { error } from "console";
+
 
 export const getKey = async (req, res) => {
   const enrolldata = req.body;

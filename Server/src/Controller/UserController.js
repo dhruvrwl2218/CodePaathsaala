@@ -211,17 +211,24 @@ export const ForgotPassword = async (req, res) => {
 
 // address the issue here may getting the status 200 fake response 
 export const ResetPassword = async (req, res) => {
-  let { new_password } = req.body;
+  const  { new_password } = req.body;
+  const {token} = req.params;
+  console.log(new_password + "dono sahi salamat aagye hai" +token)
+
+  if(!new_password){
+  res.status(403).json(new ApiError(403,"plz send the new pass to reset"))
+  }
 
   try {
     const decodedToken = jwt.verify(
-      req.params.token,
+      token,
       process.env.FORGOT_PASS_TOKEN_KEY
     );
  
     console.log(decodedToken)
+
     if (!decodedToken) {
-      throw new ApiError(401).json(401, "Invalid token");
+      throw new ApiError(401).json(401, "Invalid token or Token expired!!!");
     }
 
     const user = await User.findOne({ _id: decodedToken.userId });
@@ -229,18 +236,19 @@ export const ResetPassword = async (req, res) => {
     console.log(user)
 
     if (!user) {
-      throw new ApiError(401).json(401, "no user found");
+      throw new ApiError(401).json(401, "Unable to find the UserID!");
     }
 
-    new_password = await bcrypt.hash(new_password, 12);
+    const resetPass = await bcrypt.hash(new_password, 12);
 
-    console.log("pass" + new_password)
+    console.log("pass" + resetPass)
 
-    user.Password = new_password;
+    user.Password = resetPass;
     await user.save();
 
-    res.status(200).json(new ApiResponse(200, "Password Updated"));
+    res.status(200).json(new ApiResponse(200,"Password Updated"));
   } catch (error) {
+    console.log(error)
     res.status(error.statuscode).json(new ApiResponse(error.statuscode, error));
   }
 };

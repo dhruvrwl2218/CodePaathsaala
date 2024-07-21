@@ -5,6 +5,7 @@ This is online Course App where where the user can enroll in any Course and get 
 IN this new branch we resolving some of the major issue we are facing in production and trying to improve the performance 
 
 1> forget pass and reset pass thing was working fine but it was in another branch tht was deleted and these changes were not added here so need a fix
+issue(link is getting but while reset req is sent 200 fake response is generated and while trying to log in again getting error for icoorect pass)
 2> **** Then in production cookies are recieved but while making the calls to the protected routes server is not recieving the cookies (seems to be fixed)
 3> then read about the other things to be care about while using the https and in production
 4> Need to improve the initial loading time by splitting the code by adding the lazy loading and suspense so that it does'nt take much time to load the website when user enters
@@ -13,7 +14,17 @@ IN this new branch we resolving some of the major issue we are facing in product
 7> additionally add the zod validation to the form where needed so that unwanted behaviour is not caused by the user 
 8>while adding the files in prodiction server is not able to find the files in the local direcotory so we need to upload it as it is to the cloudinary ,(impo****)
 9> in the header while we change to the small screen to big screen and nav links are shown with toggle bar then it distrupting the behaviour of thr design 
-10> Pdfs are not been some in the pro. and videos are needed to be checked (may be due to the 3rd party cookies sent by the cloudinary)
+10> Pdfs are not been some in the pro. and videos are needed to be checked (may be due to the 3rd party cookies sent by the cloudinary)~~~~~~~~now working fine (in case of the single course in the crousel it not working fine)
+11> add the after effects on the client side after you have performed the any of the action and remember to dlt the cloudinary images and files for which the course has been deleted or in case of any error after cloud activity need to delete the file .
+
+
+cloudinary.uploader.destroy('public_id_of_file', (error, result) => {
+  if (error) {
+    console.error('Error deleting file:', error);
+  } else {
+    console.log('File deleted successfully:', result);
+  }
+});
 
 
 #User-side pages
