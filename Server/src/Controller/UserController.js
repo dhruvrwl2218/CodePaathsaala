@@ -119,11 +119,11 @@ export const UserLogIn = async (req, res) => {
         new ApiResponse(
           200,
           { user, accessToken, refreshToken },
-          "user logged in suceessfully!"
+          "user logged in suceessfully!"  
         )
       );
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.status(error.statuscode).json(error);
   }
 };
@@ -213,7 +213,6 @@ export const ForgotPassword = async (req, res) => {
 export const ResetPassword = async (req, res) => {
   const  { new_password } = req.body;
   const {token} = req.params;
-  console.log(new_password + "dono sahi salamat aagye hai" +token)
 
   if(!new_password){
   res.status(403).json(new ApiError(403,"plz send the new pass to reset"))
@@ -224,8 +223,6 @@ export const ResetPassword = async (req, res) => {
       token,
       process.env.FORGOT_PASS_TOKEN_KEY
     );
- 
-    console.log(decodedToken)
 
     if (!decodedToken) {
       throw new ApiError(401).json(401, "Invalid token or Token expired!!!");
@@ -233,23 +230,17 @@ export const ResetPassword = async (req, res) => {
 
     const user = await User.findOne({ _id: decodedToken.userId });
 
-    console.log(user)
 
     if (!user) {
       throw new ApiError(401).json(401, "Unable to find the UserID!");
     }
 
-    const resetPass = await bcrypt.hash(new_password, 12);
-
-    console.log("pass" + resetPass)
-
-    user.Password = resetPass;
-    await user.save();
+    user.Password = new_password;
+    await user.save(); 
 
     res.status(200).json(new ApiResponse(200,"Password Updated"));
   } catch (error) {
-    console.log(error)
-    res.status(error.statuscode).json(new ApiResponse(error.statuscode, error));
+    res.status(error?.statuscode?error?.statuscode:500).json(new ApiResponse(error.statuscode, error));
   }
 };
 

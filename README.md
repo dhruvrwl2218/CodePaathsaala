@@ -6,8 +6,11 @@ IN this new branch we resolving some of the major issue we are facing in product
 
 1> forget pass and reset pass thing was working fine but it was in another branch tht was deleted and these changes were not added here so need a fix
 issue(link is getting but while reset req is sent 200 fake response is generated and while trying to log in again getting error for icoorect pass)
+~~~~~~~~~~~fixed~~~~~~~~~~~~~~~~11111111111
 2> **** Then in production cookies are recieved but while making the calls to the protected routes server is not recieving the cookies (seems to be fixed)
+~~~~~~~~~~fixed~~~~~~~~~~~~~~~~~2222222222
 3> then read about the other things to be care about while using the https and in production
+~~~~~`
 4> Need to improve the initial loading time by splitting the code by adding the lazy loading and suspense so that it does'nt take much time to load the website when user enters
 5> Read and try to fix the issue where design of the website looks diff in the browser like in dev also it was fine with the chrome but in edge there were slight diff but after hosting it edge seems to be too small and weird .(chrome 100% === edge 125% {still looks weird after this})
 6> try to improve the api response by deleting the complexity of the obj sent by the api(my axious inteceptor)
