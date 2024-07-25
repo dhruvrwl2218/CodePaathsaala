@@ -2,6 +2,8 @@
 This is online Course App where where the user can enroll in any Course and get access to that Course ,This Project has all the auth functionality. More things are to be added...
 
 
+#Issues fix the payment gateway (Razorpay third party issue) & add proper form validation 
+
 
 #User-side pages
 ![home page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/140a9d8c-95c6-4f6e-b0f8-7e5d6ab8aed7)
