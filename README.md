@@ -5,6 +5,9 @@ This is online Course App where where the user can enroll in any Course and get 
 #Issues fix the payment gateway (Razorpay third party issue) & add proper form validation 
 
 
+# CodePath saala has been deployed on the Render here is the link (https://codepaathsaala-client.onrender.com) 
+# *****Need the fix for the payment or for enrollment in course as razorpay side error (razorpay team have asked to make some changes so after that payment gateway will be up running )
+
 #User-side pages
 ![home page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/140a9d8c-95c6-4f6e-b0f8-7e5d6ab8aed7)
 ![Course Page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/b110ca4a-7abc-4e0d-abb4-716e6b30cdae)
