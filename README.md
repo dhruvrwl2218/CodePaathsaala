@@ -7,6 +7,7 @@ This is online Course App where where the user can enroll in any Course and get 
 
 # CodePath saala has been deployed on the Render here is the link (https://codepaathsaala-client.onrender.com) 
 # *****Need the fix for the payment or for enrollment in course as razorpay side error (razorpay team have asked to make some changes so after that payment gateway will be up running )
+With this payment and other minor issues like new logo and some optimization are been done and looke after in new issue branch wchih will be merged after fixes
 
 #User-side pages
 ![home page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/140a9d8c-95c6-4f6e-b0f8-7e5d6ab8aed7)
