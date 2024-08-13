@@ -3,9 +3,9 @@ import Form from '../../Components/Admin-Page-Components/Form'
 
 const EditCourse = () => {
   return (
-    <div>
+    
       <Form/>
-    </div>
+    
   )
 }
 

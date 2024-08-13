@@ -5,7 +5,7 @@ import axiosInstance from "../../utils/AxiosInstance";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
   Name: yup
@@ -17,13 +17,13 @@ const schema = yup.object().shape({
     .string()
     .email("Invalid email address")
     .required("Email is required"),
-  phoneNo: yup
+  PhoneNo: yup
     .string()
     .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
-  categories: yup
+  Categories: yup
     .string()
     .oneOf(["Money", "Stream", "Enrollment", "Other"], "Select a valid option"),
-  messages: yup
+  Message: yup
     .string()
     .test(
       'max-words',
@@ -75,8 +75,15 @@ const Issue = () => {
     mode: "onChange",
   });
 
-  const Contact = (data) => {
+  const Contact = async(data) => {
     console.log(data)
+    try {
+      const res = await axiosInstance.post("/Utility/ContactUs",data);
+      console.log(res)
+      toast.success(res.data.data)
+    } catch (error) {
+      console.log()
+    }
   };
 
   return (
@@ -107,7 +114,7 @@ const Issue = () => {
           </p>
         </div>
         <form
-          onSubmit={handleSubmit()}
+          onSubmit={handleSubmit(Contact)}
           action=""
           className="flex flex-wrap gap-6 justify-between p-10 bg-neutral-800 text-white"
         >
@@ -143,48 +150,52 @@ const Issue = () => {
             </label>
             <input
               type="text"
-              id="phone No"
-              placeholder="phoneNo"
+              id="Phone No"
+              placeholder="PhoneNo"
               className="p-2 rounded-lg bg-black border w-64"
-              {...register("phoneNo")}
+              {...register("PhoneNo")}
             />
-            {errors.phoneNo && <p className="text-xs text-red-700 text-left p-1">{errors.phoneNo.message}</p>}
+            {errors.PhoneNo && <p className="text-xs text-red-700 text-left p-1">{errors.PhoneNo.message}</p>}
           </div>
           <div>
-            <label htmlFor="categories" className="block">
+            <label htmlFor="Categories" className="block">
               Categories
             </label>
             <select
-              name="categories"
-              id="categories"
+              name="Categories"
+              id="Categories"
               className="p-2 rounded-lg bg-black border w-64"
-              {...register("categories")}
+              {...register("Categories")}
             >
               <option value="Money">Monatary</option>
               <option value="Stream">Streaming</option>
               <option value="Enrollment">Enrollment</option>
               <option value="Other">Other</option>
             </select>
-            {errors.categories && <p className="text-xs text-red-700 text-left p-1">{errors.categories.message}</p>}
+            {errors.Categories && <p className="text-xs text-red-700 text-left p-1">{errors.Categories.message}</p>}
           </div>
           <div className="w-full">
-            <label htmlFor="message" className="block ">
+            <label htmlFor="Message" className="block ">
               Message
             </label>
             <input
               type="textbox"
-              name="messages"
+              name="Message"
               className="p-2 rounded-lg w-full bg-black border"
               placeholder="Enter your message"
-              {...register("messages")}
+              {...register("Message")}
             />
-            {errors.messages && <p className="text-xs text-red-700 text-left p-1">{errors.messages.message}</p>}
+            {errors.Message && <p className="text-xs text-red-700 text-left p-1">{errors.Message.message}</p>}
           </div>
           <div className="w-full text-center">
             <input
               type="submit"
               className="p-2 rounded-lg bg-indigo-600 w-1/2"
             />
+          </div>
+          <div className="text-center text-sm  p-2 w-full">
+            <p><span className="font-bold">Email:</span><a href="#">support@CodePathsaala.com</a></p>
+            <p> <span className="font-bold">Address:</span> CodePathsaala, Cubeway Avenue, Ahemdabad (Gujrat), CA 94043</p>
           </div>
         </form>
       </div>

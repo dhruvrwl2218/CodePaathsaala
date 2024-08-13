@@ -2,7 +2,7 @@ import { ApiError } from "../Utils/Errors.js";
 import uploadFilesCloudinary from "../Utils/Cloudinary.js";
 import { Course } from "../Models/CourseModel.js";
 import { ApiResponse } from "../Utils/ApiResponse.js";
-
+import { Enroll} from "../Models/EnrollementModel.js"
 export const AddCourse = async (req, res) => {
   console.log(req.files)
   const { Name, CourseId, Description, Level, Duration, Price } = req.body;
@@ -66,18 +66,24 @@ export const RemoveCourse = async (req, res) => {
   const { CourseId } = req.params;
 
   try {
+
+    const enrollmentdelete = await Enroll.deleteMany({Course : CourseId})
+
+    if(!enrollmentdelete){
+      console.log("there weere no enrollments or may be enable to delete them")
+    }
+
     const isCourseThere = await Course.findOne({ _id: CourseId });
 
     if (!isCourseThere) {
       throw new ApiError(505, {}, "no such Course is there ..");
     }
-
+    
     const result = await Course.deleteOne({ _id: CourseId });
 
     if (result.deletedCount > !0) {
       throw new ApiError(400, {}, "error while deleting the course");
     }
-
     return res
       .status(200)
       .json(new ApiResponse(200, { result }, "course has been deleted"));

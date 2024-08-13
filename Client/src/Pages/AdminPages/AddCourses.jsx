@@ -4,12 +4,13 @@ import Form from "../../Components/Admin-Page-Components/Form";
 
 const AddCourses = () =>{
   return(
-    <div>
     <Form/>
-  </div>
   )
 }
 export default AddCourses;
+
+
+
 // import { useForm } from "react-hook-form";
 // import { toast } from "react-toastify";
 // import { useNavigate } from "react-router";
