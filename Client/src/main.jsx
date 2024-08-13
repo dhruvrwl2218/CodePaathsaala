@@ -33,17 +33,10 @@ import RestrictedPath from "./Components/Restricted-Page-Components/RestrictedPa
 import {AddCourses,CourseList,EditCourse,AdminHome,EnrolledUserList} from "./Pages/AdminPages";
 
 import {TermsOfServicePage,PrivacyPolicyPage,RefundPolicyPage,PageNF} from './Pages/other'
-// import { pdfjs } from 'react-pdf';
-
-
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.js',
-//   import.meta.url,
-// ).toString();
 
 const publicRoutes = [
   <Route key="home" path="/" element={<Home />} />,
-  // <Route key="about" path="/About" element={<About />} />,
+  <Route key="about" path="/About" element={<About />} />,
   <Route key="courses" path="/Courses" element={<Courses />} />,
   <Route key= "issuePage" path="/IssuePage" element={<Issue/>}/>,
 ];
@@ -88,7 +81,7 @@ const router = createBrowserRouter(
       <Route element={<AdminRoutes />}>
         {adminRoutes}
       </Route>
-      <Route path="*" element = {<PageNF/>}/>
+      <Route path="/*" element = {<PageNF/>}/>
     </Route>
   )
 );
@@ -114,134 +107,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </Provider>
   //  {/* </React.StrictMode>  */}
 );
-
-
-
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={<App />}>
-//       {/* these are public routes */}
-
-//       <Route path="/" element={<Home />} />
-//       <Route path="/About" element={<About />} />
-//       <Route path="/Courses" element={<Courses />} />
-
-//        {/* Auth routes */} 
-//       <Route path="/Signin" element={<SignIn />} />
-//       <Route path="/Login" element={<LogIn />} />
-//       <Route path="/Forgot-Password" element={<ForgotPass />}></Route>
-//       <Route path="/Reset-Password/:token" element={<ResetPassword />}></Route>
-
-//       {/* //these are private routes for the user ..log in is needed for this  */}
-//       <Route element={<RestrictedPath />}>
-//         <Route path="/YourCourses" element={<YourCourses />} />
-//         <Route path="/Sucess" element={<EnrollementSucess />}></Route>
-//       </Route>
-
-//       {/* admin side component  */}
-//       <Route element={<AdminRoutes />}>
-//         <Route path="/AdminHome" element={<AdminHome />}></Route>
-//         <Route path="/AddCourses" element={<AddCourses />} />
-//         <Route path="/CourseList" element={<CourseList />} />
-//         <Route path="/EditCourse/:_id" element={<EditCourse />}></Route>
-//         <Route path="/EnrolledUser" element = {<EnrolledUserList/>}></Route>
-//       </Route>
-//     </Route>
-//   )
-// );
-
-
-{
-  /* <Router>
-      <Routes>
-       
-        <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Courses" element={<Courses />} />
-        <Route path="/SignIn" element={<SignIn />} />
-        <Route path="/LogIn" element={<LogIn />} />
-
-        <Route path="/RestrictedPath" element={<RestrictedPath />}>
-          <Route path="YourCourses" element={<YourCourses />} />
-        </Route>
-
-        <Route path="/AdminPath" element={<AdminRoutes />}>
-          <Route path="AddCourses" element={<AddCourses />} />
-        </Route>
-
-      </Route>
-
-      </Routes>
-   </Router> */
-}
-
-{
-  /* <RouterProvider router={router}/> */
-}
-
-// const Router = createBrowserRouter([
-//   {
-//   path:'/',
-//   element: <App/>,
-//   children:[
-//     {
-//       path:'/',
-//       element : <Home/>
-//     },
-//     {
-//       path : '/About',
-//       element : <About/>
-//     },
-//     {
-//       path : '/Courses',
-//       element : <Courses/>
-//     },
-//     {
-//       path : '/YourCourses',
-//       element : <YourCourses/>
-//     }
-//     ,{
-//       path : '/Add',
-//       element : <AddCourses/>
-//     },
-//   ],
-// },
-// {
-//   path : 'Signin',
-//   element : <SignIn/>
-// },
-// {
-//   path : 'Login',
-//   element : <LogIn/>
-// }
-// ])
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path='/' element = {<App/>}>
-
-//       {/* these are public routes */}
-
-//       <Route path='/' element = {<Home/>}/>
-//       <Route path='/About' element = {<About/>}/>
-//       <Route path='/Courses' element = {<Courses/>}/>
-//       <Route path = '/Signin' element = {<SignIn/>}/>
-//       <Route path = '/Login' element = {<LogIn/>}/>
-
-//       {/* //these are private routes for the user ..log in is needed for this  */}
-//       <Route path='/RestricrtedPath' element={<RestrictedPath/>}>
-//           <Route path='/YourCourses' element = {<YourCourses/>}/>
-//       </Route>
-
-//       {/* admin side component  */}
-//       <Route path='/AdminPath' element = {<AdminRoutes/>}>
-//           <Route path='/AddCourses' element = {<AddCourses/>}/>
-//       </Route>
-
-//     </Route>
-
-// )
-
-// )

@@ -4,13 +4,14 @@ import { Course } from "../Models/CourseModel.js";
 import { ApiResponse } from "../Utils/ApiResponse.js";
 
 export const AddCourse = async (req, res) => {
+  console.log(req.files)
   const { Name, CourseId, Description, Level, Duration, Price } = req.body;
 
   const fields = [Name, CourseId, Description, Level, Duration, Price];
 
   if (fields.some((field) => field.trim(" ") === "")) {
     throw new ApiError(505, "all the fields are nessccary!");
-  }
+  }  
 
   const ThumbnailPath = req.files?.Thumbnail[0]?.path;
 
@@ -40,6 +41,7 @@ export const AddCourse = async (req, res) => {
       },
     });
     if (!CreatedCourse) {
+      
       throw new ApiError(400, "error while saving the data in db", Error);
     }
     return res
@@ -221,6 +223,7 @@ export const updatedCourse = async (req, res) => {
 
   const ThumbnailPath = req.file?.path;
 
+  console.log(ThumbnailPath)
   //in case of thumbnail change first dlt the img earlier saved in the cloud by getting its url from the db then upload a new one
 
   if (ThumbnailPath) {

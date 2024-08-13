@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const axiousInstance = axios.create({
+const axiosInstance = axios.create({
     baseURL: 'http://localhost:8000/api/v1/',
     headers:{
         'Content-Type':'application/json'
@@ -8,7 +8,7 @@ const axiousInstance = axios.create({
     withCredentials: true
 })
 
-export default axiousInstance;
+export default axiosInstance;
 
 //https://codepaathsaala-3.onrender.com/api/v1/
 // http://localhost:8000/api/v1/

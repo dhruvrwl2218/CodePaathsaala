@@ -12,18 +12,15 @@ const Footer = () => {
     <div className="text-white pt-20 px-3 font-serif border-t border-neutral-800 ">
       
       <div className="flex flex-wrap  justify-between md:mx-80 ">
-        
           <img
             className="w-48 "
            src="Nerd Niche (1).gif"
             alt="logo"
           />
-          
-
         <div className="text-sm text-indigo-300 md:flex gap-10 md:text-md">
           <ul className="mx-auto">
-            <li className="p-2 ">About</li>
-            <li className="p-2">Docs</li>
+            <Link to={"/About"}><li className="p-2 ">About us</li></Link>
+            <Link to={'/IssuePage'}><li className="p-2">Contact us</li></Link> 
             <li className="p-2">Updates</li>
           </ul>
           <ul className="">
@@ -54,4 +51,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
