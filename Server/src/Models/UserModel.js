@@ -51,16 +51,6 @@ userschema.pre('save', async function(next){
 
 userschema.methods.PasswordCheck = async function(Password){
     return await bcrypt.compare(Password,this.Password);
-
-//     console.log("pC" + Password)
-//    try {
-//      const result = await bcrypt.compare(Password,this.Password)
-//      console.log(result)
-//      return result;
-//    } catch (error) {
-//     console.log(error)
-//     return error
-//    }
 }
 
 userschema.methods.GenerateAccessToken = async function(){

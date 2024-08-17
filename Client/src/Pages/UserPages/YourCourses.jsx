@@ -14,39 +14,25 @@ const YourCourses = () => {
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
       try {
-        // const response = await axios.get(
-        //   `${process.env.url}/Enroll/EnrolledCourses/${User_id}`,
-        //   {
-        //     withCredentials: true,
-        //     // headers: { "Content-Type": "multipart/form-data" },
-        //   }
-        // );
         const response = await axiosInstance.get(`Enroll/EnrolledCourses/${User_id}`);
-        setFetchedCourse(response?.data?.data);
+        setFetchedCourse(response);
       } catch (error) {
-        // console.log(error.response.status);
+        console.log('error:',error)
         if (error.response.status === 401) {
           try {
-            // const res = await axios.get(
-            //   `${process.env.url}/user/refreshTokens`,
-            //   {
-            //     withCredentials: true,
-            //     // headers: { "Content-Type": "multipart/form-data" },
-            //   }
-            // );
+            
             const res = await axiosInstance.get('user/refreshTokens');
-            // console.log(res);
             if (res.status === 200) {
               fetchEnrolledCourses();
             }
           } catch (err) {
-            // console.log(err);
             dispatch(logout());
-            toast.error("session out"); //'error.response.message'
+            toast.error("session out");
             Navigate("/Login");
           }
         } else {
-          toast.error("User session out"); // get the error message
+          // toast.error("User session out"); // get the error message
+          console.log('error',error)
         }
       }
     };

@@ -9,12 +9,16 @@ This is online Course App where where the user can enroll in any Course and get 
 # *****Need the fix for the payment or for enrollment in course as razorpay side error (razorpay team have asked to make some changes so after that payment gateway will be up running )
 With this payment and other minor issues like new logo and some optimization are been done and looked after in new Productionissue branch which will be merged after fixes
 
+
 #User-side pages
+
 ![home page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/140a9d8c-95c6-4f6e-b0f8-7e5d6ab8aed7)
 ![Course Page](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/b110ca4a-7abc-4e0d-abb4-716e6b30cdae)
 ![purchased courses](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/93ae969e-5518-4c90-bfa3-000bc265a097)
 ![videos in lec](https://github.com/dhruvrwl2218/CodePaathsaala/assets/162804817/a12c6503-44fa-4161-8727-b597cfa2d4e6)
 ![ISSUE PAGE](https://github.com/user-attachments/assets/28b57416-6f55-4821-86c1-5b29314244f5)
+
+
 
 #admin side pages
 

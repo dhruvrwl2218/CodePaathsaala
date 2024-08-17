@@ -8,28 +8,24 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchstats = async () => {
       try {
-        
         const res = await axiosInstance.get('Utility/adminStats');
-        // console.log(res.data.data.data);
-        setData(res.data.data.data);
+        setData(res.data);
       } catch (error) {
         // console.log(error.response.status);
         if (error.response.status === 401) {
           try {
-           
             const res = await axiosInstance.get('user/refreshTokens')
-            // console.log(res);
             if (res.status === 200) {
               fetchstats();
             }
           } catch (error) {
-            // console.log(error);
+            console.log('error:',error)
             dispatch(logout());
-            toast.error();
             Navigate("/Login");
           }
         } else {
-          toast.error("User session out");
+          // toast.error("User session out");
+          console.log(" user session out")
         }
       }
     };

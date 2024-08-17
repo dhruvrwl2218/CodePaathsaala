@@ -12,17 +12,8 @@ const ForgotPass = () => {
   } = useForm();
   const Send = async (data) => {
     try {
-      // const res = await axios.post(
-      //   `${process.env.url}user/forgot-Password`,
-      //   data,
-      //   { withCredentials: true }
-      // );
       const res = await axiosInstance.post('user/forgot-Password',data);
-      if (res.status === 200) {
-        toast.success("Email sent successfully");
-      } else {
-        toast.error(res.error);
-      }
+      reset();
     } catch (error) {
       toast.error("Server Error");
     }
@@ -34,7 +25,6 @@ const ForgotPass = () => {
           <p className="w-full text-center text-3xl  font-bold mb-16">
             Forgot-Password
           </p>
-
           <form
             onSubmit={handleSubmit(Send)}
             className="flex flex-wrap text-center w-full text-black justify-center "

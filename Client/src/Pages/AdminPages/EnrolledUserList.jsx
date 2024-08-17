@@ -17,21 +17,17 @@ const EnrolledUserList =  () => {
   const [itemsPerPage,setItemsPerPage] = useState(8)
   const [totalPages , setTotalPages] = useState(0)
 
-
-
   useEffect(() => {
     const FetchEnrolledUser = async () => {
       try {
-        
         const res = await axiousInstance.get('Enroll/EnrolledUser')
       
-        setEnrolledUser(res.data.data.enrollments);
-        setFilteredEnrolledUser(res.data.data.enrollments);
+        setEnrolledUser(res.enrollments);
+        setFilteredEnrolledUser(res.enrollments);
         setIsLoading(false);
 
       } catch (error) {
-        // console.log(error);
-        toast.error(error.message)
+        console.log('fetch enrolled user error:',error);
       }
     };
     FetchEnrolledUser();
@@ -100,26 +96,17 @@ const EnrolledUserList =  () => {
       setPage(newPage)
     }
   }
-  
   let ListStart = (page - 1) * itemsPerPage;
   let ListEnd = ListStart + itemsPerPage;
- 
-
+  
   const deleteEnrollement = async(_id) => {
-    
     try {
       const res = await axiousInstance.delete(`Enroll/deleteEnrollment/${_id}`)
-
-      if(res.status === 200){
-        toast.success("Enrollment deleted successfully!")
-      }else{        
-        throw res.data        
-      }
+      console.log("enrollment deleted :",res)
     } catch (error) {
-      toast.error(res.error)
+      console.log('error while deleting the enrollment',error)
     }
   }
-
   return (
     <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full p-8 pt-0 mx-1 rounded-lg">
       {isLoading ? (
