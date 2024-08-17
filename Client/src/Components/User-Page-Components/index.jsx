@@ -4,7 +4,6 @@ import Logo from "./Logo";
 import PdfViewer from "./PdfViewer";
 import UserCourseDisplay from "./UserCourseDisplay";
 import VideoViewer from "./VideoViewer";
-import EnrollmentSucess from "./EnrollmentSucess";
 import Coursecard from "./Coursecard";
 
 export{
@@ -14,6 +13,5 @@ export{
     PdfViewer,
     UserCourseDisplay,
     VideoViewer,
-    EnrollmentSucess,
     Coursecard,
 }

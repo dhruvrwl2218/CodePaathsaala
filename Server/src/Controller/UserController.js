@@ -6,7 +6,9 @@ import { ApiResponse } from "../Utils/ApiResponse.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import pkg from 'nodemailer/lib/xoauth2/index.js';
+
+import pkg from "nodemailer/lib/xoauth2/index.js";
+
 const { errorMonitor } = pkg;
 
 const GenerateAccessAndRefreshToken = async (user) => {
@@ -21,15 +23,6 @@ const GenerateAccessAndRefreshToken = async (user) => {
   } catch (error) {
     throw new Error("Error updating refreshToken");
   }
-  // try {
-  //   user.refreshToken = refreshToken;
-  //  const newdata = await user.save();
-
-  //  console.log(newdata)
-
-  // } catch (error) {
-  //   error;
-  // }
 
   return { accessToken, refreshToken };
 };
@@ -40,7 +33,6 @@ export const UserSignIn = async (req, res) => {
   let { Role } = req.params;
 
   if ([FullName, Email, Password].some((e) => e?.trim() === "")) {
-    // throw new ApiError("All the credentails are needed",Error)
     return res
       .status(500)
       .json(new ApiResponse(500, "All fields are required!"));
@@ -55,14 +47,13 @@ export const UserSignIn = async (req, res) => {
   if (!isValidEmail(Email)) {
     return res.status(409).json(new ApiResponse(409, "Email is not valid"));
   }
+
   try {
     const UserCheck = await User.findOne({ Email });
 
     if (UserCheck) {
       throw new ApiError(409, "User with email or username already exists");
-      // return res.status(409).json(new ApiResponse(409, "user Already exits"));
     }
-    // console.log(Email);
 
     Role = process.env.EMAIL === Email ? "Admin" : Role;
     //more you can add the array of emails which are of admin's ,
@@ -83,7 +74,7 @@ export const UserSignIn = async (req, res) => {
 
     res.json(new ApiResponse(200, user, "user Regestired successfullly!"));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json(new ApiResponse(500, error));
   }
 };
@@ -104,7 +95,8 @@ export const UserLogIn = async (req, res) => {
         "User with this email is not present in db"
       );
     }
-
+     
+    console.log(Password);
     const isPasswordCorrect = await user.PasswordCheck(Password);
 
     if (!isPasswordCorrect) {
@@ -129,7 +121,7 @@ export const UserLogIn = async (req, res) => {
         new ApiResponse(
           200,
           { user, accessToken, refreshToken },
-          "user logged in suceessfully!"
+          "user logged in suceessfully!"  
         )
       );
   } catch (error) {
@@ -155,9 +147,9 @@ export const Logout = async (req, res) => {
       .status(200)
       .clearCookie("accessToken", options)
       .clearCookie("refreshToken", options)
-      .json(new ApiResponse(200, "User Logged Out Succesfully"));
+      .json(new ApiResponse(200,{},"User Logged Out Succesfully"));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res
       .status(error.statuscode)
       .json(new ApiResponse(error.statuscode, "Error while logging out!"));
@@ -180,7 +172,7 @@ export const ForgotPassword = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id },
       process.env.FORGOT_PASS_TOKEN_KEY,
-      { expiresIn: "10m" }
+      { expiresIn: "5m" }
     );
 
     const transporter = nodemailer.createTransport({
@@ -197,8 +189,8 @@ export const ForgotPassword = async (req, res) => {
       subject: "Reset Password",
       html: `<h1>Reset Your Password</h1>
       <p>Click on the following link to reset your password:</p>
-      <a href="http://localhost:5173/reset-password/${token}">http://localhost:5173/reset-password/${token}</a>
-      <p>The link will expire in 10 minutes.</p>
+      <a href="http://localhost:5173/reset-password/${token}">Password reset</a>
+      <p>The link will expire in 5 minutes.</p>
       <p>If you didn't request a password reset, please ignore this email.</p>`,
     };
     transporter.sendMail(mailOptions, (err, info) => {
@@ -219,33 +211,38 @@ export const ForgotPassword = async (req, res) => {
   }
 };
 
+// address the issue here may getting the status 200 fake response 
 export const ResetPassword = async (req, res) => {
-  let { new_password } = req.body;
+  const  { new_password } = req.body;
+  const {token} = req.params;
+
+  if(!new_password){
+  res.status(403).json(new ApiError(403,"plz send the new pass to reset"))
+  }
 
   try {
     const decodedToken = jwt.verify(
-      req.params.token,
+      token,
       process.env.FORGOT_PASS_TOKEN_KEY
     );
 
     if (!decodedToken) {
-      throw new ApiError(401).json(401, "Invalid token");
+      throw new ApiError(401).json(401, "Invalid token or Token expired!!!");
     }
 
     const user = await User.findOne({ _id: decodedToken.userId });
 
+
     if (!user) {
-      throw new ApiError(401).json(401, "no user found");
+      throw new ApiError(401).json(401, "Unable to find the UserID!");
     }
 
-    new_password = await bcrypt.hash(new_password, 12);
-
     user.Password = new_password;
-    await user.save();
+    await user.save(); 
 
-    res.status(200).json(new ApiResponse(200, "Password Updated"));
+    res.status(200).json(new ApiResponse(200,"Password Updated"));
   } catch (error) {
-    res.status(error.statuscode).json(new ApiResponse(error.statuscode, error));
+    res.status(error?.statuscode?error?.statuscode:500).json(new ApiResponse(error.statuscode, error));
   }
 };
 
@@ -289,9 +286,7 @@ export const RefreshAccessToken = async (req, res) => {
           "Refresh token is not valid or may expired !!"
         );
       }
-      // there could be 2 case if someone have old refresh token and trying to get in via
-      // that or there could be bug by which your refresh token got refreshed but not got updated in the db
-      //**(errors here check and test needed)
+
       if (token !== user?.refreshToken) {
         throw new ApiError(
           400,
@@ -304,14 +299,10 @@ export const RefreshAccessToken = async (req, res) => {
         user
       );
 
-      // console.log("AF" + accessToken);
-      // console.log("RF" + refreshToken);
-
       const options = {
-        // secure : true,
+        secure : true,
         httpOnly: true,
-        // origin : process.env.CORS_ORIGIN,
-        // SameSite: 'None'
+        SameSite: 'None'       
       };
 
       res
@@ -326,7 +317,7 @@ export const RefreshAccessToken = async (req, res) => {
           )
         );
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return res.status(error.statuscode).json(new ApiResponse(error));
     }
   }
@@ -346,7 +337,7 @@ export const deleteUser = async (req, res) => {
         )
       );
   }
-  console.log(_id);
+  // console.log(_id);
   try {
     const result = await User.deleteOne({ _id: _id });
 
@@ -369,7 +360,7 @@ export const deleteUser = async (req, res) => {
 
     res.status(200).json(200, {}, "User has been removed");
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(error.statuscode).json(error);
   }
 };

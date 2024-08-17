@@ -2,8 +2,12 @@ import { ApiError } from "../Utils/Errors.js";
 import uploadFilesCloudinary from "../Utils/Cloudinary.js";
 import { Course } from "../Models/CourseModel.js";
 import { ApiResponse } from "../Utils/ApiResponse.js";
+import { Enroll } from "../Models/EnrollementModel.js";
+import mongoTransaction from "../Utils/Transaction.js";
+import deleteCloudinaryFile from "../Utils/DeleteCloudFiles.js";
 
 export const AddCourse = async (req, res) => {
+  // console.log(req.files)
   const { Name, CourseId, Description, Level, Duration, Price } = req.body;
 
   const fields = [Name, CourseId, Description, Level, Duration, Price];
@@ -19,7 +23,6 @@ export const AddCourse = async (req, res) => {
   }
 
   const StudyMaterialPath = req.files?.StudyMaterial[0]?.path;
-  // console.log(StudyMaterialPath);
 
   const Thumbnail = await uploadFilesCloudinary(ThumbnailPath);
   const StudyMaterial = await uploadFilesCloudinary(StudyMaterialPath);
@@ -53,7 +56,7 @@ export const AddCourse = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     // in catch dlt the cloudinary files then send the error response
     return res
       .status(error.statuscode ? error.statuscode : 500)
@@ -64,27 +67,45 @@ export const AddCourse = async (req, res) => {
 export const RemoveCourse = async (req, res) => {
   const { CourseId } = req.params;
 
+  // transactional way for atomicity
+  const transactionalDeletion = async (session) => {
+    const course = await Course.findById({ _id: CourseId }).session(session);
+
+    if (!course) {
+      throw new ApiError(500, "Course not Found");
+    }
+
+    await Enroll.deleteMany({ Course: CourseId }).session(session);
+
+    const courseDeleteResult = await Course.deleteOne({
+      _id: CourseId,
+    }).session(session);
+
+    if (!courseDeleteResult) {
+      throw new ApiError(500, "failed to dlt the course");
+    }
+    return course;
+  };
   try {
-    const isCourseThere = await Course.findOne({ _id: CourseId });
-
-    if (!isCourseThere) {
-      throw new ApiError(505, {}, "no such Course is there ..");
-    }
-
-    const result = await Course.deleteOne({ _id: CourseId });
-
-    if (result.deletedCount > !0) {
-      throw new ApiError(400, {}, "error while deleting the course");
-    }
-
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { result }, "course has been deleted"));
+    const course = await mongoTransaction(transactionalDeletion);
+    res.status(200).json(new ApiResponse(200, {}, "Course Deleted"));
+    // get back to this & learn about the bg jobs or try to use redis for deletion of cloud files ...
+    //   (async ()=>{
+    //   const fileUrls = [
+    //     course.Thumbnail,
+    //     ...course.StudyMaterial.map(material => material.FileUrl)
+    //   ]
+    //   await Promise.all(fileUrls.map(async (url) =>{
+    //     try {
+    //       await deleteCloudinaryFile(url);
+    //     } catch (bgerror) {
+    //       console.log(bgerror)
+    //     }
+    //   }))
+    // })
   } catch (error) {
     console.log(error);
-    res
-      .status(error.statuscode ? error.statuscode : 500)
-      .json(new ApiResponse(error));
+    res.status(500).json(error);
   }
 };
 
@@ -95,7 +116,6 @@ export const GetCourses = async (req, res) => {
     if (!Courses) {
       throw new ApiError(404, "Error occured while fetching the data..");
     }
-
     return res
       .status(200)
       .json(
@@ -106,7 +126,7 @@ export const GetCourses = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(error.statuscode ? error.statuscode : 400).json(error);
   }
 };
@@ -140,7 +160,13 @@ export const UploadFiles = async (req, res) => {
 
   const studymaterial = req.files;
 
+  if (studymaterial.length < 0) {
+    throw new ApiError(409, "havem't recieved the files");
+  }
+
+  console.log(_id, studymaterial);
   const url = [];
+
   try {
     for (const files of studymaterial) {
       const { secure_url: FileUrl, original_filename: FileName } =
@@ -186,7 +212,7 @@ export const UploadFiles = async (req, res) => {
         );
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(error.statuscode).json(error);
   }
 };
@@ -216,6 +242,7 @@ export const updatedCourse = async (req, res) => {
 
   const ThumbnailPath = req.file?.path;
 
+  console.log(ThumbnailPath);
   //in case of thumbnail change first dlt the img earlier saved in the cloud by getting its url from the db then upload a new one
 
   if (ThumbnailPath) {
@@ -237,19 +264,19 @@ export const updatedCourse = async (req, res) => {
       { new: true }
     );
 
-    if (!Update) {
-      return res.status(400);
-      // .json(new ApiResponse(400, "Error while updatation"));
-      throw new ApiError(400, Update, "Error while updatation");
-    }
-    console.log(Update);
+    // if (!Update) {
+    //   return res.status(400);
+    //   // .json(new ApiResponse(400, "Error while updatation"));
+    //   throw new ApiError(400, Update, "Error while updatation");
+    // }
+    // console.log(Update);
     res
       .status(200)
       .json(
         new ApiResponse(200, Update, "Course Details updated successfully")
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res
       .status(error.statusocde ? error.statuscode : 500)
       .json(
@@ -262,102 +289,33 @@ export const updatedCourse = async (req, res) => {
   }
 };
 
-//   const { CourseId } = req.body;
+// try {
+// here leran about the transactions in mongo db to maintian the atomacity around your db
+// changes to be done
+//   const enrollmentdelete = await Enroll.deleteMany({Course : CourseId})
 
-//   const studyMaterial = req.files?.StudyMaterial[0]?.path;
-//   const studyMaterial2 = req.files?.StudyMaterial[1]?.path;
-//   console.log(studyMaterial2);
-//   const cloud = await uploadFilesCloudinary(studyMaterial);
-
-//   if (!cloud) {
-//     throw new ApiError(500, "Error while files to the cloud :(  ", Error);
+//   if(!enrollmentdelete){
+//     console.log("there weere no enrollments or may be enable to delete them")
 //   }
 
-//   const UpdatedCourse = async (CourseId, cloud) => {
-//     try {
-//       const updatedCourse = await Course.findByIdAndUpdate(
-//         CourseId,
-//         { $push: { StudyMaterial: cloud.secure_url } },
-//         { new: true }
-//       );
-//       if(updatedCourse === null){
-//        return new ApiError(500,"no course with this is availabel")
-//       }
-//       return updatedCourse;
-//     } catch (error) {
-//        return  res.status(500)
-//         .json(new ApiError(500,"error wile saving the data in db",Error))
-//     }
-//   };
-//   const newUpdatedCourse = await UpdatedCourse(CourseId,cloud)
+//   const isCourseThere = await Course.findOne({ _id: CourseId });
 
-//   console.log(newUpdatedCourse)
-//   return res.json(
-//     new ApiResponse(200, newUpdatedCourse, "your files had been added :)")
-//   );
-// };
-// const UpdatedCourse = await Course.findByIdAndUpdate(CourseId,{$push:{StudyMaterial : cloud}},{ new: true },(err, updatedDocument)=>{
-//     if(err){
-//         console.log(err)
-//         throw new ApiError(500,"error occured while updating the files in db..",err)
-//     }else{
-//         console.log(updatedDocument)
-//     }
-// } )
-// const studyMaterial = req.files?.StudyMaterial;
+//   if (!isCourseThere) {
+//     throw new ApiError(505, {}, "no such Course is there ..");
+//   }
 
-// const urls = [];
-// studyMaterial.map((files)=>{
-//     urls.add = uploadFilesCloudinary(files?.path)
-// })
+//   const result = await Course.deleteOne({ _id: CourseId });
 
-// lavdaya bata diya tune ki promises juthe hote h
-//   Promise.all(studymaterial.map(async(files)=>{
-//     console.log(files.path);
-//     const individualUrl = await(uploadFilesCloudinary(files?.path))
-//     console.log(individualUrl)
-//     url.push(individualUrl)
-// }))
-// import stripe from "stripe";
+//   if (result.deletedCount > !0) {
+//     throw new ApiError(400, {}, "error while deleting the course");
+//   }
+//   return res
+//     .status(200)
+//     .json(new ApiResponse(200, { result }, "course has been deleted"));
+// } catch (error) {
+//   // console.log(error);
+//   res
+//     .status(error.statuscode ? error.statuscode : 500)
+//     .json(new ApiResponse(error));
 
-// export const stripePayment = async(req,res)=>{
-//   const {Name,Price} = req.body;
-//   const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY)
-// //   const paymentIntent = await stripeInstance.paymentIntents.create({
-// //     amount: 1099,
-// //     currency: 'usd',
-// //     description: 'Software development services',
-// //   });
-
-// // const customer = await stripe.customers.create({
-// //   name: 'Jenny Rosen',
-// //   address: {
-// //     line1: '510 Townsend St',
-// //     postal_code: '98140',
-// //     city: 'San Francisco',
-// //     state: 'CA',
-// //     country: 'US',
-// //   },
-// // });
-//   const session = await stripeInstance.checkout.sessions.create({
-//     payment_method_types :["card"],
-//     line_items: [
-//       {
-//         price_data: {
-//           currency: 'inr',
-//           product_data: {
-//             name:Name,
-//             // images: [Course.url], // URL of the product image
-//           },
-//              unit_amount: Price * 100,
-//         },
-//         quantity: 1,
-//       },
-//     ],
-//     mode: 'payment',
-//   success_url: 'http://localhost:5173/Sucess',
-//   cancel_url: 'http://localhost:5173/Courses',
-
-//   })
-//   res.json({id:session.id})
 // }

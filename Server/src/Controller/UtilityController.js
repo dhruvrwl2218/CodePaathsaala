@@ -3,7 +3,8 @@ import { ApiResponse } from "../Utils/ApiResponse.js";
 import { User } from "../Models/UserModel.js";
 import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
-import crypto from "crypto";
+import {ContactUs} from "../Models/ContactUs.js"
+
 //this model is for utility as req or end-points which does'nt belong to any
 // of one specific model or envolves multiple models then this controller is used
 
@@ -32,61 +33,28 @@ export const AdminStats = async (req, res) => {
   }
 };
 
-export const getKey = async (req , res) =>{
-    const key = {key:process.env.KEY}
-    return res.status(200).json(new ApiResponse(200,{key},"here is your key..."))
-}
-
-export const checkout = async (req, res) => {
-  const { amount } = req.body;
-
-  const instance = new reazorpay({
-    key_id: process.env.KEY,
-    key_secret: process.env.SECRET,
-  });
-  const options = {
-    amount: Number(amount * 100),
-    currency: "INR",
-  };
-
-  const order = await instance.orders.create(options);
-
-  console.log(order);
-  res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { order },
-        "order Id has been cerated sucessfully :)..!"
-      )
-    );
-};
-
-export const paymentverification = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    req.body;
-
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
-
-  const expectedSingnature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(body.toString())
-    .digest("hex");
-
-  const isauth = expectedSingnature === razorpay_signature;
-
-  if (isauth) {
-    res.redirect(
-      `http://localhost:5173/paymentsuccess?reference=${
-        (razorpay_payment_id, razorpay_order_id, razorpay_signature)
-      }`
-    );
-  }else{
-    res.status(400).json(new ApiError(400,"error while making the transaction"))
+export const Issues = async(req,res) =>{
+  const {Name,Email,PhoneNo,Categories,Message} = req.body;
+  
+  if ([Name,Email,PhoneNo,Categories,Message].some((e) => e?.trim() === "")) {
+    return res
+      .status(500)
+      .json(new ApiResponse(500, "All fields are required!"));
   }
-};
-
-// export const checkToken = (_,res) =>{
-//     res.status(200).josn("you got the token go-ahead")
-// }
+ try {
+  const details = await ContactUs.create({
+    Name : Name,
+    Email : Email,
+    PhoneNo : PhoneNo,
+    Categories : Categories,
+    Message : Message
+  })
+  if(!details){
+    throw new Error("NOt able to process"); 
+  }
+  res.status(200).json(new ApiResponse(200,"we will connect with you soon!!!"))
+ } catch (error) {
+  console.log(error)
+  res.status(400).json(new ApiResponse(400,"issue while sending the message"))
+ }
+}

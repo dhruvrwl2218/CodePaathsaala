@@ -3,11 +3,6 @@ import mongoose,{Schema} from "mongoose";
 
 const EnrollementSchema = new Schema(
     {
-        // Email : {
-        //     type : String,
-        //     required : true,
-        //     unique : true
-        // },
         User : {
             type : Schema.Types.ObjectId,
             ref : 'User',
@@ -16,9 +11,16 @@ const EnrollementSchema = new Schema(
             type : Schema.Types.ObjectId,
             ref : 'Course'
         },
-        // CourseDuration:{
-        //     type : Number,
-        // }
+        status: { type: String,
+                  enum: ['pending', 'completed', 'failed', 'refunded'], default: 'pending' 
+        },
+        PaymentDetails : {
+            amount : {type:Number},
+            paymentDate : {type : Date},
+            razorpayOrderId: { type: String, required: true },
+            razorpayPaymentId: { type: String, required: true },
+            razorpaySignature: { type: String, required: true },
+        }
     },
     {
         timestamps : true,
@@ -31,3 +33,9 @@ export const Enroll = mongoose.model("Enrollment",EnrollementSchema)
 //user who have enrolled in the particular course but we are making one seprate enrollement model as on admin side we can reflect 
 //enrolled user directly and on filter with the user with the particular courses with the date of enrollment and other detials and
 // on the completion of the date it should finctionality od deleting the user automatically.. 
+
+ // _id :{
+        //     type : String,
+        //     required :true,
+        //     unique : true
+        // },

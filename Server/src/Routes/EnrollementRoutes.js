@@ -1,25 +1,29 @@
 import { Router} from "express"
 import { CourseEnrolledUser,
-         Enrollement,
          GetEnrolledUser,
          EnrolledUserCourses,
-         adminStats,
-         deleteEnrollment
+         deleteEnrollment,
+         getKey,
+         checkout,
+         paymentverificationandEnrollment
         }from "../Controller/EnrollementController.js";
  import VerifyUser from "../Middleware/AuthMiddleware.js";
+ import IsAdmin from "../Middleware/IsAdminMiddleware.js";
 
 const router = Router();
 
-router.route("/EnrollUser").post(Enrollement);//VerifyUser,
+router.route("/getkey").post(VerifyUser,getKey);
 
-router.route('/EnrolledUser').get(GetEnrolledUser);
+router.route("/checkout").post(VerifyUser,checkout);
+
+router.route("/paymentVerification").post(VerifyUser,paymentverificationandEnrollment);
+
+router.route('/EnrolledUser').get(VerifyUser,IsAdmin,GetEnrolledUser);
 
 router.route('/CourseEnrolledUser').get(CourseEnrolledUser);
 
-router.route('/EnrolledCourses/:User_id').get(VerifyUser,EnrolledUserCourses);  //
-
-router.route('/stats').get(adminStats);
+router.route('/EnrolledCourses/:User_id').get(VerifyUser,EnrolledUserCourses);  
  
-router.route('/deleteEnrollment/:_id').delete(deleteEnrollment);
+router.route('/deleteEnrollment/:_id').delete(VerifyUser,IsAdmin,deleteEnrollment);//
 
 export default router;   

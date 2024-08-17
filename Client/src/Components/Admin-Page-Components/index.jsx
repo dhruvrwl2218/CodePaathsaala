@@ -1,6 +1,6 @@
 import AdminCourseCard from "./AdminCourseCard";
 import AdminRoutes from "./AdminRoutes";
-import DashBoard from "./DashBoard";
+import DashBoard from "./SideBar";
 import Pagination from "./Pagination";
 
 export{

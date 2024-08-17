@@ -9,15 +9,12 @@ import { FaFilePdf } from "react-icons/fa6";
 
 
 const UserCourseDisplay = ({props}) => {
-  console.log("here are yor props")
-  console.log(props)
   const[coursecontent,setCourseContent] = useState(false);
   const[filesPage,setFilesPage] = useState(false);
   const[fileDetail,setFileDetail] = useState();
 
   
   const fileExtension = (url) =>{
-    console.log(url)
     const URL = url.toLowerCase();
     const parts = URL.split('.');
    return (parts[parts.length-1]);
@@ -36,7 +33,6 @@ const UserCourseDisplay = ({props}) => {
     }
 
     const CloseFiles = () => {
-      console.log('clicked')
       setFileDetail();
       setFilesPage(false);
     }

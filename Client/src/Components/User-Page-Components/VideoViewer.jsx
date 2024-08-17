@@ -5,8 +5,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 
 const VideoViewer = ({VideoUrl,CloseFiles}) => {
 
-  console.log("inside video" + VideoUrl);
-  // console.log(props)
 
  try {
   return (
@@ -23,9 +21,8 @@ const VideoViewer = ({VideoUrl,CloseFiles}) => {
     </div>
   )
  } catch (error) {
-  console.log(error)
-  return(
-    
+  // console.log(error)
+  return( 
     <div><p>error while playing</p></div>
   )
  }

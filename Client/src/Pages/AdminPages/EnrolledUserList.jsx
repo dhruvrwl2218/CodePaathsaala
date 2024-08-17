@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import {Pagination} from "../../Components/Admin-Page-Components";
 import {CourseUserDeletion} from "../../Components/Admin-Page-Components/Pop-ups";
 import { toast } from "react-toastify";
+import axiousInstance from "../../utils/AxiosInstance";
 
 const EnrolledUserList =  () => {
 
@@ -17,25 +17,17 @@ const EnrolledUserList =  () => {
   const [itemsPerPage,setItemsPerPage] = useState(8)
   const [totalPages , setTotalPages] = useState(0)
 
-
-
   useEffect(() => {
     const FetchEnrolledUser = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8000/api/v1/Enroll/EnrolledUser`,
-          {
-            withCredentials: true,
-            // headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        // console.log(res)
-        // console.log(res?.data?.data?.enrollments);
-        setEnrolledUser(res.data.data.enrollments);
-        setFilteredEnrolledUser(res.data.data.enrollments);
+        const res = await axiousInstance.get('Enroll/EnrolledUser')
+      
+        setEnrolledUser(res.enrollments);
+        setFilteredEnrolledUser(res.enrollments);
         setIsLoading(false);
+
       } catch (error) {
-        console.log(error);
+        console.log('fetch enrolled user error:',error);
       }
     };
     FetchEnrolledUser();
@@ -56,20 +48,15 @@ const EnrolledUserList =  () => {
     }, []);
 
   const SearchUsers = async (data) => {
-    // console.log(data);
-    // console.log(data.User);
-    // console.log(data.selectCourses);
+    
     if (!data.User || data.User === "") {
       const filteredData = await enrolledUser.filter(
         (enrolled) => enrolled.Course.Name === data.selectCourses
       );
-
-      // console.log(filteredData)
       const filtereddataaa = filteredData.map((data, index) => ({
         ...data,
         Index: index + 1,
       }));
-      // console.log(filtereddataaa);
       setFilteredEnrolledUser(filtereddataaa);
       setPage(1);
       return;
@@ -104,55 +91,40 @@ const EnrolledUserList =  () => {
     }
   };
 
-  //  console.log(CourseSearchOptions);
-  // console.log(enrolledUser)
-  // console.log(CourseDetails)
-
-
   const onPageChange = (newPage) =>{
     if(newPage >= 1 && newPage <= totalPages){
       setPage(newPage)
     }
   }
-  
   let ListStart = (page - 1) * itemsPerPage;
   let ListEnd = ListStart + itemsPerPage;
- 
-
+  
   const deleteEnrollement = async(_id) => {
-    console.log("Enrolled User" + _id)
     try {
-      const res = await axios.delete(`http://localhost:8000/api/v1/Enroll/deleteEnrollment/${_id}`);
-
-      console.log(res);
-      if(res.status === 200){
-        toast.success("Enrollment deleted successfully!")
-      }else{
-        toast.error(res.error)
-      }
+      const res = await axiousInstance.delete(`Enroll/deleteEnrollment/${_id}`)
+      console.log("enrollment deleted :",res)
     } catch (error) {
-      console.log(error)
-      toast.error(res.error)
+      console.log('error while deleting the enrollment',error)
     }
   }
-
   return (
-    <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full border border-gray-500 p-2 mx-1 rounded-lg">
+    <div className="bg-black w-3/5 text-white flex flex-wrap justify-center max-md:w-full p-8 pt-0 mx-1 rounded-lg">
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         <div className="text-gray-200 w-full">
+          <div className="text-4xl w-full text-indigo-500 p-2 text-center font-semibold bg-neutral-800">Enrolled User's</div>
           <form
-            className="h-12 ml-5 bg-grey-100 flex justify-between"
+            className=" bg-grey-100 flex justify-between p-5 "
             onSubmit={handleSubmit(SearchUsers)}
           >
-            <div>
+            <div className="flex w-full justify-between">
               <select
                 name="SelectCourse"
                 id="drop-down"
                 {...register("selectCourses")}
                 defaultValue=""
-                className="bg-neutral-800 p-1  border border-gray-500 rounded-l-3xl w-40"
+                className="bg-neutral-800 p-3 rounded-l-3xl w-full"
               >
                 <option value="">Search by Course</option>
                 {CourseSearchOptions.map((CourseName, index) => (
@@ -163,14 +135,14 @@ const EnrolledUserList =  () => {
               </select>
               <input
                 type="text"
-                className="rounded-r-3xl bg-neutral-800 p-1  border border-gray-500"
+                className="rounded-r-3xl bg-neutral-800 p-3 border-l w-full"
                 placeholder="UserName"
                 {...register("User")}
               />
             </div>
             <div>
               <button
-                className="bg-neutral-800 px-2 py-1  border border-gray-500 rounded-lg"
+                className="p-3 rounded-xl ml-12 bg-indigo-600"
                 {...register}
               >
                 Search
@@ -178,7 +150,7 @@ const EnrolledUserList =  () => {
             </div>
           </form>
           <table className="w-full mx-2 rounded-lg  ">
-            <thead className="bg-black h-16">
+            <thead className=" h-16 bg-neutral-800">
               <tr className="p-5">
                 <th className=" rounded-tl-lg">S.no.</th>
                 <th>User Name</th>
@@ -201,7 +173,7 @@ const EnrolledUserList =  () => {
                     <tr
                       key={_id}
                       
-                      className={index % 2 === 0 ? `bg-blue-600` : `bg-black`}
+                      className={index % 2 === 0 ? `bg-indigo-900` : `bg-black`}
                     >
                       <td>{Index != null ? Index : index + 1}</td>
                       <td>{User?.FullName}</td>
@@ -228,23 +200,19 @@ const EnrolledUserList =  () => {
                         }
                          
                       </td>
-                    </tr>
-                  
+                    </tr>     
                   ))
               )}
             </tbody>
-            <tfoot className="w-full justify-center bg-slate-500 " >
-              
+          </table>
+          <div className="flex justify-center px-2 mt-8 bg-neutral-800">
               <Pagination
                totalPages = {totalPages} 
                onPageChange = {onPageChange}
                currentPage={page}
-               pageListLimit= {3}
-               
+               pageListLimit= {3} 
                />
-            </tfoot>
-         
-          </table>
+              </div>         
         </div>
       )}
     </div>
