@@ -3,7 +3,6 @@ import { Coursecard } from "../../Components/User-Page-Components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import axiosInstance from '../../utils/AxiosInstance';
@@ -51,16 +50,15 @@ const Courses = () => {
 
   const [course, setCourse] = useState(null);
   useEffect(() => {
-    const res = async () => {
+    const getCourse = async () => {
       try {
           const response = await axiosInstance.get('Course/AllCourses')
-        setCourse(response.data.data);
+          setCourse(response);
       } catch (error) {
-        toast.error(error.message);
-        console.log(error);
+        console.log('error:',error);
       }
     };
-    res();
+    getCourse();
   }, []);
 
   const checkout = async (Price, _id, Name) => {
@@ -77,28 +75,21 @@ const Courses = () => {
     await loadRazorpay();
 
     try {
-      // const res = await axios.post(
-      //   `${process.env.url}/Enroll/getKey`,
-      //   enrolldata
-      // );
       const res = await axiosInstance.post('Enroll/getKey',enrolldata)
-      // console.log(res.data.data.key)
-      if (res.status !== 200) {
-        throw res;
-      }
+      // // console.log(res.data.data.key)
+      // if (res.status !== 200) {
+      //   throw res;
+      // }
 
-      const key = res.data.data.key;
+      const key = res.key;
 
-      // const res2 = await axios.post(`${process.env.url}/Enroll/checkout`, {
-      //   amount: Price,
-      // });
       const res2 = await axiosInstance.post('Enroll/checkout',{amount : Price});
 
-      if (res2 !== 200) {
-        throw res2;
-      }
+      // if (res2 !== 200) {
+      //   throw res2;
+      // }
 
-      const order = res2.data.data.order;
+      const order = res2.order;
 
       const options = {
         key,
@@ -123,13 +114,9 @@ const Courses = () => {
             //   paymentResponse
             // );
             const enrolled = await axiosInstance.post('/Enroll/paymentVerification',paymentResponse)
-            if (enrolled.status === 200) {
-              toast.success(enrolled.response.data.message);
               navigate("/YourCourses");
-            }
           } catch (error) {
-            // console.log(error)
-            toast.error(error.response.data.message);
+            console.log('error :',error)
           }
         },
         prefill: {
@@ -138,7 +125,7 @@ const Courses = () => {
           contact: "1234567890",
         },
         notes: {
-          address: "Jaipur,Rajasthan",
+          address: "Ahmedabad,Gujrat",
         },
         theme: {
           color: "#4169E1",
@@ -147,7 +134,8 @@ const Courses = () => {
       const razor = new window.Razorpay(options);
       razor.open();
     } catch (error) {
-      toast.error(error.response.data.message);
+      // toast.error(error.response.data.message);
+      console.log('error:',error)
     }
   };
 

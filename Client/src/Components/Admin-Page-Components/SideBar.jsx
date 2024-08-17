@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink} from 'react-router-dom'
 
 
-const DashBoard = () => {
+const SideBar = () => {
 
   return (
     <div className="flex flex-col max-sm:hidden ">
@@ -18,4 +18,4 @@ const DashBoard = () => {
   )
 }
 
-export default DashBoard
+export default SideBar

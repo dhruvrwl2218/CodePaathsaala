@@ -17,9 +17,9 @@ const CourseList = () => {
     const Courses = async () => {
       try {
         const res = await axiousInstance.get('Course/AllCourses')
-        setCourse(res?.data?.data);
+        setCourse(res)
       } catch (error) {
-        toast.error(error.message);
+        console.log('fetch Course error:',error)
       }
     };
     Courses();

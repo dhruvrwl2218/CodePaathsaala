@@ -10,23 +10,17 @@ import { Link } from "react-router-dom";
 const Home = () => {
   const sliderRef = useRef(null);
   const [course, setCourse] = useState(null);
+
   useEffect(() => {
-    const res = async () => {
+    const getCourses = async () => {
       try {
-        // const response = await axios.get(
-        //   `http://localhost:8000/api/v1/Course/AllCourses`,
-        //   { withCredentials: true }
-        // );
         const response = await axiosInstance.get('Course/AllCourses')
-        
-        setCourse(response.data.data);
+        setCourse(response);
       } catch (error) {
-        // console.log(error);
-        toast.error(error.message);
+        console.log('error :',error) 
       }
     };
-
-    res();
+    getCourses();
   }, []);
 
   useEffect(() => {

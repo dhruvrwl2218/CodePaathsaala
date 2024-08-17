@@ -1,12 +1,27 @@
-import React,{useState}from 'react'
+import * as Yup from 'yup';
 import { useForm} from 'react-hook-form'
 import axiousInstance from '../../../utils/AxiosInstance';
-import { toast } from "react-toastify";
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const validationSchema = Yup.object().shape({
+  files: Yup.mixed()
+    .test(
+      'max-files',
+      'You can upload up to 5 files only',
+      (value) => {
+        if (!value) return true; // No files selected, so no need to validate
+        return value.length <= 5; // Validate that the array has 5 or fewer files
+      }
+    )
+    .required('Files are required'),
+});
 
 const AddFiles = ({removePopUp,_id}) => {
     
-    const{handleSubmit,reset,register} = useForm();
-
+    const{handleSubmit,reset,register,formState:{errors}} = useForm({
+        resolver:yupResolver(validationSchema),
+    });
+//add the valdation for the form here 
     const AddFiles = async(data) =>{
       
         const formData = new FormData();
@@ -20,17 +35,14 @@ const AddFiles = ({removePopUp,_id}) => {
                 formData,
                 {headers : {"Content-Type" : "multipart/form-data"}}
               )
-
-              toast.success("New Files have been added Successfully!");
-              
+              console.log('file add success ',response)
+              reset();
+              removePopUp()      
         } catch (error) {
-            // console.log(error)
-            toast.error("Error while Adding Files :(..")
-           
+            console.log('error while add files :',error)           
         }
         reset();
-        removePopUp();
-
+        removePopUp()
     }
   return (
     <div className = 'p-8 bg-black text-white border rounded-md '>
@@ -41,7 +53,7 @@ const AddFiles = ({removePopUp,_id}) => {
             <label htmlFor="files" className='text-2xl'> <span className='mr-4'>Add Files Here : </span>
                 <input type="file" name='StudyMaterial'  id="files" multiple {...register("StudyMaterial",{ required: true })} /></label>
             <input type="submit" value="submit" className='bg-blue-600 p-2 rounded-lg'/>
-            <p className='py-4'>Max 5 files can be sent at Once..</p>
+            {errors.files && <p>{errors.files.message}</p>}
       </form>
     </div>
   ) 

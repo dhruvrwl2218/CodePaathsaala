@@ -76,13 +76,12 @@ const Issue = () => {
   });
 
   const Contact = async(data) => {
-    console.log(data)
+    // console.log(data)
     try {
       const res = await axiosInstance.post("/Utility/ContactUs",data);
       console.log(res)
-      toast.success(res.data.data)
     } catch (error) {
-      console.log()
+      console.log('error:',error)
     }
   };
 

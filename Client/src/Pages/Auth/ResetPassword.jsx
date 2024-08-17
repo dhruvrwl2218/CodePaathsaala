@@ -20,18 +20,11 @@ const ResetPassword = () => {
   const Send = async (data) => {
     console.log(data);
     try {
-      
       const res = axiosInstance.post(`/user/reset-Password/${token}`,data)
-
-      if (res.status === 200) {
-        toast.success("Password updated Sucessfully!");
+        reset();
         Navigate("/Login");
-      } else {
-        throw res;
-      }
     } catch (error) {
-      console.log(error);
-      toast.error(error.data.message);
+      console.log("error:",error);
       Navigate("/Forgot-Password");
     }
   };

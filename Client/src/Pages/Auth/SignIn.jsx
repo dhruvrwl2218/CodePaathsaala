@@ -38,42 +38,18 @@ const SignIn = () => {
   const send = async (data) => {
     try {
       const response = await axiosInstance.post(`user/SignIn/User`, data);
-
-      if (response.status === 200) {
-        toast.success("User Successfully Registered!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          // transition: Bounce,
-        });
+      console.log(response)
         reset();
         navigate("/Login");
-      }
     } catch (error) {
-      if (error)
-        toast.error(error.response.data.data, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          // transition: Bounce,
-        });
-    }
-  };
+      console.log('error :',error)
+    };
+  }
   return (
     <div className="flex justify-center items-center  text-white bg-gradient-to-r from-gray-900 via-indigo-900 to-gray-400 min-h-screen">
       <div className="flex w-1/2 max-sm:w-full justify-between  max-sm:mx-10 max-sm:p-8 p-5 shadow-sm shadow-gray-200 ">
         <div className="flex flex-wrap full p-4 md:w-1/2">
-          <p className="w-full text-center text-3xl font-bold"> Sign In</p>
+          <p className="w-full text-center text-3xl font-bold">Sign In</p>
           <form
             onSubmit={handleSubmit(send)}
             className="flex flex-wrap text-center text-black p-2 justify-center"
@@ -131,16 +107,6 @@ const SignIn = () => {
 };
 
 export default SignIn;
-// } else {
-//   toast.error(response.data.message, {
-//     position: "top-right",
-//     autoClose: 5000,
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: true,
-//     draggable: true,
-//     progress: undefined,
-//     theme: "colored",
-//     // transition: "Bounce",
-//   });
-// }
+
+
+

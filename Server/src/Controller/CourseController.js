@@ -2,16 +2,19 @@ import { ApiError } from "../Utils/Errors.js";
 import uploadFilesCloudinary from "../Utils/Cloudinary.js";
 import { Course } from "../Models/CourseModel.js";
 import { ApiResponse } from "../Utils/ApiResponse.js";
-import { Enroll} from "../Models/EnrollementModel.js"
+import { Enroll } from "../Models/EnrollementModel.js";
+import mongoTransaction from "../Utils/Transaction.js";
+import deleteCloudinaryFile from "../Utils/DeleteCloudFiles.js";
+
 export const AddCourse = async (req, res) => {
-  console.log(req.files)
+  // console.log(req.files)
   const { Name, CourseId, Description, Level, Duration, Price } = req.body;
 
   const fields = [Name, CourseId, Description, Level, Duration, Price];
 
   if (fields.some((field) => field.trim(" ") === "")) {
     throw new ApiError(505, "all the fields are nessccary!");
-  }  
+  }
 
   const ThumbnailPath = req.files?.Thumbnail[0]?.path;
 
@@ -41,7 +44,6 @@ export const AddCourse = async (req, res) => {
       },
     });
     if (!CreatedCourse) {
-      
       throw new ApiError(400, "error while saving the data in db", Error);
     }
     return res
@@ -54,7 +56,7 @@ export const AddCourse = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     // in catch dlt the cloudinary files then send the error response
     return res
       .status(error.statuscode ? error.statuscode : 500)
@@ -65,33 +67,45 @@ export const AddCourse = async (req, res) => {
 export const RemoveCourse = async (req, res) => {
   const { CourseId } = req.params;
 
+  // transactional way for atomicity
+  const transactionalDeletion = async (session) => {
+    const course = await Course.findById({ _id: CourseId }).session(session);
+
+    if (!course) {
+      throw new ApiError(500, "Course not Found");
+    }
+
+    await Enroll.deleteMany({ Course: CourseId }).session(session);
+
+    const courseDeleteResult = await Course.deleteOne({
+      _id: CourseId,
+    }).session(session);
+
+    if (!courseDeleteResult) {
+      throw new ApiError(500, "failed to dlt the course");
+    }
+    return course;
+  };
   try {
-
-    const enrollmentdelete = await Enroll.deleteMany({Course : CourseId})
-
-    if(!enrollmentdelete){
-      console.log("there weere no enrollments or may be enable to delete them")
-    }
-
-    const isCourseThere = await Course.findOne({ _id: CourseId });
-
-    if (!isCourseThere) {
-      throw new ApiError(505, {}, "no such Course is there ..");
-    }
-    
-    const result = await Course.deleteOne({ _id: CourseId });
-
-    if (result.deletedCount > !0) {
-      throw new ApiError(400, {}, "error while deleting the course");
-    }
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { result }, "course has been deleted"));
+    const course = await mongoTransaction(transactionalDeletion);
+    res.status(200).json(new ApiResponse(200, {}, "Course Deleted"));
+    // get back to this & learn about the bg jobs or try to use redis for deletion of cloud files ...
+    //   (async ()=>{
+    //   const fileUrls = [
+    //     course.Thumbnail,
+    //     ...course.StudyMaterial.map(material => material.FileUrl)
+    //   ]
+    //   await Promise.all(fileUrls.map(async (url) =>{
+    //     try {
+    //       await deleteCloudinaryFile(url);
+    //     } catch (bgerror) {
+    //       console.log(bgerror)
+    //     }
+    //   }))
+    // })
   } catch (error) {
-    // console.log(error);
-    res
-      .status(error.statuscode ? error.statuscode : 500)
-      .json(new ApiResponse(error));
+    console.log(error);
+    res.status(500).json(error);
   }
 };
 
@@ -102,7 +116,6 @@ export const GetCourses = async (req, res) => {
     if (!Courses) {
       throw new ApiError(404, "Error occured while fetching the data..");
     }
-
     return res
       .status(200)
       .json(
@@ -137,7 +150,7 @@ export const CoursesByLevel = async (req, res) => {
         )
       );
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     res.status(error.statuscode).json(error.message);
   }
 };
@@ -147,13 +160,13 @@ export const UploadFiles = async (req, res) => {
 
   const studymaterial = req.files;
 
-  if(studymaterial.length < 0){
-    throw new ApiError(409,"havem't recieved the files")
+  if (studymaterial.length < 0) {
+    throw new ApiError(409, "havem't recieved the files");
   }
-    
-  console.log(_id,studymaterial)
+
+  console.log(_id, studymaterial);
   const url = [];
-  
+
   try {
     for (const files of studymaterial) {
       const { secure_url: FileUrl, original_filename: FileName } =
@@ -229,7 +242,7 @@ export const updatedCourse = async (req, res) => {
 
   const ThumbnailPath = req.file?.path;
 
-  console.log(ThumbnailPath)
+  console.log(ThumbnailPath);
   //in case of thumbnail change first dlt the img earlier saved in the cloud by getting its url from the db then upload a new one
 
   if (ThumbnailPath) {
@@ -275,3 +288,34 @@ export const updatedCourse = async (req, res) => {
       );
   }
 };
+
+// try {
+// here leran about the transactions in mongo db to maintian the atomacity around your db
+// changes to be done
+//   const enrollmentdelete = await Enroll.deleteMany({Course : CourseId})
+
+//   if(!enrollmentdelete){
+//     console.log("there weere no enrollments or may be enable to delete them")
+//   }
+
+//   const isCourseThere = await Course.findOne({ _id: CourseId });
+
+//   if (!isCourseThere) {
+//     throw new ApiError(505, {}, "no such Course is there ..");
+//   }
+
+//   const result = await Course.deleteOne({ _id: CourseId });
+
+//   if (result.deletedCount > !0) {
+//     throw new ApiError(400, {}, "error while deleting the course");
+//   }
+//   return res
+//     .status(200)
+//     .json(new ApiResponse(200, { result }, "course has been deleted"));
+// } catch (error) {
+//   // console.log(error);
+//   res
+//     .status(error.statuscode ? error.statuscode : 500)
+//     .json(new ApiResponse(error));
+
+// }

@@ -1,22 +1,16 @@
-import React from 'react'
 import axiousInstance from '../../../utils/AxiosInstance';
-import { toast } from "react-toastify";
 
 const CourseUserDeletion = ({removePopUp,_id}) => {
     
     const deleteItem = async () => {
         try {
          const res = await axiousInstance.delete(`Course/remove/${_id}`);
-
-      if(res.status === 200){
-        toast.success("Items delted successfully!");
-        
-      }else{
-        toast.error(res.error)
-      }
+         console.log(res)
+         setTimeout(() => {
+          window.location.reload();
+        }, 5000); 
     } catch (error) {
-      // console.log(error)
-      toast.error(res.error)
+      console.log('error while deleting :',error)
     }
     removePopUp();
     }

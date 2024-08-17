@@ -25,13 +25,10 @@ const Header = () => {
   const LogOut = async () => {
     try {
       const response = await axiousInstance.post(`user/logout`);
-      if (response.status === 200) {
-        toast.success(response.data.data);
         dispatch(logout());
-        navigate("/Login");
-      }
+        navigate("/Login");   
     } catch (error) {
-      toast.error("error while logging out");
+      console.log('error:',error)
     }
   };
   return (

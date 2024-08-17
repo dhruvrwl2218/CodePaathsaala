@@ -39,19 +39,12 @@ const LogIn = () => {
   const Send = async (data) => {
     try {
       const response = await axiosInstance.post('user/LogIn',data);
-      if (response.status === 200) {
-        toast.success("user logged In Sucessfully!");
-
-        const { accessToken, refreshToken, user } = await response?.data?.data;
+        const { accessToken, refreshToken, user } = response;
         dispatch(login({ User_id: user._id, Role: user.Role }));
         reset();
-        navigate("/");
-      } else {
-        toast.error(response.message);
-      }
+        navigate("/");  
     } catch (error) {
-      // console.log(error);
-      toast.error("error while logging in :(");
+      console.log('error :' , error)
     }
   };
   return (

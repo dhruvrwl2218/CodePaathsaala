@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router";
 import axiosInstance from "../../utils/AxiosInstance";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,10 +27,9 @@ const Form = () => {
     const GetCoureseDetails = async (_id) => {
       try {
         const res = await axiosInstance.get(`Course/ReadOne/${_id}`);
-        setFetchedCourse(res.data.data);
+        setFetchedCourse(res);
       } catch (error) {
-        // toast.error(error.message)
-        console.log(error);
+        console.log('fetching course for edit error:',error);
       }
     };
     if (location.pathname !== "/AddCourses") {
@@ -56,8 +54,6 @@ const Form = () => {
   }, [fetchedCourse, reset]);
 
   const Submit = async (data) => {
-    // console.log(data);
-    // console.group("Dirty Fields : ",dirtyFields)
     const formData = new FormData();
 
     if (isEdit) {
@@ -76,15 +72,11 @@ const Form = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        if (res.status === 200) {
-          toast.success("Course has been updated");
           reset();
           navigate("/CourseList");
-        }
       } catch (error) {
-        toast.error(error.message);
+        console.log('edit/add form error :',error)
       }
-      // console.log('dirty fields values',dirtyValues);
     } else {
       formData.append("Name", data.Name);
       formData.append("CourseId", data.CourseId);
@@ -103,7 +95,6 @@ const Form = () => {
         const res = await axiosInstance.post("Course/add", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        toast.success("New Course Added");
         reset();
         navigate("/CourseList");
       } catch (error) {
