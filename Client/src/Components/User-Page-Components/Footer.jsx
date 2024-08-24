@@ -34,8 +34,8 @@ const Footer = () => {
         <p className="w-full text-center text-3xl text-indigo-300">
           Let's Chat!
         </p>
-        <a className="w-full text-center text-md" href="#">
-          codePathsaala.com
+        <a className="w-full text-center text-md" href="mailto:codepathsaala@gmail.com">
+        codepathsaala@gmail.com
         </a>
         <div className="flex justify-around m-2">
           <SiInstagram className="text-4xl p-1" />

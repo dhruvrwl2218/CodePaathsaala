@@ -6,7 +6,6 @@ import { Course } from "../Models/CourseModel.js";
 import crypto from "crypto";
 import Razorpay from "razorpay";
 
-
 export const getKey = async (req, res) => {
   const enrolldata = req.body;
 
@@ -19,7 +18,7 @@ export const getKey = async (req, res) => {
     });
 
     if (CheckEnrollment) {
-      throw new ApiError(409, "you're already enrolled in this Course");
+      throw new ApiError(409, "already enrolled in this course");
     }
 
     const key = process.env.RAZORPAY_KEY;
@@ -27,13 +26,16 @@ export const getKey = async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, { key }, "here is your key..."));
   } catch (error) {
-    res.status(409).json(new ApiResponse(error.statuscode, {}, error.message));
+    const statuscode = error.statuscode || 500;
+    res
+      .status(statuscode)
+      .json(new ApiResponse(statuscode, {}, error.message || "can't get key"));
   }
 };
 
 export const checkout = async (req, res) => {
   const { amount } = req.body;
-  console.log(amount)
+  // console.log(amount)
   const instance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY,
     key_secret: process.env.RAZORPAY_SECRET,
@@ -44,22 +46,20 @@ export const checkout = async (req, res) => {
     currency: "INR",
   };
   try {
-    
-  const order = await instance.orders.create(options);
-
-  console.log(order);
-
-  res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { order },
-        "order Id has been cerated sucessfully :)..!"
-      )
-    );
+    const order = await instance.orders.create(options);
+    // console.log(order);
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { order },
+          "order Id has been cerated sucessfully :)..!"
+        )
+      );
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    res.status(500).json(new ApiResponse(500, {}, "unable to create order"));
   }
 };
 
@@ -104,8 +104,11 @@ export const paymentverificationandEnrollment = async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, "Enrollment sucessfull :)"));
   } catch (error) {
-    // console.log(error);
-    res.status(401).json(new ApiResponse(error));
+    console.log(error);
+    const statuscode = error.statuscode || 500;
+    res
+      .status(statuscode)
+      .json(new ApiResponse(statuscode, {}, "Problem while enrolling"));
   }
 };
 
@@ -126,7 +129,9 @@ export const GetEnrolledUser = async (req, res) => {
       );
   } catch (error) {
     // console.log(error);
-    res.status(error.statuscode).json(new ApiResponse(error));
+    res
+      .status(500)
+      .json(new ApiResponse(500, {}, "Unable get the Enrolled userList"));
   }
 };
 
@@ -134,15 +139,7 @@ export const CourseEnrolledUser = async (req, res) => {
   const { course_id } = req.body;
 
   if (!course_id) {
-    res
-      .status(401)
-      .json(
-        new ApiResponse(
-          401,
-          {},
-          "id has not been recieved for fetching the realted enrolled users"
-        )
-      );
+    res.status(401).json(new ApiResponse(401, {}, "plz send the id"));
   }
   try {
     const EnrolledUsers = await Enroll.find({ Course: course_id }).populate(
@@ -153,13 +150,11 @@ export const CourseEnrolledUser = async (req, res) => {
     if (EnrolledUsers.length === 0) {
       res
         .status(200)
-        .json(
-          new ApiResponse(200, {}, "No User has been Enrolled in the course")
-        );
+        .json(new ApiResponse(200, {}, "no enrollments are there"));
     }
 
     if (!EnrolledUsers) {
-      throw new ApiError(500, {}, "failed while fetching the users");
+      throw new ApiError(500, {}, "Unable to fetch user");
     }
 
     res
@@ -180,11 +175,7 @@ export const EnrolledUserCourses = async (req, res) => {
     res
       .status(401)
       .json(
-        new ApiResponse(
-          401,
-          {},
-          "there is some glitch here id not recieved"
-        )
+        new ApiResponse(401, {}, "there is some glitch here id not recieved")
       );
   }
   try {
@@ -200,10 +191,23 @@ export const EnrolledUserCourses = async (req, res) => {
     if (!enrolledCourse) {
       throw new ApiError(500, "Internal server Error!");
     }
-    return res.status(200).json(new ApiResponse(200,enrolledCourse,"Course fetched successfully"));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, enrolledCourse, "Course fetched successfully")
+      );
   } catch (error) {
+    const statuscode = error.statuscode || 500;
     // console.log(error);
-    return res.status(error.statuscode).json(new ApiResponse(error));
+    return res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message || "unable to get the enrolled user courses"
+        )
+      );
   }
 };
 
@@ -211,9 +215,10 @@ export const deleteEnrollment = async (req, res) => {
   const { _id } = req.params;
 
   if (!_id) {
+    //there is no need to check as it is params but still
     return res
       .status(401)
-      .json(new ApiResponse(401, {}, "Enrollment id was not there"));
+      .json(new ApiResponse(401, {}, "Plz provide the enrollment id"));
   }
   try {
     const Enrollement = await Enroll.find({ _id });
@@ -237,6 +242,15 @@ export const deleteEnrollment = async (req, res) => {
     }
   } catch (error) {
     // console.log(error);
-    return res.status(error.statuscode).json(error);
+    const statuscode = error.statuscode || 500;
+    return res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message || "Unable to deleting the Enrollment!"
+        )
+      );
   }
 };

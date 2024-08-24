@@ -7,13 +7,13 @@ import mongoTransaction from "../Utils/Transaction.js";
 import deleteCloudinaryFile from "../Utils/DeleteCloudFiles.js";
 
 export const AddCourse = async (req, res) => {
-  // console.log(req.files)
+  
   const { Name, CourseId, Description, Level, Duration, Price } = req.body;
 
   const fields = [Name, CourseId, Description, Level, Duration, Price];
 
   if (fields.some((field) => field.trim(" ") === "")) {
-    throw new ApiError(505, "all the fields are nessccary!");
+    return res.status(409).json(new ApiResponse(409,{},"all fields are required"))
   }
 
   const ThumbnailPath = req.files?.Thumbnail[0]?.path;
@@ -44,7 +44,7 @@ export const AddCourse = async (req, res) => {
       },
     });
     if (!CreatedCourse) {
-      throw new ApiError(400, "error while saving the data in db", Error);
+      throw new ApiError(500, "Internal server Error");
     }
     return res
       .status(200)
@@ -58,9 +58,10 @@ export const AddCourse = async (req, res) => {
   } catch (error) {
     // console.log(error);
     // in catch dlt the cloudinary files then send the error response
+    const statuscode = error.statuscode || 500;
     return res
-      .status(error.statuscode ? error.statuscode : 500)
-      .json(new ApiError(500, "Error while creating course in db", error));
+      .status(statuscode)
+      .json(new ApiResponse(statuscode,{},error.message || "Error while Creating Course"));
   }
 };
 
@@ -105,7 +106,8 @@ export const RemoveCourse = async (req, res) => {
     // })
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    const statuscode = error.statuscode || 500
+    res.status(statuscode).json(new ApiResponse(statuscode,{},"Error while deleting course"));
   }
 };
 
@@ -127,7 +129,8 @@ export const GetCourses = async (req, res) => {
       );
   } catch (error) {
     // console.log(error);
-    res.status(error.statuscode ? error.statuscode : 400).json(error);
+    const stauscode = error.statuscode || 404
+    res.status(stauscode).json(new ApiResponse(404,{},error.message || "not able to get course"));
   }
 };
 
@@ -161,10 +164,9 @@ export const UploadFiles = async (req, res) => {
   const studymaterial = req.files;
 
   if (studymaterial.length < 0) {
-    throw new ApiError(409, "havem't recieved the files");
+    res.status(409).json(new ApiResponse(409,{},"Plz send files to upload!"))
+    // throw new ApiError(409, "haven't recieved the files");
   }
-
-  console.log(_id, studymaterial);
   const url = [];
 
   try {
@@ -175,13 +177,13 @@ export const UploadFiles = async (req, res) => {
     }
   } catch (error) {
     // console.log(error)
+    const statuscode = error.statuscode || 500;
     return res
-      .status(error.statuscode ? errorstatuscode : 500)
+      .status(statuscode)
       .json(
         new ApiResponse(
-          error.statuscode ? errorstatuscode : 500,
-          "error while file upload to cloud",
-          error
+          statuscode,{},
+          "error while uploading files",
         )
       );
   }
@@ -195,10 +197,11 @@ export const UploadFiles = async (req, res) => {
     ).exec();
 
     if (updatedCourse.nModified === 0) {
+      //here before throwing the error first revert the file upload i.e dlt the files from cloud you can do that in background
       throw new ApiError(
         500,
-        { updatedCourse },
-        "not able to update with new data ..."
+        {},
+        "not able complete the upload"
       );
     } else {
       return res
@@ -207,13 +210,13 @@ export const UploadFiles = async (req, res) => {
           new ApiResponse(
             200,
             updatedCourse,
-            "your all files have been uploaded successfully !"
+            "files been added!"
           )
         );
     }
   } catch (error) {
-    // console.log(error);
-    return res.status(error.statuscode).json(error);
+    const statuscode = error.statuscode || 500;
+    return res.status(statuscode).json(new ApiResponse(statuscode,{},error.message || "can't complete the request!"));
   }
 };
 
@@ -224,15 +227,16 @@ export const CourseByID = async (req, res) => {
     const CourseData = await Course.findById(_id);
 
     if (!CourseData) {
-      throw new ApiError(500, "no Course avilable with this id");
+      throw new ApiError(500, "can't find the course :(");
     }
     res
       .status(200)
       .json(new ApiResponse(200, CourseData, "got course details.."));
   } catch (error) {
+    const statuscode = error.statuscode || 500
     res
-      .status(error.statuscode ? error.statuscode : 500)
-      .json(new ApiResponse(500, "Error occured while fetching data", error));
+      .status(statuscode)
+      .json(new ApiResponse(statuscode,{},error.message || "error while fetching course!",))
   }
 };
 
@@ -242,7 +246,7 @@ export const updatedCourse = async (req, res) => {
 
   const ThumbnailPath = req.file?.path;
 
-  console.log(ThumbnailPath);
+  // console.log(ThumbnailPath);
   //in case of thumbnail change first dlt the img earlier saved in the cloud by getting its url from the db then upload a new one
 
   if (ThumbnailPath) {
@@ -254,7 +258,7 @@ export const updatedCourse = async (req, res) => {
     return res
       .status(403)
       .json(
-        new ApiResponse(403, " you haven't given any updated data to update")
+        new ApiResponse(403,{}, " you haven't given any updated data to update")
       );
   }
   try {
@@ -263,59 +267,22 @@ export const updatedCourse = async (req, res) => {
       { $set: updateCourseInfo },
       { new: true }
     );
-
-    // if (!Update) {
-    //   return res.status(400);
-    //   // .json(new ApiResponse(400, "Error while updatation"));
-    //   throw new ApiError(400, Update, "Error while updatation");
-    // }
-    // console.log(Update);
     res
       .status(200)
       .json(
         new ApiResponse(200, Update, "Course Details updated successfully")
       );
   } catch (error) {
-    // console.log(error);
+    const statuscode = error.statuscode || 500;
     return res
-      .status(error.statusocde ? error.statuscode : 500)
+      .status(statuscode)
       .json(
         new ApiResponse(
-          error.statusocde ? error.statuscode : 500,
+           statuscode,
+           {},
           "Updatation fails",
-          error
         )
       );
   }
 };
 
-// try {
-// here leran about the transactions in mongo db to maintian the atomacity around your db
-// changes to be done
-//   const enrollmentdelete = await Enroll.deleteMany({Course : CourseId})
-
-//   if(!enrollmentdelete){
-//     console.log("there weere no enrollments or may be enable to delete them")
-//   }
-
-//   const isCourseThere = await Course.findOne({ _id: CourseId });
-
-//   if (!isCourseThere) {
-//     throw new ApiError(505, {}, "no such Course is there ..");
-//   }
-
-//   const result = await Course.deleteOne({ _id: CourseId });
-
-//   if (result.deletedCount > !0) {
-//     throw new ApiError(400, {}, "error while deleting the course");
-//   }
-//   return res
-//     .status(200)
-//     .json(new ApiResponse(200, { result }, "course has been deleted"));
-// } catch (error) {
-//   // console.log(error);
-//   res
-//     .status(error.statuscode ? error.statuscode : 500)
-//     .json(new ApiResponse(error));
-
-// }

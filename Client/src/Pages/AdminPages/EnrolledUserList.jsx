@@ -102,9 +102,10 @@ const EnrolledUserList =  () => {
   const deleteEnrollement = async(_id) => {
     try {
       const res = await axiousInstance.delete(`Enroll/deleteEnrollment/${_id}`)
-      console.log("enrollment deleted :",res)
+      
+      // console.log("enrollment deleted :",res)
     } catch (error) {
-      console.log('error while deleting the enrollment',error)
+      // console.log('error while deleting the enrollment',error)
     }
   }
   return (

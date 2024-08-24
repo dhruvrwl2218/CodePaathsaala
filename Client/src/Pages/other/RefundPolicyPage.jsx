@@ -112,10 +112,11 @@ const RefundPolicyPage = () => {
             If you have any questions about our refund policy, please contact
             us:
           </p>
-          <p className="mt-4 text-lg">Email: support@codepathsaala.com</p>
-          <p className="mt-4 text-lg">
-            Address: CodePathsaala, Cubeway Avenue, Ahemdabad (Gujrat), CA 94043
+          <p className="mt-4 text-lg">Email: <a href="mailto:codepathsaala@gmail.com" className="text-blue-700"> codepathsaala@gmail.com</a>
           </p>
+          <p className="mt-4 text-lg">
+            Address: 403, CelebrityAura, NavrangPura, Ahmedabad
+         </p>
         </section>
 
         <footer className="text-center mt-8">

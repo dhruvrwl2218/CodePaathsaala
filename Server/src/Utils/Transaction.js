@@ -6,11 +6,11 @@ const mongoTransaction = async(transactionalFunction) =>{
 
     try {
         const result = await transactionalFunction(session);
-        console.log("Result aagya",result)
+        // console.log("Result aagya",result)
         await session.commitTransaction();
         return result;
     } catch (error) {
-        console.log("error : ",error)
+        // console.log("error : ",error)
         await session.abortTransaction();
         throw error;
     }finally{

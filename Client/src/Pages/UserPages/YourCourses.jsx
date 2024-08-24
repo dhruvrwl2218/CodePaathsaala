@@ -20,9 +20,9 @@ const YourCourses = () => {
         console.log('error:',error)
         if (error.response.status === 401) {
           try {
-            
             const res = await axiosInstance.get('user/refreshTokens');
-            if (res.status === 200) {
+            console.log(res)
+            if (res.accessToken && res.refreshToken) {
               fetchEnrolledCourses();
             }
           } catch (err) {

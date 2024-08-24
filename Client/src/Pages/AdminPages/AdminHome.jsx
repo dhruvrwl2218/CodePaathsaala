@@ -5,17 +5,18 @@ import { Navigate } from "react-router";
 const AdminHome = () => {
   const [data, setData] = useState();
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const fetchstats = async () => {
       try {
         const res = await axiosInstance.get('Utility/adminStats');
-        setData(res.data);
+        setData(res);
       } catch (error) {
         // console.log(error.response.status);
         if (error.response.status === 401) {
           try {
             const res = await axiosInstance.get('user/refreshTokens')
-            if (res.status === 200) {
+            if (res.accessToken && res.refreshToken) {
               fetchstats();
             }
           } catch (error) {
@@ -24,7 +25,6 @@ const AdminHome = () => {
             Navigate("/Login");
           }
         } else {
-          // toast.error("User session out");
           console.log(" user session out")
         }
       }
@@ -51,6 +51,5 @@ const AdminHome = () => {
       </div>
     </div>
   );
-};
-
+};  
 export default AdminHome;

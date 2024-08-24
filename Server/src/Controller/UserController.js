@@ -7,8 +7,9 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import pkg from "nodemailer/lib/xoauth2/index.js";
-const { errorMonitor } = pkg;
+import mongoTransaction from "../Utils/Transaction.js";
 
+const { errorMonitor } = pkg;
 const GenerateAccessAndRefreshToken = async (user) => {
   const accessToken = await user.GenerateAccessToken();
   const refreshToken = await user.GenerateRefreshToken();
@@ -19,7 +20,7 @@ const GenerateAccessAndRefreshToken = async (user) => {
       { $set: { refreshToken: refreshToken } }
     );
   } catch (error) {
-    throw new Error("Error updating refreshToken");
+    throw new Error(401, "Error updating refreshToken");
   }
 
   return { accessToken, refreshToken };
@@ -67,34 +68,32 @@ export const UserSignIn = async (req, res) => {
     const ConfirmUser = User.findById(user.id);
 
     if (!ConfirmUser) {
-      new ApiError(500, "Somethings went wrong while Signing In");
+      new ApiError(500, "Error while siging In");
     }
 
     res.json(new ApiResponse(200, user, "user Regestired successfullly!"));
   } catch (error) {
     // console.log(error);
-    res.status(500).json(new ApiResponse(500, error));
+    res
+      .status(500)
+      .json(new ApiResponse(500, error.message || "Unable to Sign In"));
   }
 };
 export const UserLogIn = async (req, res) => {
   const { Email, Password } = req.body;
 
   if ([Email, Password].some((option) => option.trim(" ") === "")) {
-    return res.status(409).json("All fields required!");
+    return res
+      .status(409)
+      .json(new ApiResponse(409, {}, "Empty fileds are not allowed"));
   }
 
   try {
     const user = await User.findOne({ Email });
-
     if (!user) {
-      throw new ApiError(
-        401,
-        { user },
-        "User with this email is not present in db"
-      );
+      throw new ApiError(401, "User with this email is not present in db");
     }
-     
-    console.log(Password);
+    // console.log(Password);
     const isPasswordCorrect = await user.PasswordCheck(Password);
 
     if (!isPasswordCorrect) {
@@ -110,25 +109,34 @@ export const UserLogIn = async (req, res) => {
       .cookie("accessToken", accessToken, {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: true,       
-        sameSite: 'None',
+        secure: true,
+        sameSite: "None",
       })
       .cookie("refreshToken", refreshToken, {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: true,       
-        sameSite: 'None',
+        secure: true,
+        sameSite: "None",
       })
       .json(
         new ApiResponse(
           200,
           { user, accessToken, refreshToken },
-          "user logged in suceessfully!"  
+          "user logged in suceessfully!"
         )
       );
   } catch (error) {
     console.log(error);
-    return res.status(error.statuscode).json(error);
+    const statuscode = error.statuscode || 500;
+    return res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message || "Unable to loggin,Contact us if issue persist"
+        )
+      );
   }
 };
 
@@ -143,18 +151,19 @@ export const Logout = async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
-      sameSite: 'None',
+      sameSite: "None",
     };
     res
       .status(200)
       .clearCookie("accessToken", options)
       .clearCookie("refreshToken", options)
-      .json(new ApiResponse(200,{},"User Logged Out Succesfully"));
+      .json(new ApiResponse(200, {}, "User Logged Out Succesfully"));
   } catch (error) {
     // console.log(error);
+    const statuscode = error.statuscode || 500;
     res
-      .status(error.statuscode)
-      .json(new ApiResponse(error.statuscode, "Error while logging out!"));
+      .status(statuscode)
+      .json(new ApiResponse(statuscode, {}, "Error while logging out!"));
   }
 };
 
@@ -165,10 +174,7 @@ export const ForgotPassword = async (req, res) => {
     const user = await User.findOne({ Email: Email });
 
     if (!user) {
-      throw new ApiError(404).json(
-        404,
-        "No user is avilable with this name :("
-      );
+      throw new ApiError(404, "No user is avilable with this name :(");
     }
 
     const token = jwt.sign(
@@ -203,30 +209,35 @@ export const ForgotPassword = async (req, res) => {
           "Error occured while sending the pass-reset mail"
         );
       }
-
       res
         .status(200)
         .json(new ApiResponse(200, "Link has been sent to your mail id"));
     });
   } catch (error) {
-    res.status(error.statuscode).json(error);
+    const statuscode = error.statuscode || 500;
+    res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message ||
+            "Unable to process the req for while if issue persist then contact us"
+        )
+      );
   }
 };
 
-// address the issue here may getting the status 200 fake response 
 export const ResetPassword = async (req, res) => {
-  const  { new_password } = req.body;
-  const {token} = req.params;
+  const { new_password } = req.body;
+  const { token } = req.params;
 
-  if(!new_password){
-  res.status(403).json(new ApiError(403,"plz send the new pass to reset"))
+  if (!new_password) {
+    res.status(403).json(new ApiError(403, "plz send the new pass to reset"));
   }
 
   try {
-    const decodedToken = jwt.verify(
-      token,
-      process.env.FORGOT_PASS_TOKEN_KEY
-    );
+    const decodedToken = jwt.verify(token, process.env.FORGOT_PASS_TOKEN_KEY);
 
     if (!decodedToken) {
       throw new ApiError(401).json(401, "Invalid token or Token expired!!!");
@@ -234,17 +245,25 @@ export const ResetPassword = async (req, res) => {
 
     const user = await User.findOne({ _id: decodedToken.userId });
 
-
     if (!user) {
       throw new ApiError(401).json(401, "Unable to find the UserID!");
     }
 
     user.Password = new_password;
-    await user.save(); 
+    await user.save();
 
-    res.status(200).json(new ApiResponse(200,"Password Updated"));
+    res.status(200).json(new ApiResponse(200, "Password Updated"));
   } catch (error) {
-    res.status(error?.statuscode?error?.statuscode:500).json(new ApiResponse(error.statuscode, error));
+    const statuscode = error.statuscode || 500;
+    res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message || "Issue while reseting the password"
+        )
+      );
   }
 };
 
@@ -257,16 +276,8 @@ export const RefreshAccessToken = async (req, res) => {
       { $set: { refreshToken: "" } },
       { new: true }
     );
-    console.log(newuser);
-    res
-      .status(403)
-      .json(
-        new ApiResponse(
-          403,
-          {},
-          "refresh Token is not avilable unauthorized user!"
-        )
-      );
+    // console.log(newuser);
+    res.status(403).json(new ApiResponse(403, {}, "Unauthorized User"));
   } else {
     try {
       const decodedrefreshToken = jwt.verify(
@@ -283,19 +294,11 @@ export const RefreshAccessToken = async (req, res) => {
       const user = await User.findById(_id);
 
       if (!user) {
-        throw new ApiError(
-          400,
-          {},
-          "Refresh token is not valid or may expired !!"
-        );
+        throw new ApiError(400, {}, "Refresh Token expired");
       }
 
       if (token !== user?.refreshToken) {
-        throw new ApiError(
-          400,
-          {},
-          "Refresh token does'nt matches with user has Provided"
-        );
+        throw new ApiError(400, {}, "Expired refresh Token");
       }
 
       const { accessToken, refreshToken } = await GenerateAccessAndRefreshToken(
@@ -303,9 +306,9 @@ export const RefreshAccessToken = async (req, res) => {
       );
 
       const options = {
-        secure : true,
+        secure: true,
         httpOnly: true,
-        SameSite: 'None'
+        SameSite: "None",
       };
 
       res
@@ -321,7 +324,17 @@ export const RefreshAccessToken = async (req, res) => {
         );
     } catch (error) {
       // console.log(error);
-      return res.status(error.statuscode).json(new ApiResponse(error));
+      const statuscode = error.statuscode || 500;
+      res
+        .status(statuscode)
+        .json(
+          new ApiResponse(
+            statuscode,
+            {},
+            error.message ||
+              "Credentials doesn't updated Plz try To Loggin Again"
+          )
+        );
     }
   }
 };
@@ -329,41 +342,61 @@ export const RefreshAccessToken = async (req, res) => {
 export const deleteUser = async (req, res) => {
   const { _id } = req.params;
 
-  if (!_id) {
+  const transactionalDeletion = async (session) => {
+    const DeleteUser = await User.findOneAndDelete({ _id: _id }).session(
+      session
+    );
+
+    if (!DeleteUser) {
+      throw new ApiError(409, "User not Found!");
+    }
+    const UserEnrollmentsDeletion = await Enroll.deleteMany({
+      User: _id,
+    }).session(session);
+
+    return DeleteUser;
+  };
+  try {
+    const DeletedUser = await mongoTransaction(transactionalDeletion);
+    res.status(200),json(new ApiResponse(200, DeletedUser, "User Deleted!"));
+  } catch (error) {
+    const statuscode = error.statuscode || 500;
     res
-      .status(401)
+      .status(statuscode)
       .json(
         new ApiResponse(
-          401,
+          statuscode,
           {},
-          "bad req,plz provide the user id of user u want to dlt"
+          error.message || "Error while User Deletion"
         )
       );
   }
-  // console.log(_id);
-  try {
-    const result = await User.deleteOne({ _id: _id });
-
-    if (result.deletedCount !== 1) {
-      throw new ApiError(401, "No user was found with this id");
-    }
-    //then here dlt all the enrolled doc with this id
-
-    // const result2 = Enroll.deleteMany({_id :_id});
-
-    const enrollments = Enroll.countDocuments({ User: _id });
-
-    if (enrollments > 0) {
-      const dltEnrollments = await Enroll.deleteMany({ User: _id });
-
-      if (dltEnrollments.deletedCount !== enrollments) {
-        console.log("Chances of error glich in matrix");
-      }
-    }
-
-    res.status(200).json(200, {}, "User has been removed");
-  } catch (error) {
-    // console.log(error);
-    res.status(error.statuscode).json(error);
-  }
 };
+
+// // console.log(_id);
+// // Here transactional actions are needed as user and his enrollment both to be dlt otherwise can cause the issue in future
+// try {
+//   const result = await User.deleteOne({ _id: _id });
+
+//   if (result.deletedCount !== 1) {
+//     throw new ApiError(401, "No user was found with this id");
+//   }
+//   //then here dlt all the enrolled doc with this id
+
+//   // const result2 = Enroll.deleteMany({_id :_id});
+
+//   const enrollments = Enroll.countDocuments({ User: _id });
+
+//   if (enrollments > 0) {
+//     const dltEnrollments = await Enroll.deleteMany({ User: _id });
+
+//     if (dltEnrollments.deletedCount !== enrollments) {
+//       console.log("Chances of error glich in matrix");
+//     }
+//   }
+//   res.status(200).json(200, {}, "User has been removed");
+// } catch (error) {
+//   // console.log(error);
+//   const statuscode = error.statuscode || 500;
+//   res.status(statuscode).json(new ApiResponse(statuscode,{},error.message || ""));
+// }

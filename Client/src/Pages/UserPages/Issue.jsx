@@ -79,7 +79,7 @@ const Issue = () => {
     // console.log(data)
     try {
       const res = await axiosInstance.post("/Utility/ContactUs",data);
-      console.log(res)
+      // console.log(res)
     } catch (error) {
       console.log('error:',error)
     }
@@ -193,8 +193,8 @@ const Issue = () => {
             />
           </div>
           <div className="text-center text-sm  p-2 w-full">
-            <p><span className="font-bold">Email:</span><a href="#">support@CodePathsaala.com</a></p>
-            <p> <span className="font-bold">Address:</span> CodePathsaala, Cubeway Avenue, Ahemdabad (Gujrat), CA 94043</p>
+            <p><span className="font-bold">Email:</span><a href="mailto:codepathsaala@gmail.com"> codepathsaala@gmail.com</a></p>
+            <p> <span className="font-bold">Address:</span> 403, CelebrityAura, NavrangPura, Ahmedabad</p>
           </div>
         </form>
       </div>
