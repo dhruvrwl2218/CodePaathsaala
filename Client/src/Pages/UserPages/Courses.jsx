@@ -144,9 +144,11 @@ const Courses = () => {
     <>
       <div className="bg-black">
        { paymentcomp.open ?
-         <div className="flex justify-center">
+       <div>
+        <p className="text-white">*Here we are using dummy payment and enrollment as razorpay was'nt working bcoz policy it allows payment gateway in production only for real mercent</p>
+       <div className="flex justify-center">
          <Payment Details={paymentcomp.Details} setPaymentComp = {setPaymentComp}/>
-       </div>:
+       </div></div>:
        <div>
         <section className="grid grid-cols-12 gap-5" id="beginner">
           <div className="m-2 text-3xl p-2 col-start-3 col-span-6 font-semibold underline text-indigo-400">

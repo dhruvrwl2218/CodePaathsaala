@@ -128,6 +128,14 @@ export const Enrollment = async (req, res) => {
   const SignId = generateCustomUUIDWithDetails(enrolldata.email);
 
   try {
+      const CheckEnrollment = await Enroll.findOne().where({
+            User: { $eq: enrolldata.User_id },
+            Course: { $eq: enrolldata.Course_id },
+        });
+      
+      if (CheckEnrollment) {
+          throw new ApiError(409, "already enrolled in this course");
+      }
     const newEnroll = new Enroll({
       User: enrolldata.User_id,
       Course: enrolldata.Course_id,
@@ -147,9 +155,17 @@ export const Enrollment = async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, "Sucessfully Enrolled in Course", enrollment));
   } catch (error) {
-    console.log(error);
-    res.status(500).json(new ApiResponse(500, "Internal Server Error"));
-  }
+    const statuscode = error.statuscode || 500;
+    return res
+      .status(statuscode)
+      .json(
+        new ApiResponse(
+          statuscode,
+          {},
+          error.message || "Internal Server Error"
+        )
+      );
+    }
 };
 export const GetEnrolledUser = async (req, res) => {
   try {
@@ -203,6 +219,7 @@ export const CourseEnrolledUser = async (req, res) => {
       );
   } catch (error) {
     // console.log(error);
+
     res.status(error.statuscode).json(new ApiResponse(error));
   }
 };
