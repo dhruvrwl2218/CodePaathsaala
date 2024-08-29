@@ -5,113 +5,152 @@ import { Enroll } from "../Models/EnrollementModel.js";
 import { Course } from "../Models/CourseModel.js";
 import crypto from "crypto";
 import Razorpay from "razorpay";
+import { v4 as uuidv4 } from "uuid";
 
-export const getKey = async (req, res) => {
+const generateCustomUUIDWithDetails = (info) => {
+  const uuid = uuidv4();
+  const timestamp = Date.now(); // Current timestamp in milliseconds
+  return `${info}-${timestamp}-${uuid}`;
+};
+
+// export const getKey = async (req, res) => {
+//   const enrolldata = req.body;
+
+//   const { User_id, Course_id } = enrolldata;
+
+//   try {
+//     const CheckEnrollment = await Enroll.findOne().where({
+//       User: { $eq: User_id },
+//       Course: { $eq: Course_id },
+//     });
+
+//     if (CheckEnrollment) {
+//       throw new ApiError(409, "already enrolled in this course");
+//     }
+
+//     const key = process.env.RAZORPAY_KEY;
+//     return res
+//       .status(200)
+//       .json(new ApiResponse(200, { key }, "here is your key..."));
+//   } catch (error) {
+//     const statuscode = error.statuscode || 500;
+//     res
+//       .status(statuscode)
+//       .json(new ApiResponse(statuscode, {}, error.message || "can't get key"));
+//   }
+// };
+
+// export const checkout = async (req, res) => {
+//   const { amount } = req.body;
+//   // console.log(amount)
+//   const instance = new Razorpay({
+//     key_id: process.env.RAZORPAY_KEY,
+//     key_secret: process.env.RAZORPAY_SECRET,
+//   });
+
+//   const options = {
+//     amount: Number(amount * 100),
+//     currency: "INR",
+//   };
+//   try {
+//     const order = await instance.orders.create(options);
+//     // console.log(order);
+//     res
+//       .status(200)
+//       .json(
+//         new ApiResponse(
+//           200,
+//           { order },
+//           "order Id has been cerated sucessfully :)..!"
+//         )
+//       );
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json(new ApiResponse(500, {}, "unable to create order"));
+//   }
+// };
+
+// export const paymentverificationandEnrollment = async (req, res) => {
+//   const {
+//     razorpay_order_id,
+//     razorpay_payment_id,
+//     razorpay_signature,
+//     amount,
+//     User_id,
+//     Course_id,
+//   } = req.body;
+
+//   const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+//   const expectedSingnature = crypto
+//     .createHmac("sha256", process.env.RAZORPAY_SECRET)
+//     .update(body.toString())
+//     .digest("hex");
+
+//   const isauth = expectedSingnature === razorpay_signature;
+
+//   try {
+//     if (!isauth) {
+//       throw new ApiError(400).json("invalid payment signature!");
+//     }
+
+//     const newEnrollment = new Enroll({
+//       User: User_id,
+//       Course: Course_id,
+//       status: "completed",
+//       PaymentDetails: {
+//         amount: amount,
+//         paymentDate: new Date(),
+//         razorpayOrderId: razorpay_order_id,
+//         razorpayPaymentId: razorpay_payment_id,
+//         razorpaySignature: razorpay_signature,
+//       },
+//     });
+
+//     const enrolled = await newEnrollment.save();
+
+//     res.status(200).json(new ApiResponse(200, "Enrollment sucessfull :)"));
+//   } catch (error) {
+//     console.log(error);
+//     const statuscode = error.statuscode || 500;
+//     res
+//       .status(statuscode)
+//       .json(new ApiResponse(statuscode, {}, "Problem while enrolling"));
+//   }
+// };
+
+export const Enrollment = async (req, res) => {
+  console.log("body:", req.body);
   const enrolldata = req.body;
 
-  const { User_id, Course_id } = enrolldata;
+  const orderID = generateCustomUUIDWithDetails("order");
+  const PaymentId = generateCustomUUIDWithDetails(enrolldata.Amount);
+  const SignId = generateCustomUUIDWithDetails(enrolldata.email);
 
   try {
-    const CheckEnrollment = await Enroll.findOne().where({
-      User: { $eq: User_id },
-      Course: { $eq: Course_id },
-    });
-
-    if (CheckEnrollment) {
-      throw new ApiError(409, "already enrolled in this course");
-    }
-
-    const key = process.env.RAZORPAY_KEY;
-    return res
-      .status(200)
-      .json(new ApiResponse(200, { key }, "here is your key..."));
-  } catch (error) {
-    const statuscode = error.statuscode || 500;
-    res
-      .status(statuscode)
-      .json(new ApiResponse(statuscode, {}, error.message || "can't get key"));
-  }
-};
-
-export const checkout = async (req, res) => {
-  const { amount } = req.body;
-  // console.log(amount)
-  const instance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY,
-    key_secret: process.env.RAZORPAY_SECRET,
-  });
-
-  const options = {
-    amount: Number(amount * 100),
-    currency: "INR",
-  };
-  try {
-    const order = await instance.orders.create(options);
-    // console.log(order);
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { order },
-          "order Id has been cerated sucessfully :)..!"
-        )
-      );
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(new ApiResponse(500, {}, "unable to create order"));
-  }
-};
-
-export const paymentverificationandEnrollment = async (req, res) => {
-  const {
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-    amount,
-    User_id,
-    Course_id,
-  } = req.body;
-
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
-
-  const expectedSingnature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(body.toString())
-    .digest("hex");
-
-  const isauth = expectedSingnature === razorpay_signature;
-
-  try {
-    if (!isauth) {
-      throw new ApiError(400).json("invalid payment signature!");
-    }
-
-    const newEnrollment = new Enroll({
-      User: User_id,
-      Course: Course_id,
+    const newEnroll = new Enroll({
+      User: enrolldata.User_id,
+      Course: enrolldata.Course_id,
       status: "completed",
       PaymentDetails: {
-        amount: amount,
-        paymentDate: new Date(),
-        razorpayOrderId: razorpay_order_id,
-        razorpayPaymentId: razorpay_payment_id,
-        razorpaySignature: razorpay_signature,
+        amount: enrolldata.Amount,
+        PaymentData: Date.now,
+        razorpayOrderId: orderID,
+        razorpayPaymentId: PaymentId,
+        razorpaySignature: SignId,
       },
     });
 
-    const enrolled = await newEnrollment.save();
-
-    res.status(200).json(new ApiResponse(200, "Enrollment sucessfull :)"));
+    const enrollment = await newEnroll.save();
+    
+    res
+      .status(200)
+      .json(new ApiResponse(200, "Sucessfully Enrolled in Course", enrollment));
   } catch (error) {
     console.log(error);
-    const statuscode = error.statuscode || 500;
-    res
-      .status(statuscode)
-      .json(new ApiResponse(statuscode, {}, "Problem while enrolling"));
+    res.status(500).json(new ApiResponse(500, "Internal Server Error"));
   }
 };
-
 export const GetEnrolledUser = async (req, res) => {
   try {
     const enrollments = await Enroll.find()

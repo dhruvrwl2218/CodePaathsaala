@@ -4,11 +4,13 @@ import {UserCourseDisplay} from "../../Components/User-Page-Components";
 import { toast } from "react-toastify";
 import { logout } from "../../store/AuthSlice";
 import axiosInstance from '../../utils/AxiosInstance';
+import { Navigate } from 'react-router-dom';
 
 const YourCourses = () => {
   const User_id = useSelector((state) => state.Auth.User_id);
   const [fetchedCourse, setFetchedCourse] = useState([]);
   const dispatch = useDispatch();
+ 
   // const [coursecontent, setCourseContent] = useState(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const YourCourses = () => {
           } catch (err) {
             dispatch(logout());
             toast.error("session out");
-            Navigate("/Login");
+            return <Navigate to={"/Login"} replace/>
           }
         } else {
           // toast.error("User session out"); // get the error message

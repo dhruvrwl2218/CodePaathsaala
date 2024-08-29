@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useNavigate } from "react-router";
 const Coursecard = ({
   Name,
   Css = "",
@@ -9,9 +9,20 @@ const Coursecard = ({
   Price,
   Description,
   _id,
-  checkout,
+  setPaymentComp,
   ...props
 }) => {
+  const navigate = useNavigate();
+  const checkout = () =>{
+    
+    const auth = JSON.parse(localStorage.getItem("AuthState"));
+
+      if (!auth?.islogin) {
+        navigate("/Login");
+      }
+      const enrolldata = { User_id: auth?.User_id, Course_id: _id ,CourseName : Name,Price};
+      setPaymentComp({open:true,Details:enrolldata})
+  }
   return (
     <div
       className={`flex flex-col bg-black text-white gap-2 p-3 rounded-xl m-3  font-serif text-semibold ${Css}
@@ -36,7 +47,7 @@ const Coursecard = ({
 
       <button
         className="bg-neutral-800 rounded-lg mx-4 py-1 border border-slate-600"
-        onClick={() => checkout(Price, _id, Name)}
+        onClick={checkout}
       >
         Buy
       </button>

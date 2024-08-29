@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://codepaathsaala-3.onrender.com/api/v1/',
+    baseURL: 'http://localhost:8000/api/v1/',
     headers:{
         'Content-Type':'application/json'
     },
@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use(
       const { method } = response.config;
   
       // Show a success toast only for POST and PATCH requests
-      if ((method === 'post' || method === 'patch' || method === 'delete') && response.data.message) {
+      if ((method !== 'get') && response.data.message) {
         toast.success(response.data.message);
       }
       // Automatically return the `data` field from the response
@@ -35,10 +35,10 @@ axiosInstance.interceptors.request.use(
     error => {
       const { method } = error.config;
 
-      if((method === 'get')){
-        toast.error("trouble while connecting  to server:(");
-        return Promise.reject(error);
-      }
+      // if((method === 'get')){
+      //   toast.error("trouble while connecting  to server:(");
+      //   return Promise.reject(error);
+      // }
       // Always show an error toast regardless of the HTTP method
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
