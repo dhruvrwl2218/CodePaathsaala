@@ -1,13 +1,5 @@
 # OnlineCourseApp
-This is online Course App where where the user can enroll in any Course and get access to that Course ,This Project has all the auth functionality. More things are to be added...
-
-
-#Issues fix the payment gateway (Razorpay third party issue) & add proper form validation 
-
-
-# CodePath saala has been deployed on the Render here is the link (https://codepaathsaala-client.onrender.com) 
-# *****Need the fix for the payment or for enrollment in course as razorpay side error (razorpay team have asked to make some changes so after that payment gateway will be up running )
-With this payment and other minor issues like new logo and some optimization are been done and looked after in new Productionissue branch which will be merged after fixes
+This is online Course App where  the user can enroll in any Course and get access to that Course ,This Project has all the auth functionality. More things are to be added...
 
 
 #User-side pages
